@@ -1,6 +1,6 @@
 <template>
+  <h1>Paletas</h1>
   <div class="palette_view">
-    Palette
     <PaletteComponent />
   </div>
 </template>
@@ -21,17 +21,6 @@ export default {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
-  gap: 10px;
-
-  width: 1068px;
-  height: 999px;
-
-  background: #FFF3ED;
-
-  flex: none;
-  order: 0;
-  flex-grow: 0;
+  background: var(--smooth_white);
 }
 </style>
