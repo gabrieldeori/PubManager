@@ -1,31 +1,33 @@
 <template>
-  <div class='palette_component'>
-    <ColorComponent
-      v-for="(class_color, index) in classesColorBase"
-      v-bind:key="index"
-      :propColor="class_color"
-    />
-  </div>
-  <div class='palette_component'>
-    <ColorComponent
-      v-for="(class_color, index) in classesColorPrimary"
-      v-bind:key="index"
-      :propColor="class_color"
-    />
-  </div>
-  <div class='palette_component'>
-    <ColorComponent
-      v-for="(class_color, index) in classesColorHighlight"
-      v-bind:key="index"
-      :propColor="class_color"
-    />
-  </div>
-  <div class='palette_component'>
-    <ColorComponent
-      v-for="(class_color, index) in classesColorDanger"
-      v-bind:key="index"
-      :propColor="class_color"
-    />
+  <div class="palette_rowwrap">
+    <div class='palette_component'>
+      <ColorComponent
+        v-for="(class_color, index) in classesColorBase"
+        v-bind:key="index"
+        :propColor="class_color"
+      />
+    </div>
+    <div class='palette_component'>
+      <ColorComponent
+        v-for="(class_color, index) in classesColorPrimary"
+        v-bind:key="index"
+        :propColor="class_color"
+      />
+    </div>
+    <div class='palette_component'>
+      <ColorComponent
+        v-for="(class_color, index) in classesColorHighlight"
+        v-bind:key="index"
+        :propColor="class_color"
+      />
+    </div>
+    <div class='palette_component'>
+      <ColorComponent
+        v-for="(class_color, index) in classesColorDanger"
+        v-bind:key="index"
+        :propColor="class_color"
+      />
+    </div>
   </div>
 </template>
 
@@ -80,6 +82,10 @@ export default {
 </script>
 
 <style scoped>
+.palette_rowwrap {
+  display: flex;
+  flex-flow: row wrap;
+}
 .palette_component {
   display: flex;
   flex-direction: column;

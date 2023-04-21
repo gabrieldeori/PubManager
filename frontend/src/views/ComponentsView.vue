@@ -1,26 +1,30 @@
 <template>
   <h1>Paletas</h1>
-  <div class="palette_view">
+  <div class="components_view">
     <PaletteComponent />
+    <ButtonsComponent />
   </div>
 </template>
 
 <script>
 import PaletteComponent from '@/components/design/PaletteComponent.vue';
+import ButtonsComponent from '@/components/buttons/ButtonsComponent.vue';
 
 export default {
-  name: 'PaletteView',
+  name: 'ComponentsView',
   components: {
     PaletteComponent,
+    ButtonsComponent,
   },
 };
 </script>
 
 <style scoped>
-.palette_view {
+.components_view {
   display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  flex-flow: column;
+  align-items: center;
   background: var(--smooth_white);
+  gap: 2rem
 }
 </style>

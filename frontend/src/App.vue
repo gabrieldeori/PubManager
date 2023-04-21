@@ -2,7 +2,7 @@
   <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link> |
-    <router-link to="/palette">Palette</router-link>
+    <router-link to="/components">Components</router-link>
   </nav>
   <router-view/>
 </template>
@@ -64,5 +64,163 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+/* Base */
+.base_button {
+  background-color: var(--black);
+  border: 0.15rem solid var(--black);
+  border-radius: 0.5rem;
+  color: var(--white);
+  display: flex;
+  gap: 1rem;
+  font-size: 1.5rem;
+  padding: 0.5rem 1.2rem;
+}
+.button_black {
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.button_black:hover {
+  background-color: var(--grey_2);
+  border-color: var(--grey_1);
+  color: var(--white);
+}
+
+.button_black:focus {
+  background-color: var(--smooth_black);
+  border-color: var(--grey_1);
+  color: var(--white);
+}
+
+.button_black.invert {
+  background-color: var(--white);
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.button_black.invert:hover {
+  background-color: var(--smooth_black);
+  border-color: var(--grey_1);
+  color: var(--white);
+}
+
+.button_black.invert:focus {
+  background-color: var(--grey_2);
+  border-color: var(--grey_1);
+  color: var(--white);
+}
+
+/* primary */
+.button_primary {
+  background-color: var(--primary_stronger);
+  border-color: var(--primary_stronger);
+  color: var(--primary_white);
+}
+
+.button_primary:hover {
+  background-color: var(--primary_strong);
+  border-color: var(--primary_stronger);
+  color: var(--primary_lighter);
+}
+
+.button_primary:focus {
+  background-color: var(--primary_lighter);
+  border-color: var(--primary_stronger);
+  color: var(--primary_strong);
+}
+
+.button_primary.invert {
+  background-color: var(--primary_white);
+  border-color: var(--primary_stronger);
+  color: var(--primary_stronger);
+}
+
+.button_primary.invert:hover {
+  background-color: var(--primary_lighter);
+  border-color: var(--primary_stronger);
+  color: var(--primary_strong);
+}
+
+.button_primary.invert:focus {
+  background-color: var(--primary_strong);
+  border-color: var(--primary_stronger);
+  color: var(--primary_lighter);
+}
+
+/* highlight */
+.button_highlight {
+  background-color: var(--highlight_stronger);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_white);
+}
+
+.button_highlight:hover {
+  background-color: var(--highlight_strong);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_lighter);
+}
+
+.button_highlight:focus {
+  background-color: var(--highlight_lighter);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_strong);
+}
+
+.button_highlight.invert {
+  background-color: var(--highlight_white);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_stronger);
+}
+
+.button_highlight.invert:hover {
+  background-color: var(--highlight_lighter);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_strong);
+}
+
+.button_highlight.invert:focus {
+  background-color: var(--highlight_strong);
+  border-color: var(--highlight_stronger);
+  color: var(--highlight_lighter);
+}
+
+/* danger */
+.button_danger {
+  background-color: var(--danger_stronger);
+  border-color: var(--danger_stronger);
+  color: var(--danger_white);
+}
+
+.button_danger:hover {
+  background-color: var(--danger_strong);
+  border-color: var(--danger_stronger);
+  color: var(--danger_lighter);
+}
+
+.button_danger:focus {
+  background-color: var(--danger_lighter);
+  border-color: var(--danger_stronger);
+  color: var(--danger_strong);
+}
+
+.button_danger.invert {
+  background-color: var(--danger_white);
+  border-color: var(--danger_stronger);
+  color: var(--danger_stronger);
+}
+
+.button_danger.invert:hover {
+  background-color: var(--danger_lighter);
+  border-color: var(--danger_stronger);
+  color: var(--danger_strong);
+}
+
+.button_danger.invert:focus {
+  background-color: var(--danger_strong);
+  border-color: var(--danger_stronger);
+  color: var(--danger_lighter);
 }
 </style>
