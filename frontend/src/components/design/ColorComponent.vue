@@ -8,7 +8,7 @@
 export default {
   name: 'ColorComponent',
   props: {
-    propColor: Object,
+    propColor: String,
   },
 };
 </script>
