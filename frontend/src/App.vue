@@ -12,6 +12,7 @@
   /* Base */
   --black: black;
   --smooth_black: #0E0E0E;
+  --grey_0: #3a3a3a;
   --grey_1: #5B5B5B;
   --grey_2: #BEBEBE;
   --smooth_white: #E0E0E0;
@@ -66,6 +67,7 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
+/* Buttons */
 /* Base */
 .base_button {
   background-color: var(--black);
@@ -86,13 +88,13 @@ nav a.router-link-exact-active {
 .button_black:hover {
   background-color: var(--grey_2);
   border-color: var(--grey_1);
-  color: var(--white);
+  color: var(--grey2);
 }
 
 .button_black:focus {
   background-color: var(--smooth_black);
-  border-color: var(--grey_1);
-  color: var(--white);
+  border-color: var(--grey_0);
+  color: var(--grey1);
 }
 
 .button_black.invert {
@@ -103,14 +105,14 @@ nav a.router-link-exact-active {
 
 .button_black.invert:hover {
   background-color: var(--smooth_black);
-  border-color: var(--grey_1);
-  color: var(--white);
+  border-color: var(--grey_0);
+  color: var(--grey2);
 }
 
 .button_black.invert:focus {
   background-color: var(--grey_2);
   border-color: var(--grey_1);
-  color: var(--white);
+  color: var(--grey2);
 }
 
 /* primary */

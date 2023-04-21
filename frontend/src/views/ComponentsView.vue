@@ -3,18 +3,21 @@
   <div class="components_view">
     <PaletteComponent />
     <ButtonsComponent />
+    <TextInputComponents />
   </div>
 </template>
 
 <script>
 import PaletteComponent from '@/components/design/PaletteComponent.vue';
 import ButtonsComponent from '@/components/buttons/ButtonsComponent.vue';
+import TextInputComponents from '@/components/TextInputs/TextInputComponents.vue';
 
 export default {
   name: 'ComponentsView',
   components: {
     PaletteComponent,
     ButtonsComponent,
+    TextInputComponents,
   },
 };
 </script>
