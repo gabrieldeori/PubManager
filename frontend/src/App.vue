@@ -13,8 +13,8 @@
   --black: black;
   --smooth_black: #0E0E0E;
   --grey_0: #3a3a3a;
-  --grey_1: #5B5B5B;
-  --grey_2: #BEBEBE;
+  --grey_1: #4d4d4d;
+  --grey_2: #7c7c7c;
   --smooth_white: #E0E0E0;
   --white: white;
 
