@@ -10,6 +10,7 @@
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
+        :required="required"
       >
     </div>
     <div v-if="error" class="error_message">
@@ -49,6 +50,10 @@ export default {
     src: {
       type: String,
       default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
     },
   },
 };

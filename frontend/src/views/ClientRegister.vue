@@ -3,12 +3,12 @@
     <h1>FORM</h1>
     <BaseInput
       v-model="name"
-      label="Nome"
-      type="text"
-      placeholder="Apenas letras e espaços"
-      required
+      label='Nome'
+      type='text'
+      placeholder='Apenas letras e espaços'
+      required='true'
     />
-    <button class="base_button button_primary">
+    <button class='base_button button_primary'>
       Registrar Cliente
     </button>
   </form>
