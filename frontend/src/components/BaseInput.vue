@@ -1,8 +1,8 @@
 <template>
   <label class="input_label" :for="'id_' + name">
-    {{ label }}
-    <div :class="'input_area ' + errorClass" >
-      <img class="input_icon" src="" alt="">O
+    <div class="input_label_text">{{ label }}</div>
+    <div class="input_area">
+      <img class="input_icon" src="" alt="">
       <input
         :class="'input_tag '"
         :id="'id_' + name"
@@ -11,6 +11,9 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
       >
+    </div>
+    <div v-if="error" class="error_message">
+      {{ error }}
     </div>
   </label>
 </template>
@@ -39,7 +42,11 @@ export default {
       type: String,
       default: '',
     },
-    errorClass: {
+    error: {
+      type: String,
+      default: '',
+    },
+    src: {
       type: String,
       default: '',
     },
@@ -48,19 +55,6 @@ export default {
 </script>
 
 <style scoped>
-.input_label {
-  align-items: flex-start;
-  border: none;
-  display: flex;
-  flex-flow: column;
-  font-size: 1rem;
-  justify-content: center;
-  margin-bottom: 0.25rem;
-  max-width: 100%;
-  padding: 0.25rem;
-  width: fit-content;
-}
-
 .input_icon {
   height: 100%;
   width: 100%;
@@ -68,8 +62,9 @@ export default {
 
 .input_area {
   align-items: center;
-  border: 1px solid var(--grey_2);
-  border-radius: 1rem;
+  background-color: var(--smooth_white);
+  border: 0.1rem solid var(--grey_2);
+  border-radius: 0.5rem;
   display: flex;
   justify-content: center;
   padding: 0.25rem;
@@ -77,7 +72,7 @@ export default {
 }
 
 .input_area:focus-within {
-  border: 2px solid var(--primary_stronger);
+  border: 0.2rem solid var(--primary_stronger);
 }
 
 .input_tag {
@@ -94,8 +89,17 @@ export default {
   padding: 0;
 }
 
+.input_tag::placeholder {
+  color: var(--grey_2);
+}
+
 .input_area.error {
   border: 0.1rem solid var(--danger_stronger);
   color: var(--danger_stronger);
+}
+
+.error_message {
+  color: var(--danger_stronger);
+  padding: 0.25rem;
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
-  <label :for="'id_' + name">
-    {{ label }}
+  <label class="input_label" :for="'id_' + name">
+    <div class="input_label_text">{{ label }}</div>
     <select
+      class="input_select"
       :id="'id_' + name"
       :name="name"
       :value="modelValue"
@@ -39,3 +40,33 @@ export default {
 };
 
 </script>
+
+<style scoped>
+.input_select {
+  background-color: var(--smooth_white);
+  border: 0.1rem solid var(--grey_2);
+  cursor: pointer;
+}
+
+.input_select {
+  background-color: var(--smooth_white);
+  border: 0.1rem solid var(--grey_2);
+  border-radius: 0.2rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.input_select:focus {
+  background-color: var(--smooth_white);
+  border: 0.1rem solid var(--primary_stronger);
+  outline: none;
+}
+
+.input_select option:checked {
+  background-color: var(--primary_stronger);
+}
+
+option::after {
+  border: 2px solid red;
+}
+</style>

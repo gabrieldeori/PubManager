@@ -1,13 +1,16 @@
 <template>
-  <label :for="'id_' + name">
+  <label :for="'id_' + name" class="input_label_side">
     <input
       type="checkbox"
       :checked="modelValue"
       @change="$emit('update:modelValue', $event.target.checked)"
       :id="'id_' + name"
       :name="name"
+      class="input_checkbox"
     >
-    {{ label }}
+    <div class="input_label_side_text">
+      {{ label }}
+    </div>
   </label>
 </template>
 

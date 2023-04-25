@@ -1,13 +1,15 @@
 <template>
-  <BaseRadio
-    v-for="{ value, label } in options"
-    :key="'key_' + value"
-    :value="value"
-    :label="label"
-    :name="name"
-    :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
-   />
+  <section class="radio_group">
+    <BaseRadio
+      v-for="{ value, label } in options"
+      :key="'key_' + value"
+      :value="value"
+      :label="label"
+      :name="name"
+      :modelValue="modelValue"
+      @update:modelValue="$emit('update:modelValue', $event)"
+     />
+  </section>
 </template>
 
 <script>
@@ -28,3 +30,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .radio_group {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 1rem;
+    max-width: 100%;
+  }
+</style>
