@@ -1,7 +1,5 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
     <router-link to="/components">Components</router-link>
   </nav>
   <router-view/>
@@ -103,6 +101,14 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+form {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /* Buttons */
