@@ -80,7 +80,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.25rem;
+  font-size: 1rem;
   border: none;
   border-radius: 0.5rem;
   width: fit-content;

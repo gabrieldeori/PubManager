@@ -19,8 +19,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nickname',
         'email',
         'password',
+        'created_by',
+        'updated_by',
+    ];
+
+    protected $guarded = [
+        'id',
     ];
 
     /**
@@ -41,4 +48,27 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        // evento disparado quando um novo usuário é criado
+        static::creating(function ($user) {
+            $user->created_by = auth()->id();
+        });
+
+        // evento disparado quando um usuário é atualizado
+        static::updating(function ($user) {
+            $user->updated_by = auth()->id();
+        });
+
+        // evento disparado quando um usuário é criado ou atualizado
+        static::saving(function ($user) {
+            $user->updated_at = now();
+            if (!$user->exists) {
+                $user->created_at = $user->updated_at;
+            }
+        });
+    }
 }

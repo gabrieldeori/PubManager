@@ -3,31 +3,30 @@
   <div class="components_view">
     <PaletteComponent />
     <ButtonsComponent />
-    <TextInputComponents />
+    <SimpleForm />
   </div>
 </template>
 
 <script>
 import PaletteComponent from '@/components/design/PaletteComponent.vue';
 import ButtonsComponent from '@/components/buttons/ButtonsComponent.vue';
-import TextInputComponents from '@/components/TextInputs/TextInputComponents.vue';
+import SimpleForm from '@/components/forms/SimpleForm.vue';
 
 export default {
   name: 'ComponentsView',
   components: {
     PaletteComponent,
     ButtonsComponent,
-    TextInputComponents,
+    SimpleForm,
   },
 };
 </script>
 
 <style scoped>
 .components_view {
+  align-items: center;
   display: flex;
   flex-flow: column;
-  align-items: center;
-  background: var(--smooth_white);
-  gap: 2rem
+  gap: 2rem;
 }
 </style>
