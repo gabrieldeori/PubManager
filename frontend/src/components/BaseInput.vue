@@ -72,7 +72,7 @@ export default {
 }
 
 .input_area:focus-within {
-  border: 0.2rem solid var(--primary_stronger);
+  border: 0.1rem solid var(--primary_stronger);
 }
 
 .input_tag {
