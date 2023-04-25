@@ -1,6 +1,8 @@
 <template>
   <nav>
-    <router-link to="/components">Components</router-link>
+    | <router-link to="/">Home Components</router-link> |
+    <router-link to="/client/register">Registrar Cliente</router-link> |
+    <router-link to="/clients/show">Clientes Registrados</router-link> |
   </nav>
   <router-view/>
 </template>
@@ -103,12 +105,34 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
+section {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+
+/* Forms */
+
 form {
   align-items: center;
   display: flex;
   flex-flow: column;
   justify-content: center;
   gap: 1rem;
+}
+
+/* Tables */
+table {
+  background-color: var(--smooth_white);
+  border: 0.1rem solid var(--primary_stronger);
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 0.1rem solid var(--primary_stronger);
+  padding: 0.5rem;
+  margin: 0;
 }
 
 /* Buttons */

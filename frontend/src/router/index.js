@@ -11,12 +11,12 @@ const routes = [
   },
   {
     path: '/client/register',
-    name: 'clientRegister',
+    name: 'ClientRegister',
     component: () => import('../views/ClientRegister.vue'),
   },
   {
     path: '/clients/show',
-    name: 'clientsShow',
+    name: 'ClientsShow',
     component: () => import('../views/ClientsShow.vue'),
   },
 ];

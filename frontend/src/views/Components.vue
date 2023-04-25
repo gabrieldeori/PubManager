@@ -1,10 +1,10 @@
 <template>
-  <h1>Paletas</h1>
-  <div class="components_view">
-    <PaletteComponent />
-    <ButtonsComponent />
-    <SimpleForm />
-  </div>
+  <section>
+    <h1>Paletas</h1>
+      <PaletteComponent />
+      <ButtonsComponent />
+      <SimpleForm />
+  </section>
 </template>
 
 <script>
@@ -21,12 +21,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.components_view {
-  align-items: center;
-  display: flex;
-  flex-flow: column;
-  gap: 2rem;
-}
-</style>
