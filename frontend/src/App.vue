@@ -46,6 +46,44 @@
   --danger_white: #FFD8D2;
 }
 
+/* Input Defaults */
+.input_label {
+  align-items: flex-start;
+  border: none;
+  display: flex;
+  flex-flow: column;
+  font-size: 1rem;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  max-width: 100%;
+  padding: 0.5rem;
+  width: fit-content;
+}
+
+.input_label_text {
+  margin-left: 0.5rem;
+}
+
+.input_label_side {
+  align-items: flex-start;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 1rem;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  max-width: 100%;
+  padding: 0.5rem;
+  width: fit-content;
+}
+
+.input_label_side_text {
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+
+/* ***** */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
