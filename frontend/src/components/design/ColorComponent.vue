@@ -137,4 +137,34 @@ export default {
   color: var(--danger_stronger);
 }
 
+/* Success */
+.class_success_darker {
+  background-color: var(--success_darker);
+  color: var(--success_white);
+}
+.class_success_dark {
+  background-color: var(--success_dark);
+  color: var(--success_white);
+}
+.class_success_stronger {
+  background-color: var(--success_stronger);
+  color: var(--success_white);
+}
+.class_success_strong {
+  background-color: var(--success_strong);
+  color: var(--success_white);
+}
+.class_success_light {
+  background-color: var(--success_light);
+  color: var(--smooth_black);
+}
+.class_success_lighter {
+  background-color: var(--success_lighter);
+  color: var(--success_stronger);
+}
+.class_success_white {
+  background-color: var(--success_white);
+  color: var(--success_stronger);
+}
+
 </style>

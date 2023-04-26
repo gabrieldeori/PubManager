@@ -44,6 +44,15 @@
   --danger_light: #FF6B57;
   --danger_lighter: #FFAA9E;
   --danger_white: #FFD8D2;
+
+  /* Success */
+  --success_darker: #005806;
+  --success_dark: #047700;
+  --success_stronger: #00ad00;
+  --success_strong: #00c500;
+  --success_light: #6eff6e;
+  --success_lighter: #c7ffc7;
+  --success_white: #d9ffd9;
 }
 
 /* Input Defaults */

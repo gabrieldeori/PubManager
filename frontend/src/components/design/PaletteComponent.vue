@@ -28,6 +28,13 @@
         :propColor="class_color"
       />
     </div>
+    <div class='palette_component'>
+      <ColorComponent
+        v-for="(class_color, index) in classesColorSuccess"
+        v-bind:key="index"
+        :propColor="class_color"
+      />
+    </div>
   </div>
 </template>
 
@@ -75,6 +82,15 @@ export default {
         'class_danger_light',
         'class_danger_lighter',
         'class_danger_white',
+      ],
+      classesColorSuccess: [
+        'class_success_darker',
+        'class_success_dark',
+        'class_success_stronger',
+        'class_success_strong',
+        'class_success_light',
+        'class_success_lighter',
+        'class_success_white',
       ],
     };
   },

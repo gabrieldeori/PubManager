@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Helpers\Error_Handlers;
 use App\Helpers\Response_Handlers;
-use App\Helpers\ERR;
+use App\Helpers\MSG;
 
 class clientsController extends Controller
 {
@@ -14,13 +14,17 @@ class clientsController extends Controller
   {
     try {
         $clients = Client::all()->toArray();
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_FOUND, $clients);
-        return response()->json($response);
+        if (count($clients) == 0) {
+            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_NOT_FOUND, $clients);
+        } else {
+            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, $clients);
+        }
+        return response()->json($clients);
     } catch (\Exception $e) {
         $error = $e->getMessage();
-        Error_Handlers::logError(ERR::CLIENTS_NOT_FOUND, $error);
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_NOT_FOUND, ['error'=>$error]);
-        return response()->json($response, ERR::NOT_FOUND);
+        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
+        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+        return response()->json($response, MSG::NOT_FOUND);
     }
   }
 
@@ -33,13 +37,13 @@ class clientsController extends Controller
         {
             Client::create([ "name" => $client["name"]]);
         }
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_CREATED);
-        return response()->json($response, ERR::CREATED);
+        $response = Response_Handlers::setAndRespond(MSG::CLIENTS_CREATED);
+        return response()->json($response, MSG::CREATED);
     } catch (\Exception $e) {
         $error = $e->getMessage();
-        Error_Handlers::logError(ERR::CLIENTS_NOT_FOUND, $error);
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_NOT_FOUND, ['error'=>$error]);
-        return response()->json($response, ERR::INTERNAL_SERVER_ERROR);
+        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
+        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+        return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -48,13 +52,13 @@ class clientsController extends Controller
     try {
         $clientsIds = $request->all();
         Client::destroy($clientsIds);
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_DELETED);
-        return response()->json($response, ERR::ACCEPTED);
+        $response = Response_Handlers::setAndRespond(MSG::CLIENTS_DELETED);
+        return response()->json($response, MSG::ACCEPTED);
     } catch (\Exception $e) {
         $error = $e->getMessage();
-        Error_Handlers::logError(ERR::CLIENTS_NOT_FOUND, $error);
-        $response = Response_Handlers::setAndRespond(ERR::CLIENTS_NOT_FOUND, ['error'=>$error]);
-        return response()->json($response, ERR::INTERNAL_SERVER_ERROR);
+        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
+        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+        return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
 }

@@ -1,12 +1,20 @@
 <!-- view to see the client list registered on db -->
 <template>
   <section>
+    <BaseError
+      v-if="errorMessage"
+      v-bind:errorMessage="errorMessage"
+    />
+    <BaseSuccess
+      v-i="!errorMessage && successMessage"
+      v-bind:successMessage="successMessage"
+    />
     <h1>CLIENTS</h1>
     <BaseTableJSON
       v-bind:table_title="'Clients'"
       v-bind:table_data="responseClients"
     />
-</section>
+  </section>
 </template>
 
 <script>
@@ -17,7 +25,8 @@ export default {
   name: 'ClientsTable',
   data() {
     return {
-      responseMessage: '',
+      errorMessage: {},
+      successMessage: '',
       responseClients: [],
     };
   },
@@ -28,8 +37,11 @@ export default {
     getClients() {
       axios.get('http://127.0.0.1:8000/api/clients/show')
         .then((response) => {
-          this.responseMessage = response.data.message;
+          this.successMessage = response.data.message;
           this.responseClients = response.data.payload;
+        })
+        .catch((error) => {
+          this.errorMessage = error;
         });
     },
   },
