@@ -2,7 +2,7 @@
   <label class="input_label" :for="'id_' + name">
     <div class="input_label_text">{{ label }}</div>
     <div class="input_area">
-      <img class="input_icon" src="" alt="">
+      <img class="input_icon" :src="src" alt="">
       <input
         :class="'input_tag '"
         :id="'id_' + name"
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import iconDefault from '@/assets/icons/icon_default.svg';
+
 export default {
   name: 'BaseInput',
   props: {
@@ -49,7 +51,7 @@ export default {
     },
     src: {
       type: String,
-      default: '',
+      default: iconDefault,
     },
     required: {
       type: Boolean,
