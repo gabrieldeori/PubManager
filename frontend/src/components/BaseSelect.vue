@@ -53,7 +53,7 @@ export default {
   border: 0.1rem solid var(--grey_2);
   border-radius: 0.2rem;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .input_select:focus {

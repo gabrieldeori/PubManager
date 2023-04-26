@@ -50,6 +50,7 @@
 .input_label {
   align-items: flex-start;
   border: none;
+  color: var(--smooth_black);
   display: flex;
   flex-flow: column;
   font-size: 1rem;
@@ -65,13 +66,14 @@
 }
 
 .input_label_side {
-  align-items: flex-start;
+  align-items: center;
   border: none;
+  color: var(--smooth_black);
   cursor: pointer;
   display: flex;
   flex-flow: row wrap;
   font-size: 1rem;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 0.25rem;
   max-width: 100%;
   padding: 0.5rem;
