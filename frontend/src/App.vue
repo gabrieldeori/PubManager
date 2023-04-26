@@ -135,6 +135,15 @@ th, td {
   margin: 0;
 }
 
+/* SPECIAL */
+.flex_lateral {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
 /* Buttons */
 /* Base */
 .base_button {
