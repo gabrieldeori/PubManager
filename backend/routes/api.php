@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 use App\Http\Controllers\ClientsController;
 Route::get('/clients/show', [ClientsController::class, 'getClients']);
+Route::post('/client/register', [ClientsController::class, 'createClients']);

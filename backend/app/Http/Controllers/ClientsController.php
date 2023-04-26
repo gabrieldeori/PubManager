@@ -13,10 +13,11 @@ class clientsController extends Controller
     return response()->json($clients);
   }
 
-  public function createClient(Request $request)
+  public function createClients(Request $request)
   {
+    // Pegar request aqui
     $client = Client::create([
-      'name' => $request->name,
+      'name' => 'John Doe',
     ]);
     return response()->json($client);
   }
