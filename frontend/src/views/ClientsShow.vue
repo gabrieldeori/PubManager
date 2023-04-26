@@ -4,7 +4,7 @@
     <h1>CLIENTS</h1>
     <BaseTableJSON
       v-bind:table_title="'Clients'"
-      v-bind:table_data="clients"
+      v-bind:table_data="responseClients"
     />
 </section>
 </template>
@@ -17,7 +17,8 @@ export default {
   name: 'ClientsTable',
   data() {
     return {
-      clients: [],
+      responseMessage: '',
+      responseClients: [],
     };
   },
   components: {
@@ -27,7 +28,8 @@ export default {
     getClients() {
       axios.get('http://127.0.0.1:8000/api/clients/show')
         .then((response) => {
-          this.clients = response.data;
+          this.responseMessage = response.data.message;
+          this.responseClients = response.data.payload;
         });
     },
   },
