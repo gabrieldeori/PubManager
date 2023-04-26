@@ -4,10 +4,8 @@
     <div>
       <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
-        <!-- Preview Area -->
         <BasePreview v-if="editId !== index" @click="editInsertion(index)" :preview="insertion" />
 
-        <!-- Edit Area Diferente pra cada Register -->
         <div v-if="editId === index">
           <BaseInput
             v-model="toEdit.name"
@@ -24,19 +22,9 @@
       </div>
     </div>
 
-    <!-- Nova inserção, pode ser no pai -->
     <button class='base_button button_primary invert' @click="newInsertion">
       + Adicionar outra linha
     </button>
-
-    <!-- Apenas Preview Dos dados -->
-    <section>
-      <pre>
-        editId: {{ editId }}
-        insertionList: {{ insertionList }}
-        toEdit: {{ toEdit }}
-      </pre>
-    </section>
   </section>
 </template>
 
