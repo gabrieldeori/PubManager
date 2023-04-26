@@ -15,10 +15,13 @@ class clientsController extends Controller
 
   public function createClients(Request $request)
   {
-    // Pegar request aqui
-    $client = Client::create([
-      'name' => 'John Doe',
-    ]);
-    return response()->json($client);
+    $clients = $request->all();
+
+    foreach ($clients as $client) {
+        Client::create([
+            "name" => $client["name"],
+        ]);
+    }
+    return response()->json($clients);
   }
 }
