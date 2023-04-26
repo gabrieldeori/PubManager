@@ -1,33 +1,35 @@
 <template>
-  <table class="table_field">
-    <caption>{{ data.title }}</caption>
-    <thead>
-      <tr
-        v-for="tHeadRow, thri in data.cabecalho"
-        v-bind:key="'key_tHeadRow_' + thri"
-      >
-        <th
-          v-for="tHeadData, thdi in tHeadRow"
-          v-bind:key="'key_tHeadData_' + thdi"
+  <div class="table_wrapper">
+    <table class="table_field">
+      <caption>{{ data.title }}</caption>
+      <thead>
+        <tr
+          v-for="tHeadRow, thri in data.cabecalho"
+          v-bind:key="'key_tHeadRow_' + thri"
         >
-          {{ tHeadData }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="tBodyRow, tbri in data.corpo"
-        v-bind:key="'key_tBodyRow_' + tbri"
-      >
-        <td
-          v-for="tBodyData, tbdi in tBodyRow"
-          v-bind:key="'key_tBodyData_' + tbdi"
+          <th
+            v-for="tHeadData, thdi in tHeadRow"
+            v-bind:key="'key_tHeadData_' + thdi"
+          >
+            {{ tHeadData }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="tBodyRow, tbri in data.corpo"
+          v-bind:key="'key_tBodyRow_' + tbri"
         >
-          {{ tBodyData }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td
+            v-for="tBodyData, tbdi in tBodyRow"
+            v-bind:key="'key_tBodyData_' + tbdi"
+          >
+            {{ tBodyData }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>

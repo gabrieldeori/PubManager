@@ -127,6 +127,12 @@ table {
   background-color: var(--smooth_white);
   border: 0.1rem solid var(--primary_stronger);
   border-collapse: collapse;
+  width: fit-content;
+}
+
+.table_wrapper {
+  max-width: 100%;
+  overflow: scroll;
 }
 
 th, td {

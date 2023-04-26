@@ -1,30 +1,32 @@
 <template>
-  <table class="table_field">
-    <caption>{{ table_title }}</caption>
-    <thead>
-      <tr>
-        <th
-          v-for="tHeadData, thdi in Object.keys(getHeadersForTable())"
-          v-bind:key="'key_tHeadData_' + thdi"
+  <div class="table_wrapper">
+    <table class="table_field">
+      <caption>{{ table_title }}</caption>
+      <thead>
+        <tr>
+          <th
+            v-for="tHeadData, thdi in Object.keys(getHeadersForTable())"
+            v-bind:key="'key_tHeadData_' + thdi"
+          >
+            {{ tHeadData }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="tBodyRow, tbri in table_data"
+          v-bind:key="'key_tBodyRow_' + tbri"
         >
-          {{ tHeadData }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="tBodyRow, tbri in table_data"
-        v-bind:key="'key_tBodyRow_' + tbri"
-      >
-        <td
-          v-for="tBodyData, tbdi in Object.values(tBodyRow)"
-          v-bind:key="'key_tBodyData_' + tbdi"
-        >
-          {{ tBodyData }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td
+            v-for="tBodyData, tbdi in Object.values(tBodyRow)"
+            v-bind:key="'key_tBodyData_' + tbdi"
+          >
+            {{ tBodyData }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
