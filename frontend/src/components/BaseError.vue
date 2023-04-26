@@ -1,13 +1,7 @@
 <template>
   <div>
-    <h2 v-if="errorMessage.response"
-      class="error_title">
-        {{ errorMessage.response.data.message }}
-      </h2>
-    <p
-      v-if="errorMessage.response"
-      class="error_text">{{ errorMessage.response.data.payload.error }}
-    </p>
+    <h2 class="error_title">{{ errorMessage.response.data.message }}</h2>
+    <p class="error_text">{{ errorMessage.response.data.payload.error }}</p>
   </div>
 </template>
 

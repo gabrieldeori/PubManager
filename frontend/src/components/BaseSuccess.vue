@@ -9,7 +9,7 @@ export default {
   name: 'BaseError',
   props: {
     successMessage: {
-      type: Object,
+      type: String,
       required: true,
     },
   },

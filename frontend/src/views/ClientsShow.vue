@@ -2,11 +2,11 @@
 <template>
   <section>
     <BaseError
-      v-if="errorMessage"
+      v-if="errorMessage.data"
       v-bind:errorMessage="errorMessage"
     />
     <BaseSuccess
-      v-i="!errorMessage && successMessage"
+      v-if="!errorMessage.data && successMessage"
       v-bind:successMessage="successMessage"
     />
     <h1>CLIENTS</h1>
