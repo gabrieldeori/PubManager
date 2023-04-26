@@ -1,23 +1,25 @@
 <template>
-  <button
-    class='base_button button_primary invert'
-    @click="saveInsertion"
-  >
-    Registrar
-  </button>
+  <div class="flex_horizontal">
+    <button
+      class='base_button button_primary invert'
+      @click="saveInsertion"
+    >
+      Registrar
+    </button>
 
-  <button
-    class='base_button button_danger invert'
-    @click="cancelInsertion"
-  >
-    Cancelar
-  </button>
-  <button
-    class='base_button button_danger'
-    @click="deleteInsertion"
-  >
-    Deletar
-  </button>
+    <button
+      class='base_button button_danger invert'
+      @click="cancelInsertion"
+    >
+      Cancelar
+    </button>
+    <button
+      class='base_button button_danger'
+      @click="deleteInsertion"
+    >
+      Deletar
+    </button>
+  </div>
 </template>
 
 <script>
