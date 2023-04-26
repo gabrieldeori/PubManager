@@ -147,7 +147,7 @@ th, td {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.2rem;
 }
 
 .flex_vertical {
@@ -162,14 +162,15 @@ th, td {
 /* Base */
 .base_button {
   background-color: var(--black);
-  border: 0.15rem solid var(--black);
-  border-radius: 0.5rem;
+  border: 0.1rem solid var(--black);
+  border-radius: 0.3rem;
   color: var(--white);
   display: flex;
   gap: 1rem;
-  font-size: 1.5rem;
-  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  padding: 0.3rem 1rem;
 }
+
 .button_black {
   background-color: var(--black);
   border-color: var(--black);
