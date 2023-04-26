@@ -136,10 +136,18 @@ th, td {
 }
 
 /* SPECIAL */
-.flex_lateral {
+.flex_horizontal {
   align-items: center;
   display: flex;
   flex-flow: row wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.flex_vertical {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
   justify-content: center;
   gap: 1rem;
 }

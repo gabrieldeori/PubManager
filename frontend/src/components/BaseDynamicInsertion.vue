@@ -1,31 +1,36 @@
 <template>
-  <section>
-    <h1>Registrar Cliente</h1>
-    <div>
-      <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
+  <div>
+    <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
-        <!-- Preview Area -->
-        <BasePreview v-if="editId !== index" @click="editInsertion(index)" :preview="insertion" />
+      <!-- Preview Area -->
+      <BasePreview v-if="editId !== index" @click="editInsertion(index)" :preview="insertion"/>
 
-        <!-- Edit Area Diferente pra cada Register -->
-        <div v-if="editId === index">
-          <BaseInput
-            v-model="toEdit.name"
-            label='Nome'
-            type='text'
-            placeholder='Apenas letras e espaços'
-            required />
-        </div>
+      <!-- Edit Area Diferente pra cada Register -->
+      <div v-if="editId === index">
+        <BaseInput
+          v-model="toEdit.name"
+          label='Nome'
+          type='text'
+          placeholder='Apenas letras e espaços'
+          required
+        />
+      </div>
 
-        <div v-show="editId === index" class="flex_horizontal">
-          <BaseEditButtons @deleteEmit="deleteInsertion(index)" @cancelEmit="cancelInsertion()"
-            @saveEmit="saveInsertion(index)" />
-        </div>
+      <div v-show="editId === index" class="flex_horizontal">
+        <BaseEditButtons
+          @deleteEmit="deleteInsertion(index)"
+          @cancelEmit="cancelInsertion()"
+          @saveEmit="saveInsertion(index)"
+        />
       </div>
     </div>
+  </div>
 
-    <!-- Nova inserção, pode ser no pai -->
-    <button class='base_button button_primary invert' @click="newInsertion">
+  <!-- Nova inserção, pode ser no pai -->
+  <button
+      class='base_button button_primary invert'
+      @click="newInsertion"
+    >
       + Adicionar outra linha
     </button>
 
@@ -37,12 +42,11 @@
         toEdit: {{ toEdit }}
       </pre>
     </section>
-  </section>
 </template>
 
 <script>
 export default {
-  name: 'ClientRegister',
+  name: 'BaseDynamicInsertion',
   data() {
     return {
       editId: -1,
