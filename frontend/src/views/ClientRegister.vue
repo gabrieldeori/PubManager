@@ -83,8 +83,8 @@ export default {
 
     saveInsertion(index) {
       this.insertionList[index] = { ...this.toEdit };
-      this.editId = -1;
       this.toEdit = {};
+      this.editId = -1;
     },
 
     cancelInsertion() {
@@ -94,6 +94,7 @@ export default {
 
     deleteInsertion(index) {
       this.insertionList.splice(index, 1);
+      this.toEdit = {};
       this.editId = -1;
     },
   },
