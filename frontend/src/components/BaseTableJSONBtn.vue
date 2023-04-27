@@ -23,22 +23,6 @@
           >
             {{ tBodyData }}
           </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_highlight"
-              @click="updateClient(tBodyRow.id)"
-              >
-                Atualizar
-              </button>
-          </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_danger"
-              @click="deleteClient(tBodyRow.id)"
-            >
-              Deletar
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -47,9 +31,9 @@
 
 <script>
 export default {
-  name: 'BaseTableJSON',
+  name: 'BaseTableJSONBtn',
   props: {
-    is_crud: {
+    crud_table: {
       type: Boolean,
       default: false,
     },
@@ -93,16 +77,6 @@ export default {
         },
         {},
       );
-    },
-    updateClient(id) {
-      window.alert(`Atualizar o cliente com id: ${id}`);
-      this.$emit('updateEmit', id);
-    },
-    deleteClient(id) {
-      const confirmed = window.confirm(`Tem certeza que deseja deletar o cliente com id ${id}?`);
-      if (confirmed) {
-        this.$emit('deleteEmit', id);
-      }
     },
   },
 };

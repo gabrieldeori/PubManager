@@ -3,16 +3,19 @@
   <section>
     <BaseError
       v-if="errorMessage.data"
-      v-bind:errorMessage="errorMessage"
+      :errorMessage="errorMessage"
     />
     <BaseSuccess
       v-if="!errorMessage.data && successMessage"
-      v-bind:successMessage="successMessage"
+      :successMessage="successMessage"
     />
     <h1>CLIENTS</h1>
     <BaseTableJSON
-      v-bind:table_title="'Clients'"
-      v-bind:table_data="responseClients"
+      :table_title="'Clients'"
+      :table_data="responseClients"
+      :is_crud="true"
+      @updateEmit="updateClient"
+      @deleteEmit="deleteClient"
     />
   </section>
 </template>
@@ -43,6 +46,19 @@ export default {
         .catch((error) => {
           this.errorMessage = error;
         });
+    },
+    deleteClient(id) {
+      axios.delete('http://localhost:8000/api/client/delete', { data: { id } })
+        .then(() => {
+          alert('Cliente deletado com sucesso!');
+          this.$router.go();
+        })
+        .catch(() => {
+          alert('Erro ao deletar cliente!');
+        });
+    },
+    updateClient(id) {
+      this.$router.push(`/client/update/${id}`);
     },
   },
   mounted() {

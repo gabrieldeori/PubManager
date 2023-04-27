@@ -47,12 +47,16 @@ class clientsController extends Controller
     }
   }
 
-  public function deleteClients(Request $request)
+  public function editAClient(Request $request)
   {
     try {
-        $clientsIds = $request->all();
-        Client::destroy($clientsIds);
-        $response = Response_Handlers::setAndRespond(MSG::CLIENTS_DELETED);
+        $client = Client::find($request->id);
+        if ($client == null) {
+            $response = Response_Handlers::setAndRespond(MSG::CLIENT_NOT_FOUND);
+            return response()->json($response, MSG::NOT_FOUND);
+        }
+        $client->update($request->all());
+        $response = Response_Handlers::setAndRespond(MSG::CLIENT_UPDATED);
         return response()->json($response, MSG::ACCEPTED);
     } catch (\Exception $e) {
         $error = $e->getMessage();
@@ -61,4 +65,23 @@ class clientsController extends Controller
         return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
+
+    public function deleteAClient(Request $request)
+    {
+        try {
+            $client = Client::find($request->id);
+            if ($client == null) {
+                $response = Response_Handlers::setAndRespond(MSG::CLIENT_NOT_FOUND);
+                return response()->json($response, MSG::NOT_FOUND);
+            }
+            $client->delete();
+            $response = Response_Handlers::setAndRespond(MSG::CLIENTS_DELETED);
+            return response()->json($response, MSG::ACCEPTED);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+            Error_Handlers::logError(MSG::SERVER_ERROR, $error);
+            $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
 }
