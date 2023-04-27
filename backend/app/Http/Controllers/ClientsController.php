@@ -28,6 +28,25 @@ class clientsController extends Controller
     }
   }
 
+  public function getAClient(Request $request)
+  {
+    try {
+        $id = $request->all()['id'];
+        $client = Client::find($id);
+        if ($client == null) {
+            $response = Response_Handlers::setAndRespond(MSG::CLIENT_NOT_FOUND);
+            return response()->json($response, MSG::NOT_FOUND);
+        }
+        $response = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, ['client' => $client]);
+        return response()->json($response);
+    } catch (\Exception $e) {
+        $error = $e->getMessage();
+        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
+        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+        return response()->json($response, MSG::NOT_FOUND);
+    }
+  }
+
   public function createClients(Request $request)
   {
     try {
@@ -50,12 +69,14 @@ class clientsController extends Controller
   public function editAClient(Request $request)
   {
     try {
-        $client = Client::find($request->id);
+        $toUpdate = $request->all();
+        $client = Client::find($toUpdate['id']);
         if ($client == null) {
             $response = Response_Handlers::setAndRespond(MSG::CLIENT_NOT_FOUND);
             return response()->json($response, MSG::NOT_FOUND);
         }
-        $client->update($request->all());
+        $client->name = $toUpdate['name'];
+        $client->save();
         $response = Response_Handlers::setAndRespond(MSG::CLIENT_UPDATED);
         return response()->json($response, MSG::ACCEPTED);
     } catch (\Exception $e) {

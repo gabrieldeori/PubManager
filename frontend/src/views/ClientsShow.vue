@@ -48,17 +48,20 @@ export default {
         });
     },
     deleteClient(id) {
-      axios.delete('http://localhost:8000/api/client/delete', { data: { id } })
-        .then(() => {
-          alert('Cliente deletado com sucesso!');
-          this.$router.go();
-        })
-        .catch(() => {
-          alert('Erro ao deletar cliente!');
-        });
+      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
+      if (confirmed) {
+        axios.delete('http://localhost:8000/api/client/delete', { data: { id } })
+          .then(() => {
+            alert('Cliente deletado com sucesso!');
+            this.$router.go();
+          })
+          .catch(() => {
+            alert('Erro ao deletar cliente!');
+          });
+      }
     },
     updateClient(id) {
-      this.$router.push(`/client/update/${id}`);
+      this.$router.push(`/client/${id}`);
     },
   },
   mounted() {

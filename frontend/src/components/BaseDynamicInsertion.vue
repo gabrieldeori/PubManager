@@ -50,34 +50,15 @@ export default {
   data() {
     return {
       editId: -1,
-      insertionList: [
-        {
-          name: 'Name Teste',
-          email: 'Email Teste',
-          phone: 'Phone Teste',
-        },
-        {
-          name: 'Name Teste 2',
-          email: 'Email Teste 2',
-          phone: 'Phone Teste 2',
-        },
-      ],
+      insertionList: [],
       toEdit: {},
     };
   },
   methods: {
     newInsertion() {
       this.editId = this.insertionList.length;
-      this.toEdit = {
-        name: '',
-        email: '',
-        phone: '',
-      };
-      this.insertionList.push({
-        name: '',
-        email: '',
-        phone: '',
-      });
+      this.toEdit = { name: '' };
+      this.insertionList.push({ name: '' });
     },
 
     editInsertion(index) {

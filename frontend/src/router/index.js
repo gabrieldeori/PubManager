@@ -19,6 +19,11 @@ const routes = [
     name: 'ClientsShow',
     component: () => import('../views/ClientsShow.vue'),
   },
+  {
+    path: '/client/:id',
+    name: 'ClientEdit',
+    component: () => import('../views/ClientEdit.vue'),
+  },
 ];
 
 const router = createRouter({

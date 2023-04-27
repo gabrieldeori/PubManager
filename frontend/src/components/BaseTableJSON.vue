@@ -26,7 +26,7 @@
           <td v-if="is_crud">
             <button
               class="base_button button_highlight"
-              @click="updateClient(tBodyRow.id)"
+              @click="updateEmit(tBodyRow.id)"
               >
                 Atualizar
               </button>
@@ -34,7 +34,7 @@
           <td v-if="is_crud">
             <button
               class="base_button button_danger"
-              @click="deleteClient(tBodyRow.id)"
+              @click="deleteEmit(tBodyRow.id)"
             >
               Deletar
             </button>
@@ -94,15 +94,11 @@ export default {
         {},
       );
     },
-    updateClient(id) {
-      window.alert(`Atualizar o cliente com id: ${id}`);
+    updateEmit(id) {
       this.$emit('updateEmit', id);
     },
-    deleteClient(id) {
-      const confirmed = window.confirm(`Tem certeza que deseja deletar o cliente com id ${id}?`);
-      if (confirmed) {
-        this.$emit('deleteEmit', id);
-      }
+    deleteEmit(id) {
+      this.$emit('deleteEmit', id);
     },
   },
 };
