@@ -2,11 +2,11 @@
 <template>
   <section>
     <BaseError
-      v-if="errorMessage.data"
-      :errorMessage="errorMessage"
+      v-if="errorData"
+      :errorData="errorData"
     />
     <BaseSuccess
-      v-if="!errorMessage.data && successMessage"
+      v-if="!errorData && successMessage"
       :successMessage="successMessage"
     />
     <h1>CLIENTS</h1>
@@ -28,7 +28,7 @@ export default {
   name: 'ClientsTable',
   data() {
     return {
-      errorMessage: {},
+      errorData: {},
       successMessage: '',
       responseClients: [],
     };
@@ -44,7 +44,7 @@ export default {
           this.responseClients = response.data.payload;
         })
         .catch((error) => {
-          this.errorMessage = error;
+          this.errorData = error;
         });
     },
     deleteClient(id) {

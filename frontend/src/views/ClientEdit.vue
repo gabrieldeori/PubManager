@@ -1,6 +1,12 @@
 <template>
   <section>
     <h1>Editar Cliente</h1>
+
+    <BaseError
+      v-if="errorData"
+      :errorData="errorData"
+    />
+
     <div v-if="toEdit !== null">
       <h3>{{ toEdit.id }} - {{ toEdit.name }}</h3>
 
@@ -19,7 +25,7 @@
         class="base_button button_primary"
         @click="editClient()"
         >
-          Cadastrar
+          Atualizar
       </button>
       <button
         class="base_button button_danger invert"
@@ -39,6 +45,7 @@ export default {
   data() {
     return {
       toEdit: null,
+      errorData: null,
     };
   },
   methods: {
@@ -48,18 +55,19 @@ export default {
         const { data } = await axios.get('http://localhost:8000/api/client', { params: payload });
         this.toEdit = data.payload.client;
       } catch (error) {
-        console.log(error.response.data);
+        this.errorData = error;
       }
     },
     async editClient() {
-      const confirmed = window.confirm('Deseja realmente editar este cliente?');
+      const confirmed = window.confirm('Deseja realmente atualizar este cliente?');
       if (confirmed) {
         const payload = { ...this.toEdit };
         try {
           const { data } = await axios.put('http://localhost:8000/api/client/edit', payload);
           window.alert(data.message);
+          this.$router.push('/clients/show');
         } catch (error) {
-          console.log(error.response.data);
+          window.alert(error.response.data.message);
         }
       }
     },

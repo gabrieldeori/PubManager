@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 class="error_title">{{ errorMessage.response.data.message }}</h2>
-    <p class="error_text">{{ errorMessage.response.data.payload.error }}</p>
+    <h2 class="error_title">{{ errorData.response.data.message }}</h2>
+    <p class="error_text">{{ errorData.response.data.payload.error }}</p>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 export default {
   name: 'BaseError',
   props: {
-    errorMessage: {
+    errorData: {
       type: Object,
       required: true,
     },
