@@ -5,10 +5,6 @@
       v-if="errorData"
       :errorData="errorData"
     />
-    <BaseSuccess
-      v-if="!errorData && successMessage"
-      :successMessage="successMessage"
-    />
     <h1>CLIENTS</h1>
     <BaseTableJSON
       :table_title="'Clients'"
@@ -28,8 +24,7 @@ export default {
   name: 'ClientsTable',
   data() {
     return {
-      errorData: {},
-      successMessage: '',
+      errorData: null,
       responseClients: [],
     };
   },
@@ -40,7 +35,6 @@ export default {
     getClients() {
       axios.get('http://127.0.0.1:8000/api/clients/show')
         .then((response) => {
-          this.successMessage = response.data.message;
           this.responseClients = response.data.payload;
         })
         .catch((error) => {

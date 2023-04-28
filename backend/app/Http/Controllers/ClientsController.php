@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Exception;
 use App\Models\Client;
 use App\Helpers\Error_Handlers;
 use App\Helpers\Response_Handlers;
@@ -15,7 +16,7 @@ class clientsController extends Controller
     try {
         $clients = Client::all()->toArray();
         if (count($clients) == 0) {
-            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_NOT_FOUND, $clients);
+            throw new Exception(MSG::CLIENTS_NOT_FOUND);
         } else {
             $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, $clients);
         }
