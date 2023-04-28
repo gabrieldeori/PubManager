@@ -9,10 +9,10 @@
         public const CLIENTS_NOT_FOUND = "Nenhum cliente encontrado";
         public const CLIENT_NOT_FOUND = "Cliente não encontrado";
         public const CLIENT_UPDATED = "Cliente atualizado";
-
         public const CLIENT_NOT_UPDATED = "Cliente não atualizado";
         public const CLIENTS_DELETED = "Clientes deletados";
         public const CLIENTS_NOT_DELETED = "Clientes não deletados";
+        public const CLIENTS_INVALID_FORMAT = "Formato inválido para clientes";
 
         public const SERVER_ERROR = "Erro no servidor";
 
@@ -21,5 +21,6 @@
         public const CREATED = 201;
         public const ACCEPTED = 202;
         public const INTERNAL_SERVER_ERROR = 500;
+        public const BAD_REQUEST = 400;
     }
 ?>

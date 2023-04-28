@@ -52,6 +52,19 @@ class clientsController extends Controller
   {
     try {
         $clients = $request->all();
+        if (count($clients) == 0 || !isset($clients[0])) {
+            $response = Response_Handlers::setAndRespond(MSG::CLIENTS_NOT_CREATED);
+            return response()->json($response, MSG::BAD_REQUEST);
+        }
+
+        foreach ($clients as $client)
+        {
+            if (!preg_match("/^[a-zA-Z ]*$/", $client["name"])) {
+                $response = Response_Handlers::setAndRespond(MSG::CLIENTS_INVALID_FORMAT);
+                return response()->json($response, MSG::BAD_REQUEST);
+            }
+        }
+
 
         foreach ($clients as $client)
         {
