@@ -2,6 +2,7 @@
   <section>
     <form @submit.prevent="SubmitClients">
       <h1>Registrar Cliente</h1>
+      <p v-if="insertionList.length === 0">Insira ao menos um cliente</p>
       <div>
         <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
@@ -13,13 +14,17 @@
               label='Nome'
               type='text'
               placeholder='Apenas letras e espaços'
-              required />
+              :required="true"
+            />
           </div>
 
-          <div v-show="editId === index" class="flex_horizontal">
-            <BaseEditButtons @deleteEmit="deleteInsertion(index)" @cancelEmit="cancelInsertion()"
-              @saveEmit="saveInsertion(index)" />
-          </div>
+          <BaseEditButtons
+            v-show="editId === index"
+            @deleteEmit="deleteInsertion(index)"
+            @cancelEmit="cancelInsertion(index)"
+            @saveEmit="saveInsertion(index)"
+          />
+
         </div>
       </div>
 
@@ -62,12 +67,22 @@ export default {
     },
 
     saveInsertion(index) {
+      if (this.toEdit.name === '') {
+        window.alert('Insira um nome válido');
+        return;
+      }
       this.insertionList[index] = { ...this.toEdit };
       this.toEdit = {};
       this.editId = -1;
     },
 
-    cancelInsertion() {
+    cancelInsertion(index) {
+      if (this.insertionList[index].name === '') {
+        this.insertionList.splice(index, 1);
+        this.toEdit = {};
+        this.editId = -1;
+        return;
+      }
       this.toEdit = {};
       this.editId = -1;
     },
@@ -77,8 +92,11 @@ export default {
       this.toEdit = {};
       this.editId = -1;
     },
+    invalidNameOnArray() {
+      return this.insertionList.some((insertion) => insertion.name === '');
+    },
     SubmitClients() {
-      if (this.insertionList.length > 0) {
+      if (this.insertionList.length > 0 && !this.invalidNameOnArray()) {
         const confirmed = window.confirm('Tem certeza que deseja salvar?');
         if (confirmed) {
           axios.post('http://localhost:8000/api/client/register', this.insertionList)
@@ -92,7 +110,7 @@ export default {
             });
         }
       } else {
-        window.alert('Insira pelo menos um cliente');
+        window.alert('Insira clientes válidos');
       }
     },
   },
