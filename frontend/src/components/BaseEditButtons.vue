@@ -30,22 +30,13 @@ export default {
   name: 'BaseEditButtons',
   methods: {
     saveInsertion() {
-      const confirmed = window.confirm('Tem certeza que deseja salvar?');
-      if (confirmed) {
-        this.$emit('saveEmit');
-      }
+      this.$emit('saveEmit');
     },
     cancelInsertion() {
-      const confirmed = window.confirm('Tem certeza que deseja cancelar?');
-      if (confirmed) {
-        this.$emit('cancelEmit');
-      }
+      this.$emit('cancelEmit');
     },
     deleteInsertion() {
-      const confirmed = window.confirm('Tem certeza que deseja deletar?');
-      if (confirmed) {
-        this.$emit('deleteEmit');
-      }
+      this.$emit('deleteEmit');
     },
   },
 };
