@@ -1,4 +1,3 @@
-<!-- view to see the client list registered on db -->
 <template>
   <section>
     <BaseError

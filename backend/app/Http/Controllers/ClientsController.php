@@ -59,7 +59,7 @@ class clientsController extends Controller
 
         foreach ($clients as $client)
         {
-            if (!preg_match("/^[a-zA-Z ]*$/", $client["name"])) {
+            if (!preg_match("/^[a-zA-ZÀ-ÿ\s]+$/", $client["name"])) {
                 $response = Response_Handlers::setAndRespond(MSG::CLIENTS_INVALID_FORMAT);
                 return response()->json($response, MSG::BAD_REQUEST);
             }
