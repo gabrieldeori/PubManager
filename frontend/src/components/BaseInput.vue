@@ -1,7 +1,12 @@
 <template>
-  <label class="input_label" :for="'id_' + name">
+  <label
+    class="input_label"
+    :for="'id_' + name"
+  >
     <div class="input_label_text">{{ label }}</div>
-    <div class="input_area">
+    <div
+      :class="['input_area', componentClass, { error: error }]"
+    >
       <img class="input_icon" :src="src" alt="">
       <input
         :class="'input_tag '"
@@ -100,7 +105,7 @@ export default {
 }
 
 .input_area.error {
-  border: 0.1rem solid var(--danger_stronger);
+  border: 0.2rem solid var(--danger_stronger);
   color: var(--danger_stronger);
 }
 
