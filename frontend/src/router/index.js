@@ -24,6 +24,11 @@ const routes = [
     name: 'ClientEdit',
     component: () => import('../views/ClientEdit.vue'),
   },
+  {
+    path: '/user/register',
+    name: 'UserRegister',
+    component: () => import('../views/UserRegister.vue'),
+  },
 ];
 
 const router = createRouter({

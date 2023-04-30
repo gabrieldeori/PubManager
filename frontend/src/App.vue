@@ -3,6 +3,7 @@
     | <router-link to="/">Home Components</router-link> |
     <router-link to="/client/register">Registrar Cliente</router-link> |
     <router-link to="/clients/show">Clientes Registrados</router-link> |
+    <router-link to="/user/register">Registrar Usuário</router-link> |
   </nav>
   <router-view/>
 </template>
