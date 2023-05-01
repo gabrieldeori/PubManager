@@ -50,7 +50,21 @@ class AvaController extends Controller
     public function createUser(Request $request)
     {
         try {
+            $validated = $request->validate([
+                'name' => 'required|min:3|max:255|regex:/^[a-zA-ZÀ-ÿ\s]+$/',
+                'nickname' => 'required|min:3|max:45|regex:/^[a-zA-Z]+$/',
+                'email' => 'required|email',
+                'password' => 'nullable|min:6|max:255',
+                'userType' => 'required|in:Nenhum,Admin',
+            ], MSG::USER_VALIDATE);
+
             $toCreate = $request->all();
+
+            if (!$validated) {
+                $response = Response_Handlers::setAndRespond(MSG::INVALID_DATA);
+                return response()->json($response, MSG::NOT_FOUND);
+            }
+
             User::create([
                 'name' => $toCreate['name'],
                 'nickname' => $toCreate['nickname'],
