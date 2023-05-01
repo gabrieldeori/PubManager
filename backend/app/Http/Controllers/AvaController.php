@@ -73,18 +73,46 @@ class AvaController extends Controller
         try {
             $toUpdate = $request->all();
             $user = User::find($toUpdate['id']);
+
             if ($user == null) {
                 $response = Response_Handlers::setAndRespond(MSG::CLIENT_NOT_FOUND);
                 return response()->json($response, MSG::NOT_FOUND);
             }
+
+            $validated = $request->validate([
+                'name' => 'required|min:3|max:255|regex:/^[a-zA-ZÀ-ÿ\s]+$/',
+                'nickname' => 'required|min:3|max:45|regex:/^[a-zA-Z]+$/',
+                'email' => 'required|email',
+                'password' => 'nullable|min:6|max:255',
+                'userType' => 'required|in:Nenhum,Admin',
+                'password_old' => 'required|min:6|max:255',
+            ], MSG::USER_VALIDATE);
+
+            if (!$validated) {
+                $response = Response_Handlers::setAndRespond(MSG::INVALID_DATA);
+                return response()->json($response, MSG::NOT_FOUND);
+            }
+
+            if (!password_verify($toUpdate['password_old'], $user['password']) && $toUpdate['password_old'] != $user['password']) {
+                $response = Response_Handlers::setAndRespond(MSG::PASSWORD_NOT_MATCH);
+                return response()->json($response, MSG::NOT_FOUND);
+            }
+
             $user->name = $toUpdate['name'];
             $user->nickname = $toUpdate['nickname'];
             $user->email = $toUpdate['email'];
-            $user->password = 'apenas teste';
             $user->userType = $toUpdate['userType'];
+
+            if($toUpdate['password'] != '' || $toUpdate['password'] != null){
+                $toUpdate['password'] = bcrypt($toUpdate['password']);
+                $user->password = $toUpdate['password'];
+            }
+
             $user->save();
+
             $response = Response_Handlers::setAndRespond(MSG::CLIENT_UPDATED);
             return response()->json($response, MSG::ACCEPTED);
+
         } catch (\Exception $e) {
             $error = $e->getMessage();
             Error_Handlers::logError(MSG::SERVER_ERROR, $error);

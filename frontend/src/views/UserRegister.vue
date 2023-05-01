@@ -64,7 +64,7 @@ const schema = yup.object().shape({
     .matches(/^[a-zA-Z]+$/, 'Apenas letras'),
   email: yup.string().required().email(),
   password: yup.string().required().min(6).max(255),
-  password_confirmation: yup.string().required().min(6).max(255),
+  password_confirmation: yup.string().required().oneOf([yup.ref('password')]),
   userType: yup.string().required().oneOf(['Nenhum', 'Admin']),
 });
 

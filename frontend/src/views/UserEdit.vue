@@ -28,19 +28,27 @@
     />
     <BaseInput
       name="password"
-      label="Senha"
-      placeholder="Mínimo 6 caracteres"
+      label="Nova senha"
+      placeholder="(Opcional) Mínimo 6 caracteres"
       type="password"
       v-model="form.password"
       :error="formularyErrors.password"
     />
     <BaseInput
       name="password_confirmation"
-      label="Confirmação de senha"
-      placeholder="Repita a senha"
+      label="Nova confirmação de senha"
+      placeholder="(Opcional se trocar senha) Repita a senha"
       type="password"
       v-model="form.password_confirmation"
       :error="formularyErrors.password_confirmation"
+    />
+    <BaseInput
+      name="password_old"
+      label="Senha atual"
+      placeholder="Digite a senha atual"
+      type="password"
+      v-model="form.password_old"
+      :error="formularyErrors.password_old"
     />
     <BaseRadioGroup
       v-model="form.userType"
@@ -57,7 +65,7 @@
     </button>
     <button
       class="base_button button_danger invert"
-      @click="this.$router.push(`/clients/show`)"
+      @click="this.$router.push(`/users/show`)"
     >
       Cancelar
     </button>
@@ -68,14 +76,26 @@
 import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
-const schema = yup.object().shape({
-  name: yup.string().required().min(3).max(255)
-    .matches(/^[a-zA-ZÀ-ÿ\s]+$/, 'Apenas letras e espaços em branco'),
-  nickname: yup.string().required().min(3).max(45)
-    .matches(/^[a-zA-Z]+$/, 'Apenas letras'),
-  email: yup.string().required().email(),
-  userType: yup.string().required().oneOf(['Nenhum', 'Admin']),
-});
+const schema = yup.object().shape(
+  {
+    name: yup.string().required().min(3).max(255)
+      .matches(/^[a-zA-ZÀ-ÿ\s]+$/, 'Apenas letras e espaços em branco'),
+    nickname: yup.string().required().min(3).max(45)
+      .matches(/^[a-zA-Z]+$/, 'Apenas letras'),
+    email: yup.string().required().email(),
+    userType: yup.string().required().oneOf(['Nenhum', 'Admin']),
+    password_old: yup.string().required().min(6).max(255),
+    password: yup.string().nullable().notRequired().when(
+      'password',
+      {
+        is: (val) => !!(val && val.length > 0),
+        then: (rule) => rule.min(6).max(255),
+      },
+    ),
+    password_confirmation: yup.string().oneOf([yup.ref('password'), null], 'As senhas devem ser iguais'),
+  },
+  ['password', 'password'],
+);
 
 export default {
   name: 'ClientEdit',
@@ -89,6 +109,7 @@ export default {
         email: '',
         password: '',
         password_confirmation: '',
+        password_old: '',
         userType: 'Nenhum',
       },
       formularyErrors: {
@@ -97,6 +118,7 @@ export default {
         email: '',
         password: '',
         password_confirmation: '',
+        password_old: '',
         userType: '',
       },
       userTypesList: [
