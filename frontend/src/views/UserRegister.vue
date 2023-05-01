@@ -46,6 +46,7 @@
         v-model="form.userType"
         :options="userTypesList"
         name="user_type"
+        :error="formularyErrors.userType"
       />
       <input type="submit" class="base_button button_primary" value="Cadastrar">
     </form>
@@ -57,12 +58,14 @@ import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
-  name: yup.string().required().min(3),
-  nickname: yup.string().required().min(3),
+  name: yup.string().required().min(3).max(255)
+    .matches(/^[a-zA-ZÀ-ÿ\s]+$/, 'Apenas letras e espaços em branco'),
+  nickname: yup.string().required().min(3).max(45)
+    .matches(/^[a-zA-Z]+$/, 'Apenas letras'),
   email: yup.string().required().email(),
-  password: yup.string().required().min(6),
-  password_confirmation: yup.string().required().min(6),
-  userType: yup.number().required(),
+  password: yup.string().required().min(6).max(255),
+  password_confirmation: yup.string().required().min(6).max(255),
+  userType: yup.string().required().oneOf(['Nenhum', 'Admin']),
 });
 
 export default {
@@ -74,7 +77,7 @@ export default {
         email: '',
         password: '',
         password_confirmation: '',
-        userType: '',
+        userType: 'Nenhum',
       },
       formularyErrors: {
         name: '',
@@ -85,8 +88,8 @@ export default {
         userType: '',
       },
       userTypesList: [
-        { label: 'Nenhum', value: 1 },
-        { label: 'Admin', value: 0 },
+        { label: 'Nenhum', value: 'Nenhum' },
+        { label: 'Admin', value: 'Admin' },
       ],
     };
   },
@@ -94,18 +97,25 @@ export default {
     sendForm() {
       schema.validate(this.form, { abortEarly: false })
         .then(() => {
-          console.log('validou');
           axios.post('http://localhost:8000/api/user/register', this.form)
-            .then((response) => {
-              console.log(response);
+            .then(() => {
+              window.alert('Usuário registrado com sucesso!');
+              this.$router.push('/users/show');
             })
-            .catch((error) => {
-              console.log(error);
+            .catch((err) => {
+              console.error(err.response);
+              window.alert('Erro ao registrar usuário');
             });
         })
         .catch((err) => {
-          console.log(err.inner);
-          this.formularyErrors = {};
+          this.formularyErrors = {
+            name: '',
+            nickname: '',
+            email: '',
+            password: '',
+            password_confirmation: '',
+            userType: '',
+          };
           err.inner.forEach((error) => {
             this.formularyErrors[error.path] = error.message;
           });

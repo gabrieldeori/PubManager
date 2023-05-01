@@ -10,6 +10,9 @@
       @update:modelValue="$emit('update:modelValue', $event)"
      />
   </section>
+  <BaseErrorInputs
+      :error="error"
+    />
 </template>
 
 <script>
@@ -25,6 +28,10 @@ export default {
     },
     modelValue: {
       type: [String, Number, Boolean],
+      required: true,
+    },
+    error: {
+      type: String,
       required: true,
     },
   },

@@ -14,6 +14,18 @@
         public const CLIENTS_NOT_DELETED = "Clientes não deletados";
         public const CLIENTS_INVALID_FORMAT = "Formato inválido para clientes";
 
+        public const USER_CREATED = "Usuário criado";
+        public const USER_NOT_CREATED = "Usuário não criado";
+        public const USER_FOUND = "Usuário encontrado";
+        public const USERS_FOUND = "Usuários encontrados";
+        public const USER_NOT_FOUND = "Usuário não encontrado";
+        public const USERS_NOT_FOUND = "Nenhum usuário encontrado";
+        public const USER_UPDATED = "Usuário atualizado";
+        public const USER_NOT_UPDATED = "Usuário não atualizado";
+        public const USER_DELETED = "Usuário deletado";
+        public const USER_NOT_DELETED = "Usuário não deletado";
+        public const USER_INVALID_FORMAT = "Formato inválido para usuário";
+
         public const SERVER_ERROR = "Erro no servidor";
 
         public const NOT_FOUND = 404;

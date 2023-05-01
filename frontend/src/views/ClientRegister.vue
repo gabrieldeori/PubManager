@@ -100,9 +100,10 @@ export default {
         const confirmed = window.confirm('Tem certeza que deseja salvar?');
         if (confirmed) {
           axios.post('http://localhost:8000/api/client/register', this.insertionList)
-            .then(() => {
+            .then((res) => {
               window.alert('Clientes registrados com sucesso!');
               this.$router.push('/clients/show');
+              console.log(res);
             })
             .catch((err) => {
               console.error(err);

@@ -29,6 +29,16 @@ const routes = [
     name: 'UserRegister',
     component: () => import('../views/UserRegister.vue'),
   },
+  {
+    path: '/users/show',
+    name: 'UsersShow',
+    component: () => import('../views/UsersShow.vue'),
+  },
+  {
+    path: '/user/:id',
+    name: 'UserEdit',
+    component: () => import('../views/UserEdit.vue'),
+  },
 ];
 
 const router = createRouter({

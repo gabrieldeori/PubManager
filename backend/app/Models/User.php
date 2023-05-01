@@ -22,8 +22,11 @@ class User extends Authenticatable
         'nickname',
         'email',
         'password',
+        'userType',
         'created_by',
         'updated_by',
+        'created_at',
+        'updated_at',
     ];
 
     protected $guarded = [
@@ -55,19 +58,19 @@ class User extends Authenticatable
 
         // evento disparado quando um novo usuário é criado
         static::creating(function ($user) {
-            $user->created_by = auth()->id();
+            // $user->created_by = auth()->id();
         });
 
         // evento disparado quando um usuário é atualizado
         static::updating(function ($user) {
-            $user->updated_by = auth()->id();
+            // $user->updated_by = auth()->id();
         });
 
         // evento disparado quando um usuário é criado ou atualizado
         static::saving(function ($user) {
             $user->updated_at = now();
             if (!$user->exists) {
-                $user->created_at = $user->updated_at;
+                // $user->created_at = $user->updated_at;
             }
         });
     }
