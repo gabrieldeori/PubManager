@@ -69,7 +69,7 @@ class AvaController extends Controller
                 'name' => $toCreate['name'],
                 'nickname' => $toCreate['nickname'],
                 'email' => $toCreate['email'],
-                'password' => $toCreate['password'],
+                'password' => bcrypt($toCreate['password']),
                 'userType' => $toCreate['userType'],
             ]);
 

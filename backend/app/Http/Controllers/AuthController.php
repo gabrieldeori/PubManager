@@ -34,6 +34,29 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function authorizeToken() {
+        $isValid = auth()->check();
+        if ($isValid) {
+            return response()->json([
+                'message' => 'Authorized',
+                'user' => auth()->user()
+            ], 200);
+        }
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    public function authorizeAdmin() {
+        $isValid = auth()->check();
+        if ($isValid) {
+            $user = auth()->user();
+            $usertype = $user->userType;
+            if ($usertype == 'admin') {
+                return response()->json(['message' => 'Authorized'], 200);
+            }
+        }
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
     /**
      * Get the authenticated User.
      *
@@ -77,6 +100,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'access_token' => $token,
+            'userType' => auth()->user()->userType,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);

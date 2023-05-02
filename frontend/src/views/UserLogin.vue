@@ -53,8 +53,9 @@ export default {
         password: this.form.password,
       }).then((response) => {
         console.log(response);
-        localStorage.setItem('pubmanager_tk_009911', response.data.access_token);
-        // this.$router.push('/users/show');
+        const toString = JSON.stringify(response.data);
+        localStorage.setItem('pubmanager_tk_009911', toString);
+        this.$router.push('/users/show');
       }).catch((error) => {
         console.log(error.response.data);
       });
