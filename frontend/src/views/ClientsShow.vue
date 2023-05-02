@@ -1,8 +1,8 @@
 <template>
   <section>
-    <BaseErrorInputs
+    <BaseError
       v-if="errorData"
-      :error="errorData"
+      :errorData="errorData"
     />
     <h1>CLIENTS</h1>
     <BaseTableJSON
@@ -37,8 +37,7 @@ export default {
           this.responseClients = response.data.payload;
         })
         .catch((error) => {
-          // this.errorData = error.response.data.message;
-          console.log(error);
+          this.errorData = error;
         });
     },
     deleteClient(id) {
