@@ -29,6 +29,12 @@ const routes = [
     beforeEnter: Guard.auth,
   },
   {
+    path: '/products/show',
+    name: 'ProductsShow',
+    component: () => import('../views/ProductsShow.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
     path: '/user/register',
     name: 'UserRegister',
     component: () => import('../views/UserRegister.vue'),
