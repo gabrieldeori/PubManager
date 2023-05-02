@@ -2,11 +2,6 @@
   <section>
     <h1>Produtos</h1>
 
-    <BaseError
-      v-if="errorData"
-      :errorData="errorData"
-    />
-
     <BaseTableJSON
       :table_title="'Usuários'"
       :table_data="responseProducts"
@@ -39,7 +34,8 @@ export default {
           this.responseProducts = response.data.payload;
         })
         .catch((error) => {
-          this.errorData = error;
+          // this.errorData = error;
+          console.log(error);
         });
     },
     deleteProduct(id) {
