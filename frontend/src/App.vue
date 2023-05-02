@@ -1,9 +1,12 @@
 <template>
   <nav>
-    | <router-link to="/">Home Components</router-link> |
+    <router-link to="/">Home Components</router-link> |
     <router-link to="/client/register">Registrar Cliente</router-link> |
     <router-link to="/clients/show">Clientes Registrados</router-link> |
     <router-link to="/user/register">Registrar Usuário</router-link> |
+    <router-link to="/users/show">Usuários Registrados</router-link> |
+    <router-link to="/login">Login</router-link> |
+    <router-link to="/logout">Logout</router-link>
   </nav>
   <router-view/>
 </template>
