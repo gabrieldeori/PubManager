@@ -38,6 +38,18 @@
         public const PASSWORD_MATCH = "Senha confere";
         public const PASSWORD_INVALID_FORMAT = "Formato inválido para senha";
 
+        public const PRODUCTS_CREATED = "Produtos criados";
+        public const PRODUCTS_NOT_CREATED = "Produtos não criados";
+        public const PRODUCTS_FOUND = "Produtos encontrados";
+        public const PRODUCTS_NOT_FOUND = "Nenhum produto encontrado";
+        public const PRODUCT_NOT_FOUND = "Produto não encontrado";
+        public const PRODUCT_UPDATED = "Produto atualizado";
+        public const PRODUCT_NOT_UPDATED = "Produto não atualizado";
+        public const PRODUCTS_DELETED = "Produto deletado";
+        public const PRODUCT_NOT_DELETED = "Produto não deletado";
+        public const PRODUCT_INVALID_FORMAT = "Formato inválido para produto";
+
+
         public const SERVER_ERROR = "Erro no servidor";
         public const INVALID_DATA = "Dados inválidos";
 
