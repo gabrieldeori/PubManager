@@ -70,6 +70,12 @@ const routes = [
     component: () => import('../views/ProductRegister.vue'),
     beforeEnter: Guard.auth,
   },
+  {
+    path: '/product/:id',
+    name: 'ProductsEdit',
+    component: () => import('../views/ProductEdit.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({

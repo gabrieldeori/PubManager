@@ -77,7 +77,11 @@ export default {
             this.formularyErrors[e.path] = e.message;
           });
         } else {
-          this.errors.generic = errors.message;
+          const { response } = errors;
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic;
+          this.errors.specific = response.data.payload.errors.specific;
+          this.errors.validation = response.data.payload.errors.validation;
         }
       }
     },

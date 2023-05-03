@@ -36,8 +36,10 @@ export default {
           this.responseProducts = response.data.payload.products;
         })
         .catch(({ response }) => {
-          this.errors = response.data.payload.errors;
           this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic;
+          this.errors.specific = response.data.payload.errors.specific;
+          this.errors.validation = response.data.payload.errors.validation;
         });
     },
     deleteProduct(id) {
@@ -48,8 +50,10 @@ export default {
             this.$router.go();
           })
           .catch(({ response }) => {
-            this.errors = response.data.payload.errors;
             this.errors.title = response.data.message;
+            this.errors.generic = response.data.payload.errors.generic || '';
+            this.errors.specific = response.data.payload.errors.specific || '';
+            this.errors.validation = response.data.payload.errors.validation || '';
           });
       }
     },

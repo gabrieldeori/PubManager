@@ -25,20 +25,21 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 use App\Http\Controllers\AvaController;
 Route::get('/users/show', [AvaController::class, 'getUsers'])->middleware('jwt.auth');
-Route::get('/user', [AvaController::class, 'getAUser'])->middleware('jwt.auth');
 Route::put('/user/edit', [AvaController::class, 'editAUser'])->middleware('jwt.auth');
 Route::post('/user/register', [AvaController::class, 'createUser'])->middleware('jwt.auth');
 Route::delete('/user/delete', [AvaController::class, 'deleteAUser'])->middleware('jwt.auth');
+Route::get('/user', [AvaController::class, 'getAUser'])->middleware('jwt.auth');
 
 use App\Http\Controllers\ClientsController;
 Route::get('/clients/show', [ClientsController::class, 'getClients'])->middleware('jwt.auth');
-Route::get('/client', [ClientsController::class, 'getAClient'])->middleware('jwt.auth');
 Route::put('/client/edit', [ClientsController::class, 'editAClient'])->middleware('jwt.auth');
 Route::post('/client/register', [ClientsController::class, 'createClients'])->middleware('jwt.auth');
 Route::delete('/client/delete', [ClientsController::class, 'deleteAClient'])->middleware('jwt.auth');
+Route::get('/client', [ClientsController::class, 'getAClient'])->middleware('jwt.auth');
 
 use App\Http\Controllers\ProductsController;
 Route::get('/products/show', [ProductsController::class, 'getProducts'])->middleware('jwt.auth');
 Route::post('/product/register', [ProductsController::class, 'createProduct'])->middleware('jwt.auth');
 Route::put('/product/edit', [ProductsController::class, 'editAProduct'])->middleware('jwt.auth');
 Route::delete('/product/delete', [ProductsController::class, 'deleteAProduct'])->middleware('jwt.auth');
+Route::get('/product', [ProductsController::class, 'getAProduct'])->middleware('jwt.auth');
