@@ -2,6 +2,8 @@
   <section>
     <h1>Produtos</h1>
 
+    <BaseErrors :errors="errors"/>
+
     <BaseTableJSON
       :table_title="'Usuários'"
       :table_data="responseProducts"
@@ -20,7 +22,7 @@ export default {
   name: 'ProductsShow',
   data() {
     return {
-      errorData: null,
+      errors: {},
       responseProducts: [],
     };
   },
@@ -31,11 +33,11 @@ export default {
     getUsers() {
       axios.get('http://localhost:8000/api/products/show')
         .then((response) => {
-          this.responseProducts = response.data.payload;
+          this.responseProducts = response.data.payload.products;
         })
-        .catch((error) => {
-          // this.errorData = error;
-          console.log(error);
+        .catch(({ response }) => {
+          this.errors = response.data.payload.errors;
+          this.errors.title = response.data.message;
         });
     },
     deleteProduct(id) {
@@ -43,11 +45,11 @@ export default {
       if (confirmed) {
         axios.delete('http://localhost:8000/api/product/delete', { data: { id } })
           .then(() => {
-            alert('Produto deletado com sucesso!');
-            this.$router.push({ name: 'ProductsShow' });
+            this.$router.go();
           })
-          .catch(() => {
-            alert('Erro ao deletar produto!');
+          .catch(({ response }) => {
+            this.errors = response.data.payload.errors;
+            this.errors.title = response.data.message;
           });
       }
     },
