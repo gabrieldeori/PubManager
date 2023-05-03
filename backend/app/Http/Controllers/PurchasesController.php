@@ -91,7 +91,7 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -174,7 +174,42 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_UPDATED, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function deleteAPurchase(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+            ], MSG::PURCHASE_VALIDATE);
+
+            $purchase = Purchase::find($request->id);
+
+            if (!$purchase) {
+                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
+            }
+
+            $purchase->products()->detach();
+            $purchase->delete();
+
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_DELETED, ['purchase'=>$purchase]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validationError) {
+            $errors = ['errors' => $validationError->errors()];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_DELETED, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 }
