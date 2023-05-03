@@ -71,8 +71,8 @@ export default {
         const payload = { id: this.$route.params.id };
         const { data } = await axios.get('http://localhost:8000/api/product', { params: payload });
         this.form = data.payload.product;
-        this.form.alcoholic = data.payload.product.alcoholic === 1;
-        this.form.preparable = data.payload.product.preparable === 1;
+        this.form.alcoholic = data.payload.product.alcoholic === 'Sim';
+        this.form.preparable = data.payload.product.preparable === 'Sim';
       } catch ({ response }) {
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';

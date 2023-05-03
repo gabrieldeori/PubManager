@@ -20,7 +20,25 @@ class ProductsController extends Controller
                 throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$products]);
+            $products = $products->map(function ($product) {
+                $product->alcoholic = $product->alcoholic ? 'Sim' : 'Não';
+                $product->preparable = $product->preparable ? 'Sim' : 'Não';
+                return $product;
+            });
+
+            // rename products column to ptbr
+            $productsRenamedColumns = collect([]);
+            foreach ($products as $product) {
+                $productsRenamedColumns->push([
+                    'id' => $product->id,
+                    'nome' => $product->name,
+                    'Descrição' => $product->description,
+                    'Alcoólico' => $product->alcoholic,
+                    'Preparável' => $product->preparable,
+                ]);
+            }
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$productsRenamedColumns]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -42,6 +60,9 @@ class ProductsController extends Controller
             ], MSG::PRODUCT_VALIDATE);
 
             $product = Product::findOrFail($request->id);
+
+            $product->alcoholic = $product->alcoholic ? 'Sim' : 'Não';
+            $product->preparable = $product->preparable ? 'Sim' : 'Não';
 
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_FOUND, ['product'=>$product]);
             return response()->json($response, MSG::OK);
