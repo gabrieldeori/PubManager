@@ -48,7 +48,6 @@ class PurchasesController extends Controller
                     'description' => $purchase->description,
                     'price' => $purchase->price,
                     'products' => $purchase->products->map(function ($product) {
-                        // Product 0,50 ---- x10 = 5,00
                         return $product->name . ': ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' ' . $product->pivot->price;
                     })
                 ];
