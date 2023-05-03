@@ -39,3 +39,6 @@ Route::delete('/client/delete', [ClientsController::class, 'deleteAClient'])->mi
 
 use App\Http\Controllers\ProductsController;
 Route::get('/products/show', [ProductsController::class, 'getProducts'])->middleware('jwt.auth');
+Route::post('/product/register', [ProductsController::class, 'createProduct'])->middleware('jwt.auth');
+Route::put('/product/edit', [ProductsController::class, 'editAProduct'])->middleware('jwt.auth');
+Route::delete('/product/delete', [ProductsController::class, 'deleteAProduct'])->middleware('jwt.auth');

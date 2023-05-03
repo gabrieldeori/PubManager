@@ -38,14 +38,14 @@
         public const PASSWORD_MATCH = "Senha confere";
         public const PASSWORD_INVALID_FORMAT = "Formato inválido para senha";
 
-        public const PRODUCTS_CREATED = "Produtos criados";
-        public const PRODUCTS_NOT_CREATED = "Produtos não criados";
+        public const PRODUCT_CREATED = "Produto criado";
+        public const PRODUCT_NOT_CREATED = "Produto não criado";
         public const PRODUCTS_FOUND = "Produtos encontrados";
         public const PRODUCTS_NOT_FOUND = "Nenhum produto encontrado";
         public const PRODUCT_NOT_FOUND = "Produto não encontrado";
         public const PRODUCT_UPDATED = "Produto atualizado";
         public const PRODUCT_NOT_UPDATED = "Produto não atualizado";
-        public const PRODUCTS_DELETED = "Produto deletado";
+        public const PRODUCT_DELETED = "Produto deletado";
         public const PRODUCT_NOT_DELETED = "Produto não deletado";
         public const PRODUCT_INVALID_FORMAT = "Formato inválido para produto";
 
@@ -59,6 +59,8 @@
         public const ACCEPTED = 202;
         public const INTERNAL_SERVER_ERROR = 500;
         public const BAD_REQUEST = 400;
+        public const UNAUTHORIZED = 401;
+        public const FORBIDDEN = 403;
 
         public const USER_VALIDATE = [
             'name.required' => 'O nome é obrigatório.',
@@ -76,6 +78,21 @@
             'userType.required' => 'O tipo de usuário é obrigatório.',
             'userType.in' => 'O tipo de usuário deve ser "Nenhum" ou "Admin".',
             'password_old.required' => 'A senha antiga é obrigatória.',
+        ];
+
+        public const PRODUCT_VALIDATE = [
+            'name.required' => 'O nome é obrigatório.',
+            'name.min' => 'O nome deve ter pelo menos :min caracteres.',
+            'name.max' => 'O nome não pode ter mais do que :max caracteres.',
+            'name.regex' => 'O nome deve conter apenas letras e espaços em branco.',
+            'description.required' => 'A descrição é obrigatória.',
+            'description.min' => 'A descrição deve ter pelo menos :min caracteres.',
+            'description.max' => 'A descrição não pode ter mais do que :max caracteres.',
+            'description.regex' => 'A descrição deve conter apenas letras e espaços em branco.',
+            'alcoholic.required' => 'O campo "alcoholic" é obrigatório.',
+            'alcoholic.boolean' => 'O campo "alcoholic" deve ser "true" ou "false".',
+            'preparable.required' => 'O campo "preparable" é obrigatório.',
+            'preparable.boolean' => 'O campo "preparable" deve ser "true" ou "false".',
         ];
     }
 ?>

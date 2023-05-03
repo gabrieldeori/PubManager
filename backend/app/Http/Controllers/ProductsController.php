@@ -6,10 +6,12 @@ use App\Helpers\Response_Handlers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Helpers\MSG;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use \Illuminate\Validation\ValidationException;
 
 class ProductsController extends Controller
 {
-    public function getProducts(Request $request)
+    public function getProducts()
     {
         $products = Product::all()->toArray();
         if (count($products) == 0) {
@@ -18,5 +20,107 @@ class ProductsController extends Controller
         }
         $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND , $products);
         return response()->json($response, MSG::OK);
+    }
+
+    public function createProduct(Request $request) {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'alcoholic' => 'required|boolean',
+                'preparable' => 'required|boolean',
+            ], MSG::PRODUCT_VALIDATE);
+
+            $product = Product::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'alcoholic' => $request->alcoholic,
+                'preparable' => $request->preparable,
+            ]);
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_CREATED, [$product]);
+            return response()->json($response, MSG::CREATED);
+        } catch (ValidationException $validator) {
+            $errors = ['error' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_CREATED, $errors);
+            return response()->json($response, MSG::BAD_REQUEST);
+        } catch (\Exception $error) {
+            $errors = ['error' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_CREATED, $errors);
+            return response()->json($response, MSG::SERVER_ERROR);
+        }
+    }
+
+    public function editAProduct(Request $request) {
+        try {
+            $request->validate(
+                [
+                    'id' => 'required|integer',
+                    'name' => 'required|string|max:255',
+                    'description' => 'nullable|string',
+                    'alcoholic' => 'required|boolean',
+                    'preparable' => 'required|boolean',
+                ],
+                MSG::PRODUCT_VALIDATE
+            );
+
+            $product = Product::findOrFail($request->id);
+
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->alcoholic = $request->alcoholic;
+            $product->preparable = $request->preparable;
+            $product->save();
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_UPDATED, [$product]);
+            return response()->json($response, MSG::OK);
+        } catch (ValidationException $validator) {
+            $errors = $validator->errors();
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
+            return response()->json($response, MSG::BAD_REQUEST);
+        } catch (ModelNotFoundException $modelError) {
+            $errors = [
+                'error' => [
+                    'generic' => MSG::PRODUCT_NOT_FOUND,
+                    'specific' => $modelError->getMessage()
+                ]
+            ];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+        } catch (\Exception $error) {
+            $errors = ['error' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
+            return response()->json($response, MSG::SERVER_ERROR);
+        }
+    }
+
+    public function deleteAProduct(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+            ], MSG::PRODUCT_VALIDATE);
+            $product = Product::findOrFail($request->id);
+            $product->delete();
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_DELETED, [$product]);
+            return response()->json($response, MSG::OK);
+        } catch (ValidationException $validator) {
+            $errors = $validator->errors();
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
+            return response()->json($response, MSG::BAD_REQUEST);
+        } catch (ModelNotFoundException $modelError) {
+            $errors = [
+                'error' => [
+                    'generic' => MSG::PRODUCT_NOT_FOUND,
+                    'specific' => $modelError->getMessage()
+                ]
+            ];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+        } catch (\Exception $error) {
+            $errors = ['error' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
+            return response()->json($response, MSG::SERVER_ERROR);
+        }
     }
 }
