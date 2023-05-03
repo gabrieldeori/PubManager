@@ -132,7 +132,6 @@ export default {
       const payload = { id: this.$route.params.id };
       axios.get('http://localhost:8000/api/user', { params: payload })
         .then((response) => {
-          console.log(response.data.payload.user);
           this.toEdit = response.data.payload.user;
           this.form = {
             ...payload,

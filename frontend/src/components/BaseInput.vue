@@ -7,7 +7,7 @@
     <div
       :class="['input_area', componentClass, { error: error }]"
     >
-      <img class="input_icon" :src="src" alt="">
+      <img class="input_icon" :src="src" alt="" />
       <input
         :class="'input_tag '"
         :id="'id_' + name"

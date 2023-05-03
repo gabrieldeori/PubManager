@@ -45,6 +45,7 @@ class Product extends Model
             $user = Auth::user();
             if ($user) {
                 $model->created_by = $user->id;
+                $model->updated_by = $user->id;
             }
         });
 

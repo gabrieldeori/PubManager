@@ -29,12 +29,6 @@ const routes = [
     beforeEnter: Guard.auth,
   },
   {
-    path: '/products/show',
-    name: 'ProductsShow',
-    component: () => import('../views/ProductsShow.vue'),
-    beforeEnter: Guard.auth,
-  },
-  {
     path: '/user/register',
     name: 'UserRegister',
     component: () => import('../views/UserRegister.vue'),
@@ -62,6 +56,18 @@ const routes = [
     path: '/logout',
     name: 'Logout',
     component: () => import('../views/UserLogout.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/products/show',
+    name: 'ProductsShow',
+    component: () => import('../views/ProductsShow.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/product/register',
+    name: 'ProductsRegister',
+    component: () => import('../views/ProductRegister.vue'),
     beforeEnter: Guard.auth,
   },
 ];

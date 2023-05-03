@@ -1,14 +1,20 @@
 <template>
   <div class="table_wrapper">
-    <table class="table_field">
+    <table class="table_field" v-if="table_data.length > 0">
       <caption>{{ table_title }}</caption>
       <thead>
         <tr>
           <th
-            v-for="tHeadData, thdi in Object.keys(getHeadersForTable())"
-            v-bind:key="'key_tHeadData_' + thdi"
+            v-for="tHeadData, thindex in Object.keys(getHeadersForTable())"
+            v-bind:key="'key_tHeadData_' + thindex"
           >
             {{ tHeadData }}
+          </th>
+          <th v-if="is_crud">
+            Atualizar
+          </th>
+          <th v-if="is_crud">
+            Deletar
           </th>
         </tr>
       </thead>
@@ -25,10 +31,10 @@
           </td>
           <td v-if="is_crud">
             <button
-              class="base_button button_highlight"
+              class="base_button button_highlight invert"
               @click="updateEmit(tBodyRow.id)"
               >
-                Atualizar
+                <img src="../assets/icons/icon_edit.svg" alt="">
               </button>
           </td>
           <td v-if="is_crud">
@@ -36,7 +42,7 @@
               class="base_button button_danger"
               @click="deleteEmit(tBodyRow.id)"
             >
-              Deletar
+              <img src="../assets/icons/icon_delete.svg" alt="">
             </button>
           </td>
         </tr>
@@ -103,3 +109,30 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+caption {
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--primary_lighter);
+  border: 0.1rem solid var(--primary_strong);
+  border-bottom: 0;
+}
+
+img {
+  max-width: 2rem;
+  max-height: 2rem;
+}
+
+button {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0.25rem;
+  width: 100%;
+  height: 3rem;
+  max-height: 3rem;
+  max-width: 100%;
+}
+</style>
