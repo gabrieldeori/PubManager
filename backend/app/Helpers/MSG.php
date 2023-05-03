@@ -40,6 +40,7 @@
 
         public const PRODUCT_CREATED = "Produto criado";
         public const PRODUCT_NOT_CREATED = "Produto não criado";
+        public const PRODUCT_FOUND = "Produto encontrado";
         public const PRODUCTS_FOUND = "Produtos encontrados";
         public const PRODUCTS_NOT_FOUND = "Nenhum produto encontrado";
         public const PRODUCT_NOT_FOUND = "Produto não encontrado";
@@ -48,7 +49,7 @@
         public const PRODUCT_DELETED = "Produto deletado";
         public const PRODUCT_NOT_DELETED = "Produto não deletado";
         public const PRODUCT_INVALID_FORMAT = "Formato inválido para produto";
-
+        public const PRODUCTS_TABLE_EMPTY = "Tabela de produtos vazia";
 
         public const SERVER_ERROR = "Erro no servidor";
         public const INVALID_DATA = "Dados inválidos";

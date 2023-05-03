@@ -13,13 +13,54 @@ class ProductsController extends Controller
 {
     public function getProducts()
     {
-        $products = Product::all()->toArray();
-        if (count($products) == 0) {
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND);
+        try {
+            $products = Product::all();
+
+            if ($products->isEmpty()) {
+                throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
+            }
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, $products);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['error' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (\Exception $error) {
+            $errors = ['error' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+            return response()->json($response, MSG::SERVER_ERROR);
         }
-        $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND , $products);
-        return response()->json($response, MSG::OK);
+    }
+
+    public function getAProduct(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+            ], MSG::PRODUCT_VALIDATE);
+
+            $product = Product::findOrFail($request->id);
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_FOUND, [$product]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ValidationException $validator) {
+            $errors = ['error' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_FOUND, $errors);
+            return response()->json($response, MSG::BAD_REQUEST);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['error' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (\Exception $error) {
+            $errors = ['error' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_FOUND, $errors);
+            return response()->json($response, MSG::SERVER_ERROR);
+        }
     }
 
     public function createProduct(Request $request) {
@@ -40,10 +81,12 @@ class ProductsController extends Controller
 
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_CREATED, [$product]);
             return response()->json($response, MSG::CREATED);
+
         } catch (ValidationException $validator) {
             $errors = ['error' => ['validation' => $validator->errors()]];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_CREATED, $errors);
             return response()->json($response, MSG::BAD_REQUEST);
+
         } catch (\Exception $error) {
             $errors = ['error' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_CREATED, $errors);
@@ -74,10 +117,12 @@ class ProductsController extends Controller
 
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_UPDATED, [$product]);
             return response()->json($response, MSG::OK);
+
         } catch (ValidationException $validator) {
             $errors = $validator->errors();
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
             return response()->json($response, MSG::BAD_REQUEST);
+
         } catch (ModelNotFoundException $modelError) {
             $errors = [
                 'error' => [
@@ -87,6 +132,7 @@ class ProductsController extends Controller
             ];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
             return response()->json($response, MSG::NOT_FOUND);
+
         } catch (\Exception $error) {
             $errors = ['error' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_UPDATED, $errors);
@@ -104,10 +150,12 @@ class ProductsController extends Controller
 
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_DELETED, [$product]);
             return response()->json($response, MSG::OK);
+
         } catch (ValidationException $validator) {
             $errors = $validator->errors();
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
             return response()->json($response, MSG::BAD_REQUEST);
+
         } catch (ModelNotFoundException $modelError) {
             $errors = [
                 'error' => [
@@ -117,6 +165,7 @@ class ProductsController extends Controller
             ];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
             return response()->json($response, MSG::NOT_FOUND);
+
         } catch (\Exception $error) {
             $errors = ['error' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
