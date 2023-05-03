@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
@@ -55,5 +56,10 @@ class Product extends Model
                 $model->updated_by = $user->id;
             }
         });
+    }
+
+    public function purchase(): BelongsToMany
+    {
+        return $this->belongsToMany(Purchase::class);
     }
 }
