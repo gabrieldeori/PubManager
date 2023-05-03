@@ -20,7 +20,7 @@ class ProductsController extends Controller
                 throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, $products);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$products]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -43,7 +43,7 @@ class ProductsController extends Controller
 
             $product = Product::findOrFail($request->id);
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_FOUND, [$product]);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_FOUND, ['product'=>$product]);
             return response()->json($response, MSG::OK);
 
         } catch (ValidationException $validator) {
@@ -79,7 +79,7 @@ class ProductsController extends Controller
                 'preparable' => $request->preparable,
             ]);
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_CREATED, [$product]);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_CREATED, ['product'=>$product]);
             return response()->json($response, MSG::CREATED);
 
         } catch (ValidationException $validator) {
@@ -115,7 +115,7 @@ class ProductsController extends Controller
             $product->preparable = $request->preparable;
             $product->save();
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_UPDATED, [$product]);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_UPDATED, ['product'=>$product]);
             return response()->json($response, MSG::OK);
 
         } catch (ValidationException $validator) {
@@ -148,7 +148,7 @@ class ProductsController extends Controller
             $product = Product::findOrFail($request->id);
             $product->delete();
 
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_DELETED, [$product]);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCT_DELETED, ['product'=>$product]);
             return response()->json($response, MSG::OK);
 
         } catch (ValidationException $validator) {
