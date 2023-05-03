@@ -21,13 +21,9 @@ class PurchasesController extends Controller
 {
     public function getPurchases() {
         try {
-            $purchases = Purchase::all();
+            $purchases = Purchase::with('products')->get();
 
-            if ($purchases->isEmpty()) {
-                throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
-            }
-
-            $purchases = $purchases->map(function ($purchase) {
+            $purchases->map(function ($purchase) {
                 $purchase->created_by = $purchase->createdBy->name;
                 $purchase->updated_by = $purchase->updatedBy->name;
                 $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
@@ -38,19 +34,11 @@ class PurchasesController extends Controller
                 return $purchase;
             });
 
-            $purchasesRenamedColumns = collect([]);
-            foreach ($purchases as $purchase) {
-                $purchasesRenamedColumns->push([
-                    'id' => $purchase->id,
-                    'Descrição' => $purchase->description,
-                    'Preço total' => $purchase->total_price,
-                    'Criado por' => $purchase->created_by,
-                    'Atualizado por' => $purchase->updated_by,
-                    'Produtos' => $purchase->products,
-                ]);
+            if ($purchases->isEmpty()) {
+                throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$purchasesRenamedColumns]);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$purchases]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -61,7 +49,7 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 
