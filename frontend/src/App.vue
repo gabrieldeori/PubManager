@@ -3,6 +3,8 @@
     <router-link to="/">Home Components</router-link> |
     <router-link to="/client/register">Registrar Cliente</router-link> |
     <router-link to="/clients/show">Clientes Registrados</router-link> |
+    <router-link to="/products/show">Produtos Registrados</router-link> |
+    <router-link to="/product/register">Registrar Produto</router-link> |
     <router-link to="/user/register">Registrar Usuário</router-link> |
     <router-link to="/users/show">Usuários Registrados</router-link> |
     <router-link to="/login">Login</router-link> |
@@ -57,6 +59,15 @@
   --success_light: #6eff6e;
   --success_lighter: #c7ffc7;
   --success_white: #d9ffd9;
+}
+
+body {
+  background-color: var(--primary_white);
+  color: var(--smooth_black);
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
 
 /* Input Defaults */

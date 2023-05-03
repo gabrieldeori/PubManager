@@ -4,7 +4,7 @@
       v-if="errorData"
       :errorData="errorData"
     />
-    <h1>CLIENTS</h1>
+    <h1>Usuários</h1>
     <BaseTableJSON
       :table_title="'Usuários'"
       :table_data="responseUsers"

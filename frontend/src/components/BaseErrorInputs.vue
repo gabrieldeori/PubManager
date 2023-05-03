@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'BaseError',
+  name: 'BaseErrorInputs',
   props: {
     error: {
       type: String,
