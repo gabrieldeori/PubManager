@@ -15,6 +15,7 @@
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
+        :type="type"
         :required="required"
       >
     </div>
@@ -61,6 +62,10 @@ export default {
     required: {
       type: Boolean,
       default: false,
+    },
+    type: {
+      type: String,
+      default: 'text',
     },
   },
 };
