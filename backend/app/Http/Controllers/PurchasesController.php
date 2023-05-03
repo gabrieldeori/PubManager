@@ -23,22 +23,39 @@ class PurchasesController extends Controller
         try {
             $purchases = Purchase::with('products')->get();
 
-            $purchases->map(function ($purchase) {
-                $purchase->created_by = $purchase->createdBy->name;
-                $purchase->updated_by = $purchase->updatedBy->name;
-                $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
-                $purchase->products = $purchase->products->map(function ($product) {
-                    $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-                    return $product;
-                });
-                return $purchase;
-            });
-
             if ($purchases->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$purchases]);
+            // $purchases->map(function ($purchase) {
+            //     $purchase->created_by = $purchase->createdBy->name;
+            //     $purchase->updated_by = $purchase->updatedBy->name;
+            //     $purchase->price = 'R$ ' . number_format($purchase->price, 2, ',', '.');
+            //     $purchase->products = $purchase->products->map(function ($product) {
+            //         $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
+            //         return $product;
+            //     });
+            //     return $purchase;
+            // });
+
+            // como fazer $processed.push();
+            $processed = [];
+
+            foreach ($purchases as $purchase) {
+                $newPurchase = [
+                    'id' => $purchase->id,
+                    'name' => $purchase->name,
+                    'description' => $purchase->description,
+                    'price' => $purchase->price,
+                    'products' => $purchase->products->map(function ($product) {
+                        // Product 0,50 ---- x10 = 5,00
+                        return $product->name . ': ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' ' . $product->pivot->price;
+                    })
+                ];
+                array_push($processed, $newPurchase);
+            }
+
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$processed]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
