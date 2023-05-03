@@ -15,8 +15,6 @@ use App\Models\Product;
 use App\Models\Unit;
 use \Illuminate\Validation\ValidationException;
 
-
-
 class PurchasesController extends Controller
 {
     public function getPurchases() {
@@ -27,28 +25,16 @@ class PurchasesController extends Controller
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
             }
 
-            // $purchases->map(function ($purchase) {
-            //     $purchase->created_by = $purchase->createdBy->name;
-            //     $purchase->updated_by = $purchase->updatedBy->name;
-            //     $purchase->price = 'R$ ' . number_format($purchase->price, 2, ',', '.');
-            //     $purchase->products = $purchase->products->map(function ($product) {
-            //         $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-            //         return $product;
-            //     });
-            //     return $purchase;
-            // });
-
-            // como fazer $processed.push();
             $processed = [];
 
             foreach ($purchases as $purchase) {
                 $newPurchase = [
                     'id' => $purchase->id,
-                    'name' => $purchase->name,
-                    'description' => $purchase->description,
-                    'price' => $purchase->price,
-                    'products' => $purchase->products->map(function ($product) {
-                        return $product->name . ': ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' ' . $product->pivot->price;
+                    'Nome' => $purchase->name,
+                    'Descrição' => $purchase->description,
+                    'Preço Total' => $purchase->price,
+                    'Produtos' => $purchase->products->map(function ($product) {
+                        return $product->name . ': R$ ' . $product->pivot->price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->price * $product->pivot->quantity;
                     })
                 ];
                 array_push($processed, $newPurchase);
