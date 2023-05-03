@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+import BaseTableJSON from '@/components/BaseTableJSON.vue';
+
 export default {
   name: 'PurchasesShow',
   data() {
@@ -30,13 +33,15 @@ export default {
     getPurchases() {
       axios.get('http://localhost:8000/api/purchases/show')
         .then((response) => {
+          console.log(response);
           this.responsePurchases = response.data.payload.purchases;
         })
-        .catch(({ response }) => {
-          this.errors.title = response.data.message;
-          this.errors.generic = response.data.payload.errors.generic;
-          this.errors.specific = response.data.payload.errors.specific;
-          this.errors.validation = response.data.payload.errors.validation;
+        .catch((error) => {
+          console.log(error);
+          this.errors.title = error.response.data.message || '';
+          this.errors.generic = error.response.data.payload.errors.generic || '';
+          this.errors.specific = error.response.data.payload.errors.specific || '';
+          this.errors.validation = error.response.data.payload.errors.validation || '';
         });
     },
     deletePurchase(id) {

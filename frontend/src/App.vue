@@ -5,6 +5,8 @@
     <router-link to="/clients/show">Clientes Registrados</router-link> |
     <router-link to="/products/show">Produtos Registrados</router-link> |
     <router-link to="/product/register">Registrar Produto</router-link> |
+    <router-link to="/purchases/show">Compras Registrados</router-link> |
+    <router-link to="/purchase/register">Registrar Compra</router-link> |
     <router-link to="/user/register">Registrar Usuário</router-link> |
     <router-link to="/users/show">Usuários Registrados</router-link> |
     <router-link to="/login">Login</router-link> |
