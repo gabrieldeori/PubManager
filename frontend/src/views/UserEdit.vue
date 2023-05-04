@@ -28,7 +28,7 @@
     />
     <BaseInput
       name="password"
-      label="Nova senha"
+      label="(Opcional) Nova senha"
       placeholder="(Opcional) Mínimo 6 caracteres"
       type="password"
       v-model="form.password"
@@ -44,7 +44,7 @@
     />
     <BaseInput
       name="password_old"
-      label="Senha atual"
+      label="(Obrigatória) Senha atual"
       placeholder="Digite a senha atual"
       type="password"
       v-model="form.password_old"
