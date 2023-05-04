@@ -73,7 +73,7 @@ const routes = [
   {
     path: '/product/:id',
     name: 'ProductsEdit',
-    component: () => import('../views/ProductEdit.vue'),
+    component: () => import('../views/.vue'),
     beforeEnter: Guard.auth,
   },
   {
