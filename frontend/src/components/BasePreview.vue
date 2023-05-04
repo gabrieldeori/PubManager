@@ -1,5 +1,5 @@
 <template>
-  <div class="base_button button_black invert">
+  <div class="base_button button_highlight invert">
     <span v-for="element, index in Object.values(preview)" :key="'key_elem_' + index">
       {{ element }}&nbsp;
     </span>

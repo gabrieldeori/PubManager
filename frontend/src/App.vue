@@ -5,6 +5,8 @@
     <router-link to="/clients/show">Clientes Registrados</router-link> |
     <router-link to="/products/show">Produtos Registrados</router-link> |
     <router-link to="/product/register">Registrar Produto</router-link> |
+    <router-link to="/purchases/show">Compras Registrados</router-link> |
+    <router-link to="/purchase/register">Registrar Compra</router-link> |
     <router-link to="/user/register">Registrar Usuário</router-link> |
     <router-link to="/users/show">Usuários Registrados</router-link> |
     <router-link to="/login">Login</router-link> |
@@ -268,6 +270,25 @@ th, td {
   background-color: var(--primary_strong);
   border-color: var(--primary_stronger);
   color: var(--primary_lighter);
+}
+
+/* primary lighter*/
+.button_primary_lighter {
+  background-color: var(--primary_lighter);
+  border-color: var(--primary_strong);
+  color: var(--primary_strong);
+}
+
+.button_primary_lighter:hover {
+  background-color: var(--primary_light);
+  border-color: var(--primary_darker);
+  color: var(--primary_darker);
+}
+
+.button_primary_lighter:focus {
+  background-color: var(--primary_stronger);
+  border-color: var(--primary_white);
+  color: var(--primary_wite);
 }
 
 /* highlight */

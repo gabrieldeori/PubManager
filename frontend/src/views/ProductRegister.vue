@@ -78,6 +78,10 @@ export default {
           });
         } else {
           const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
           this.errors.title = response.data.message;
           this.errors.generic = response.data.payload.errors.generic;
           this.errors.specific = response.data.payload.errors.specific;

@@ -15,42 +15,32 @@ use App\Models\Product;
 use App\Models\Unit;
 use \Illuminate\Validation\ValidationException;
 
-
-
 class PurchasesController extends Controller
 {
     public function getPurchases() {
         try {
-            $purchases = Purchase::all();
+            $purchases = Purchase::with('products')->get();
 
             if ($purchases->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
             }
 
-            $purchases = $purchases->map(function ($purchase) {
-                $purchase->created_by = $purchase->createdBy->name;
-                $purchase->updated_by = $purchase->updatedBy->name;
-                $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
-                $purchase->products = $purchase->products->map(function ($product) {
-                    $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-                    return $product;
-                });
-                return $purchase;
-            });
+            $processed = [];
 
-            $purchasesRenamedColumns = collect([]);
             foreach ($purchases as $purchase) {
-                $purchasesRenamedColumns->push([
+                $newPurchase = [
                     'id' => $purchase->id,
+                    'Nome' => $purchase->name,
                     'Descrição' => $purchase->description,
-                    'Preço total' => $purchase->total_price,
-                    'Criado por' => $purchase->created_by,
-                    'Atualizado por' => $purchase->updated_by,
-                    'Produtos' => $purchase->products,
-                ]);
+                    'Preço Total' => $purchase->price,
+                    'Produtos' => $purchase->products->map(function ($product) {
+                        return $product->name . ': R$ ' . $product->pivot->price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->price * $product->pivot->quantity;
+                    })
+                ];
+                array_push($processed, $newPurchase);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$purchasesRenamedColumns]);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$processed]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -61,7 +51,7 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -101,7 +91,7 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -184,7 +174,42 @@ class PurchasesController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_UPDATED, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function deleteAPurchase(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+            ], MSG::PURCHASE_VALIDATE);
+
+            $purchase = Purchase::find($request->id);
+
+            if (!$purchase) {
+                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
+            }
+
+            $purchase->products()->detach();
+            $purchase->delete();
+
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_DELETED, ['purchase'=>$purchase]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validationError) {
+            $errors = ['errors' => $validationError->errors()];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_DELETED, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -25,15 +25,15 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 use App\Http\Controllers\AvaController;
 Route::get('/users/show', [AvaController::class, 'getUsers'])->middleware('jwt.auth');
-Route::put('/user/edit', [AvaController::class, 'editAUser'])->middleware('jwt.auth');
 Route::post('/user/register', [AvaController::class, 'createUser'])->middleware('jwt.auth');
+Route::put('/user/edit', [AvaController::class, 'editAUser'])->middleware('jwt.auth');
 Route::delete('/user/delete', [AvaController::class, 'deleteAUser'])->middleware('jwt.auth');
 Route::get('/user', [AvaController::class, 'getAUser'])->middleware('jwt.auth');
 
 use App\Http\Controllers\ClientsController;
 Route::get('/clients/show', [ClientsController::class, 'getClients'])->middleware('jwt.auth');
-Route::put('/client/edit', [ClientsController::class, 'editAClient'])->middleware('jwt.auth');
 Route::post('/client/register', [ClientsController::class, 'createClients'])->middleware('jwt.auth');
+Route::put('/client/edit', [ClientsController::class, 'editAClient'])->middleware('jwt.auth');
 Route::delete('/client/delete', [ClientsController::class, 'deleteAClient'])->middleware('jwt.auth');
 Route::get('/client', [ClientsController::class, 'getAClient'])->middleware('jwt.auth');
 
@@ -43,6 +43,11 @@ Route::post('/product/register', [ProductsController::class, 'createProduct'])->
 Route::put('/product/edit', [ProductsController::class, 'editAProduct'])->middleware('jwt.auth');
 Route::delete('/product/delete', [ProductsController::class, 'deleteAProduct'])->middleware('jwt.auth');
 Route::get('/product', [ProductsController::class, 'getAProduct'])->middleware('jwt.auth');
+Route::get('/products/options', [ProductsController::class, 'getProductsOptions'])->middleware('jwt.auth');
 
 use App\Http\Controllers\PurchasesController;
+Route::get('/purchases/show', [PurchasesController::class, 'getPurchases'])->middleware('jwt.auth');
 Route::post('/purchase/register', [PurchasesController::class, 'createPurchase'])->middleware('jwt.auth');
+Route::put('/purchase/edit', [PurchasesController::class, 'editAPurchase'])->middleware('jwt.auth');
+Route::delete('/purchase/delete', [PurchasesController::class, 'deleteAPurchase'])->middleware('jwt.auth');
+Route::get('/purchase', [PurchasesController::class, 'getAPurchase'])->middleware('jwt.auth');

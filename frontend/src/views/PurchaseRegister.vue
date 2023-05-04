@@ -1,0 +1,333 @@
+<template>
+  <section>
+    <BaseErrors
+      :errors="errors"
+    />
+    <form @submit.prevent="">
+      <BaseInput
+        name="name"
+        label="Nome"
+        placeholder="Apenas letras e espaços em branco"
+        type="text"
+        v-model="form.name"
+        :error="formularyErrors.name"
+      />
+      <BaseInput
+        name="description"
+        label="Descrição"
+        placeholder="Apenas letras e espaços em branco"
+        type="text"
+        v-model="form.description"
+        :error="formularyErrors.description"
+      />
+      <!-- produtos -->
+      <ul v-if="form.products.length > 0">
+        <article
+          v-for="(product, pIndex) in form.products"
+          v-bind="product"
+          :key="'product_key_id_' + product.id"
+        >
+          <button
+            v-if="editId !== pIndex"
+            class="base_button button_primary_lighter"
+            @click="editInsertion(pIndex)"
+          >
+            {{ responseProducts[product.id].name }} -
+            {{ product.individualPrice }} -
+            {{ product.quantity }} -
+            {{ product.totalPrice }}
+          </button>
+          <div v-if="editId === pIndex" class="product_form">
+            <BaseSelectProducts
+              name="products"
+              label="Produto"
+              v-model="productForm.id"
+              :options="responseProducts"
+              :error="formularyErrors.id"
+            />
+            <p v-if="formularyErrors.id" class="error_message">
+              {{ formularyErrors.id }}
+            </p>
+            <BaseInput
+              name="individualPrice"
+              label="Preço individual"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.individualPrice"
+              :error="formularyErrors.individualPrice"
+              @input="calculateTotalPrice"
+            />
+            <BaseInput
+              name="quantity"
+              label="Quantidade"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.quantity"
+              :error="formularyErrors.quantity"
+              @input="calculateboth"
+            />
+            <BaseInput
+              name="totalPrice"
+              label="Preço Total"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.totalPrice"
+              :error="formularyErrors.totalPrice"
+              @input="calculateIndividualPrice"
+            />
+            <BaseEditButtons
+              @deleteEmit="deleteInsertion(pIndex)"
+              @cancelEmit="cancelInsertion(pIndex)"
+              @saveEmit="saveInsertion(pIndex)"
+            />
+          </div>
+        </article>
+      </ul>
+    </form>
+
+    <button
+      class='base_button button_primary invert'
+      @click.prevent="newInsertion"
+    >
+      + Adicionar outra linha
+    </button>
+  </section>
+</template>
+
+<script>
+import BaseSelectProducts from '@/components/BaseSelectProducts.vue';
+import BaseEditButtons from '@/components/BaseEditButtons.vue';
+import BaseInput from '@/components/BaseInput.vue';
+import axios from 'axios';
+
+export default {
+  name: 'PurchaseRegister',
+  data() {
+    return {
+      form: {
+        name: '',
+        description: '',
+        products: [],
+      },
+
+      productForm: {
+        id: '',
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      },
+
+      editId: null,
+      blockEditClick: false,
+      responseProducts: [],
+      formularyErrors: {},
+      errors: {},
+    };
+  },
+  methods: {
+    async getProducts() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/products/options');
+        this.responseProducts = response.data.payload.products;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
+    newInsertion() {
+      if (this.blockEditClick) return;
+      this.editId = this.form.products.length;
+      this.productForm = {
+        id: 0,
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      };
+      this.form.products.push({ ...this.productForm });
+      this.blockEditClick = true;
+    },
+
+    validateInsertion() {
+      const {
+        id, individualPrice, quantity, totalPrice,
+      } = this.productForm;
+
+      const errors = [];
+
+      if (id <= 0) {
+        errors.push({
+          name: 'id',
+          message: 'O campo produto é obrigatório',
+        });
+      }
+      if (!individualPrice || individualPrice <= 0) {
+        errors.push({
+          name: 'individualPrice',
+          message: 'O campo preço individual é obrigatório',
+        });
+      }
+      if (!quantity || quantity <= 0) {
+        errors.push({
+          name: 'quantity',
+          message: 'O campo quantidade é obrigatório',
+        });
+      }
+      if (!totalPrice || totalPrice <= 0) {
+        errors.push({
+          name: 'totalPrice',
+          message: 'O campo preço total é obrigatório',
+        });
+      }
+      if (errors.length > 0) {
+        return errors;
+      }
+      return false;
+    },
+
+    normalizeValues() {
+      const {
+        id, individualPrice, quantity, totalPrice,
+      } = this.productForm;
+
+      this.productForm.id = parseInt(id, 10);
+      this.productForm.individualPrice = parseFloat(individualPrice).toFixed(2);
+      this.productForm.quantity = parseFloat(quantity).toFixed(2);
+      this.productForm.totalPrice = parseFloat(totalPrice).toFixed(2);
+    },
+
+    saveInsertion(index) {
+      const isInvalid = this.validateInsertion();
+      if (isInvalid) {
+        isInvalid.forEach(({ name, message }) => {
+          this.formularyErrors[name] = message;
+        });
+        return;
+      }
+      this.normalizeValues();
+      this.form.products[index] = this.productForm;
+      this.editId = null;
+      this.productForm = {
+        id: 0,
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      };
+      this.formularyErrors = {};
+      this.errors = {};
+      this.blockEditClick = false;
+    },
+
+    editInsertion(index) {
+      if (this.blockEditClick) return;
+      this.editId = index;
+      this.productForm = {
+        id: 0,
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      };
+      this.formularyErrors = {};
+      this.errors = {};
+      this.productForm = { ...this.form.products[index] };
+      this.blockEditClick = true;
+    },
+
+    cancelInsertion() {
+      this.editId = null;
+      this.productForm = {
+        id: 0,
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      };
+      this.formularyErrors = {};
+      this.errors = {};
+      this.blockEditClick = false;
+    },
+
+    deleteInsertion(index) {
+      this.form.products.splice(index, 1);
+      this.productForm = {
+        id: 0,
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      };
+      this.editId = null;
+      this.formularyErrors = {};
+      this.errors = {};
+      this.blockEditClick = false;
+    },
+
+    calculateTotalPrice() {
+      const { individualPrice, quantity } = this.productForm;
+      if (quantity > 0 && individualPrice > 0) {
+        this.productForm.totalPrice = (individualPrice * quantity).toFixed(4);
+      } else {
+        this.productForm.totalPrice = 0;
+      }
+    },
+
+    calculateIndividualPrice() {
+      const { totalPrice, quantity } = this.productForm;
+      if (quantity > 0 && totalPrice > 0) {
+        this.productForm.individualPrice = (totalPrice / quantity).toFixed(4);
+      } else {
+        this.productForm.individualPrice = 0;
+      }
+    },
+
+    calculateboth() {
+      const { totalPrice, quantity } = this.productForm;
+      if (quantity > 0 && totalPrice > 0) {
+        this.calculateIndividualPrice();
+      } else {
+        this.calculateTotalPrice();
+      }
+    },
+  },
+  mounted() {
+    this.getProducts();
+  },
+  components: { BaseSelectProducts, BaseInput, BaseEditButtons },
+};
+</script>
+
+<style scoped>
+.error_message {
+  color: var(--danger_stronger);
+  padding: 0.25rem;
+}
+
+.product_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.product_form input {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.product_form button {
+  margin: 0.5rem 0;
+}
+
+.product_form button:first-child {
+  margin-top: 1rem;
+}
+
+.product_form button:last-child {
+  margin-bottom: 1rem;
+}
+</style>
+```

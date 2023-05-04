@@ -30,31 +30,40 @@ export default {
     BaseTableJSON,
   },
   methods: {
-    getUsers() {
-      axios.get('http://localhost:8000/api/products/show')
-        .then((response) => {
-          this.responseProducts = response.data.payload.products;
-        })
-        .catch(({ response }) => {
-          this.errors.title = response.data.message;
-          this.errors.generic = response.data.payload.errors.generic;
-          this.errors.specific = response.data.payload.errors.specific;
-          this.errors.validation = response.data.payload.errors.validation;
-        });
+    async getProducts() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/products/show');
+        this.responseProducts = data.payload.products;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
     },
-    deleteProduct(id) {
+    async deleteProduct(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
-        axios.delete('http://localhost:8000/api/product/delete', { data: { id } })
-          .then(() => {
-            this.$router.go();
-          })
-          .catch(({ response }) => {
-            this.errors.title = response.data.message;
-            this.errors.generic = response.data.payload.errors.generic || '';
-            this.errors.specific = response.data.payload.errors.specific || '';
-            this.errors.validation = response.data.payload.errors.validation || '';
-          });
+        try {
+          await axios.delete('http://localhost:8000/api/product/delete', { data: { id } });
+          alert('Produto deletado com sucesso!');
+          this.$router.go();
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+        }
       }
     },
     updateProduct(id) {
@@ -62,7 +71,7 @@ export default {
     },
   },
   mounted() {
-    this.getUsers();
+    this.getProducts();
   },
 };
 </script>

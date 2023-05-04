@@ -5,20 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 use Illuminate\Support\Facades\Auth;
 
-class Product extends Model
+class Purchase extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
-        'alcoholic',
-        'preparable',
-        'active_recipe',
-        'created_at',
-        'updated_at',
+        'price',
         'created_by',
         'updated_by',
     ];
@@ -58,8 +55,9 @@ class Product extends Model
         });
     }
 
-    public function purchase(): BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Purchase::class);
+        return $this->belongsToMany(Product::class, 'purchase_products', 'purchase_id', 'product_id')
+            ->withPivot('quantity', 'price');
     }
 }

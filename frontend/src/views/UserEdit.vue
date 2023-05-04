@@ -1,7 +1,7 @@
 <template>
   <section>
     <h1>Editar Usuário</h1>
-
+    <BaseErrors :errors="errors" />
     <BaseInput
       name="name"
       label="Nome"
@@ -28,7 +28,7 @@
     />
     <BaseInput
       name="password"
-      label="Nova senha"
+      label="(Opcional) Nova senha"
       placeholder="(Opcional) Mínimo 6 caracteres"
       type="password"
       v-model="form.password"
@@ -44,7 +44,7 @@
     />
     <BaseInput
       name="password_old"
-      label="Senha atual"
+      label="(Obrigatória) Senha atual"
       placeholder="Digite a senha atual"
       type="password"
       v-model="form.password_old"
@@ -128,54 +128,57 @@ export default {
     };
   },
   methods: {
-    getUser() {
+    async getUser() {
       const payload = { id: this.$route.params.id };
-      axios.get('http://localhost:8000/api/user', { params: payload })
-        .then((response) => {
-          this.toEdit = response.data.payload.user;
-          this.form = {
-            ...payload,
-            name: this.toEdit.name,
-            nickname: this.toEdit.nickname,
-            email: this.toEdit.email,
-            password: '',
-            password_confirmation: '',
-            userType: this.toEdit.userType,
-          };
-        })
-        .catch((err) => {
-          console.error(err.response);
-          window.alert('Erro ao buscar usuário');
-        });
+      try {
+        const response = await axios.get('http://localhost:8000/api/user', { params: payload });
+        this.toEdit = response.data.payload.user;
+        this.form = {
+          ...payload,
+          name: this.toEdit.name,
+          nickname: this.toEdit.nickname,
+          email: this.toEdit.email,
+          password: '',
+          password_confirmation: '',
+          userType: this.toEdit.userType,
+        };
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
     },
     async editUser() {
       const confirmed = window.confirm('Deseja realmente atualizar este cliente?');
       if (confirmed) {
-        schema.validate(this.form, { abortEarly: false })
-          .then(() => {
-            axios.put('http://localhost:8000/api/user/edit', this.form)
-              .then(() => {
-                window.alert('Usuário Atualizado com sucesso!');
-                this.$router.push('/users/show');
-              })
-              .catch((err) => {
-                console.error(err.response);
-                window.alert('Erro ao atualizar usuário');
-              });
-          })
-          .catch((err) => {
-            this.formularyErrors = {
-              name: '',
-              nickname: '',
-              email: '',
-              password: '',
-              password_confirmation: '',
-              userType: '',
-            };
-            err.inner.forEach((error) => {
-              this.formularyErrors[error.path] = error.message;
+        try {
+          await schema.validate(this.form, { abortEarly: false });
+          await axios.put('http://localhost:8000/api/user/edit', this.form);
+          window.alert('Usuário Atualizado com sucesso!');
+          this.$router.push('/users/show');
+        } catch (errors) {
+          if (errors instanceof yup.ValidationError) {
+            errors.inner.forEach((e) => {
+              this.formularyErrors[e.path] = e.message;
             });
-          });
+          } else {
+            const { response } = errors;
+            if (!response) {
+              this.errors.generic = errors.message;
+              return;
+            }
+            this.errors.title = response.data.message;
+            this.errors.generic = response.data.payload.errors.generic;
+            this.errors.specific = response.data.payload.errors.specific;
+            this.errors.validation = response.data.payload.errors.validation;
+          }
+        }
       }
     },
   },

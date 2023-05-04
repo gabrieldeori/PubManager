@@ -1,15 +1,15 @@
 <template>
   <section>
-    <h1>CLIENTS</h1>
+    <h1>Compras</h1>
 
-    <BaseErrors :errors="this.errors" />
+    <BaseErrors :errors="errors" />
 
     <BaseTableJSON
-      :table_title="'Clients'"
-      :table_data="responseClients"
+      :table_title="'Compras'"
+      :table_data="responsePurchases"
       :is_crud="true"
-      @updateEmit="updateClient"
-      @deleteEmit="deleteClient"
+      @updateEmit="updatePurchase"
+      @deleteEmit="deletePurchase"
     />
   </section>
 </template>
@@ -19,21 +19,21 @@ import axios from 'axios';
 import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
-  name: 'ClientsTable',
+  name: 'PurchasesShow',
   data() {
     return {
       errors: {},
-      responseClients: [],
+      responsePurchases: [],
     };
   },
   components: {
     BaseTableJSON,
   },
   methods: {
-    async getClients() {
+    async getPurchases() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/clients/show');
-        this.responseClients = data.payload;
+        const { data } = await axios.get('http://localhost:8000/api/purchases/show');
+        this.responsePurchases = data.payload.purchases;
       } catch (errors) {
         const { response } = errors;
         if (!response) {
@@ -46,12 +46,12 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    async deleteClient(id) {
+    async deletePurchase(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/client/delete', { data: { id } });
-          alert('Cliente deletado com sucesso!');
+          await axios.delete('http://localhost:8000/api/purchase/delete', { data: { id } });
+          alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {
           const { response } = errors;
@@ -59,19 +59,19 @@ export default {
             this.errors.generic = errors.message;
             return;
           }
-          this.errors.title = response.data.message || '';
+          this.errors.title = response.data.message;
           this.errors.generic = response.data.payload.errors.generic || '';
           this.errors.specific = response.data.payload.errors.specific || '';
           this.errors.validation = response.data.payload.errors.validation || '';
         }
       }
     },
-    updateClient(id) {
-      this.$router.push(`/client/${id}`);
+    updatePurchase(id) {
+      this.$router.push(`/purchases/edit/${id}`);
     },
   },
   mounted() {
-    this.getClients();
+    this.getPurchases();
   },
 };
 </script>

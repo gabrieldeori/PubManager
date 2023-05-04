@@ -3,7 +3,7 @@
     <button
       type="button"
       class='base_button button_primary invert'
-      @click="saveInsertion"
+      @click.prevent="saveInsertion"
     >
       Registrar
     </button>
@@ -11,14 +11,14 @@
     <button
       type="button"
       class='base_button button_danger invert'
-      @click="cancelInsertion"
+      @click.prevent="cancelInsertion"
     >
       Cancelar
     </button>
     <button
       type="button"
       class='base_button button_danger'
-      @click="deleteInsertion"
+      @click.prevent="deleteInsertion"
     >
       Deletar
     </button>

@@ -27,7 +27,16 @@
             v-for="tBodyData, tbdi in Object.values(tBodyRow)"
             v-bind:key="'key_tBodyData_' + tbdi"
           >
-            {{ tBodyData }}
+            <ul v-if="Array.isArray(tBodyData)">
+              <li
+                v-for="tBodyDataItem, tbdii in tBodyData.slice(0,5)"
+                v-bind:key="'key_tBodyDataItem_' + tbdii"
+              >
+                {{ tBodyDataItem }}
+              </li>
+              ...
+            </ul>
+            <div v-else>{{ tBodyData }}</div>
           </td>
           <td v-if="is_crud">
             <button
@@ -134,5 +143,9 @@ button {
   height: 3rem;
   max-height: 3rem;
   max-width: 100%;
+}
+
+li {
+  text-align: left;
 }
 </style>

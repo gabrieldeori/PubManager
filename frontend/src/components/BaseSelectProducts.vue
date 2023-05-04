@@ -2,7 +2,8 @@
   <label class="input_label" :for="'id_' + name">
     <div class="input_label_text">{{ label }}</div>
     <select
-    :class="['input_area input_select', componentClass, { error: error }]"
+      v-if="options.length > 0"
+      class="input_select"
       :id="'id_' + name"
       :name="name"
       :value="modelValue"
@@ -13,14 +14,11 @@
     >
       <option
         v-for="option in options"
-        :value="option"
-        :key="option"
-        :selected="option === modelValue"
-      >{{ option }}</option>
+        :value="option.id"
+        :key="option.name"
+        :selected="option.id === modelValue"
+      >{{ option.name }}</option>
     </select>
-    <div v-if="error" class="error_message">
-      {{ error }}
-    </div>
   </label>
 </template>
 
@@ -31,6 +29,10 @@ export default {
       type: String,
       default: '',
     },
+    name: {
+      type: String,
+      required: true,
+    },
     modelValue: {
       type: [String, Number],
       default: '',
@@ -38,10 +40,7 @@ export default {
     options: {
       type: Array,
       required: true,
-    },
-    error: {
-      type: String,
-      default: '',
+      default: () => [],
     },
   },
 };
@@ -75,15 +74,5 @@ export default {
 
 option::after {
   border: 2px solid red;
-}
-
-.input_area.error {
-  border: 0.2rem solid var(--danger_stronger);
-  color: var(--danger_stronger);
-}
-
-.error_message {
-  color: var(--danger_stronger);
-  padding: 0.25rem;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <section>
     <h1>form</h1>
+    <BaseErrors :errors="errors" />
     <form class="base_form" @submit.prevent="sendForm">
       <BaseInput
         name="name"
@@ -87,6 +88,7 @@ export default {
         password_confirmation: '',
         userType: '',
       },
+      errors: {},
       userTypesList: [
         { label: 'Nenhum', value: 'Nenhum' },
         { label: 'Admin', value: 'Admin' },
@@ -94,32 +96,29 @@ export default {
     };
   },
   methods: {
-    sendForm() {
-      schema.validate(this.form, { abortEarly: false })
-        .then(() => {
-          axios.post('http://localhost:8000/api/user/register', this.form)
-            .then(() => {
-              window.alert('Usuário registrado com sucesso!');
-              this.$router.push('/users/show');
-            })
-            .catch((err) => {
-              console.error(err.response);
-              window.alert('Erro ao registrar usuário');
-            });
-        })
-        .catch((err) => {
-          this.formularyErrors = {
-            name: '',
-            nickname: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-            userType: '',
-          };
-          err.inner.forEach((error) => {
-            this.formularyErrors[error.path] = error.message;
+    async sendForm() {
+      try {
+        await schema.validate(this.form, { abortEarly: false });
+        await axios.post('http://localhost:8000/api/user/register', this.form);
+        window.alert('Usuário registrado com sucesso!');
+        this.$router.push('/users/show');
+      } catch (errors) {
+        if (errors instanceof yup.ValidationError) {
+          errors.inner.forEach((e) => {
+            this.formularyErrors[e.path] = e.message;
           });
-        });
+        } else {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic;
+          this.errors.specific = response.data.payload.errors.specific;
+          this.errors.validation = response.data.payload.errors.validation;
+        }
+      }
     },
   },
 };
