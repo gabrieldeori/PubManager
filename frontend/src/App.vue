@@ -54,6 +54,21 @@ export default {
           ],
         },
         {
+          group: 'Clientes',
+          options: [
+            {
+              id: 'showClients',
+              title: 'Ver Clientes',
+              link: '/clients/show',
+            },
+            {
+              id: 'registerClients',
+              title: 'Registrar Cliente',
+              link: '/client/register',
+            },
+          ],
+        },
+        {
           group: 'Usuários',
           options: [
             {
