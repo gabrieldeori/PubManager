@@ -67,7 +67,7 @@ export default {
       }
     },
     updatePurchase(id) {
-      this.$router.push(`/purchases/edit/${id}`);
+      this.$router.push(`/purchase/${id}`);
     },
   },
   mounted() {

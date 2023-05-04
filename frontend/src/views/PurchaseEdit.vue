@@ -123,7 +123,73 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'PurchaseEdit',
-}
+  data() {
+    return {
+      responsePurchase: {},
+      form: {
+        name: '',
+        description: '',
+        products: [],
+      },
+      productForm: {
+        id: '',
+        individualPrice: '',
+        quantity: '',
+        totalPrice: '',
+      },
+      responseProducts: [],
+      formularyErrors: {
+        name: '',
+        description: '',
+        products: '',
+      },
+      errors: {},
+      editId: null,
+      blockEditClick: false,
+      totalPrice: 0,
+    };
+  },
+  methods: {
+    async getProducts() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/products/options');
+        this.responseProducts = response.data.payload.products;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
+    async getAPurchase() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/purchase');
+        this.responsePurchase = data.payload.purchase;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+  },
+  mounted() {
+    this.getProducts();
+    this.getAPurchase();
+  },
+};
 </script>
