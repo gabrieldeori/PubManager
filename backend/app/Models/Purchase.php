@@ -15,9 +15,7 @@ class Purchase extends Model
     protected $fillable = [
         'name',
         'description',
-        'price',
-        'created_by',
-        'updated_by',
+        'total_price',
     ];
 
     protected $casts = [
@@ -58,6 +56,6 @@ class Purchase extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'purchase_products', 'purchase_id', 'product_id')
-            ->withPivot('quantity', 'price');
+            ->withPivot('quantity', 'total_price');
     }
 }

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\PurchasesProduct;
 use App\Models\Product;
+use App\Models\PurchaseProduct;
 use App\Models\Unit;
 use \Illuminate\Validation\ValidationException;
 
@@ -97,24 +98,34 @@ class PurchasesController extends Controller
 
     public function createPurchase(Request $request) {
         try {
-            $request->validate([
-                'description' => 'required|string',
-                'total_price' => 'required|numeric',
-                'products' => 'required|array',
-                'products.*.id' => 'required|integer',
-                'products.*.quantity' => 'required|integer',
-                'products.*.unit' => 'required|string',
-                'products.*.individual_price' => 'required|numeric',
-            ], MSG::PURCHASE_VALIDATE);
+            // $request->validate([
+            //     'name' => 'required|string',
+            //     'description' => 'required|string',
+            //     'products' => 'required|array|min:1',
+            //     'products.*.id' => 'required|integer',
+            //     'products.*.quantity' => 'required|integer',
+            //     'products.*.unit' => 'required|string',
+            //     'products.*.individualPrice' => 'required|numeric',
+            // ], MSG::PURCHASE_VALIDATE);
 
             $purchase = new Purchase();
+            $purchase->name = $request->name;
             $purchase->description = $request->description;
-            $purchase->total_price = $request->total_price;
-            $purchase->created_by = auth()->user()->id;
-            $purchase->updated_by = auth()->user()->id;
-            $purchase->save();
+            $purchase->total_price = 0;
+            $purchase->save(); // salva a compra e atribui um ID
 
-            $purchase->products()->attach($request->products);
+            foreach ($request->products as $product) {
+                $purchaseProduct = new PurchaseProduct();
+                $purchaseProduct->purchase_id = $purchase->id;
+                $purchaseProduct->product_id = $product['id'];
+                $purchaseProduct->quantity = $product['quantity'];
+                $purchaseProduct->individual_price = $product['individualPrice'];
+                $purchaseProduct->save();
+
+                $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+            }
+
+            $purchase->save(); // atualiza o total_price da compra
 
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_CREATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::CREATED);
@@ -151,8 +162,7 @@ class PurchasesController extends Controller
             }
 
             $purchase->description = $request->description;
-            $purchase->total_price = $request->total_price;
-            $purchase->updated_by = auth()->user()->id;
+            $purchase->total_price = $request->totalPrice;
             $purchase->save();
 
             $purchase->products()->detach();

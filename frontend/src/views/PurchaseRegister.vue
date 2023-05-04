@@ -169,7 +169,6 @@ export default {
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
         await axios.post('http://localhost:8000/api/purchase/register', this.form);
-        console.log('foi');
         // this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
