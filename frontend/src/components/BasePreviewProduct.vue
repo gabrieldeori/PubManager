@@ -1,6 +1,8 @@
 <template>
-  <div class="base_button button_highlight invert">
-    {{ preview.name }} {{ preview.price }} x {{ preview.quantity }} = {{ preview.total_price }}
+  <div v-if="preview && products.length > 0" class="base_button button_highlight invert">
+    {{ products[preview.product_id].name }}
+     R$ {{ preview.price }}
+     x {{ preview.quantity }} = R$ {{ preview.total_price }}
   </div>
 </template>
 
@@ -11,6 +13,11 @@ export default {
     preview: {
       type: Object,
       required: true,
+    },
+    products: {
+      type: Array,
+      required: true,
+      default: () => [],
     },
   },
 };

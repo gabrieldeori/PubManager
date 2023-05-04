@@ -5,9 +5,10 @@
         <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
           <BasePreviewProduct
-            v-if="editId !== index"
+            v-if="editId !== index && insertion.product_id !== null"
             @click="editInsertion(index)"
             :preview="insertion"
+            :products="responseProducts"
           />
 
           <div v-if="editId === index">
@@ -92,14 +93,14 @@ export default {
       this.editId = this.insertionList.length;
       this.toEdit = {
         name: '',
-        product_id: '',
+        product_id: null,
         price: 0,
         quantity: 0,
         total_price: 0,
       };
       this.insertionList.push({
         name: '',
-        product_id: '',
+        product_id: null,
         price: 0,
         quantity: 0,
         total_price: 0,
@@ -110,9 +111,19 @@ export default {
       this.toEdit = { ...this.insertionList[index] };
     },
     saveInsertion(index) {
-      this.insertionList[index] = { ...this.toEdit };
-      this.toEdit = {};
-      this.editId = -1;
+      const {
+        product_id: productId,
+        price,
+        quantity,
+        total_price: totalPrice,
+      } = this.toEdit;
+      if (productId !== null && price > 0 && quantity > 0 && totalPrice > 0) {
+        this.toEdit.price = parseFloat(price).toFixed(2);
+        this.toEdit.total_price = parseFloat(totalPrice).toFixed(2);
+        this.insertionList[index] = { ...this.toEdit };
+        this.toEdit = {};
+        this.editId = -1;
+      }
     },
     cancelInsertion() {
       this.toEdit = {};
@@ -141,15 +152,25 @@ export default {
         });
     },
     calculateTotalPrice() {
-      this.toEdit.total_price = (this.toEdit.price * this.toEdit.quantity).toFixed(4);
+      const { price, quantity } = this.toEdit;
+      if (quantity > 0 && price > 0) {
+        this.toEdit.total_price = (price * quantity).toFixed(4);
+      } else {
+        this.toEdit.total_price = 0;
+      }
     },
     calculateIndividualPrice() {
-      this.toEdit.price = (this.toEdit.total_price / this.toEdit.quantity).toFixed(4);
+      const { total_price: totalPrice, quantity } = this.toEdit;
+      if (quantity > 0 && totalPrice > 0) {
+        this.toEdit.price = (totalPrice / quantity).toFixed(4);
+      } else {
+        this.toEdit.price = 0;
+      }
     },
     calculateBoth() {
-      const { price, total_price: totalPrice, quantity } = this.toEdit;
-      if (price === 0 && totalPrice > 0 && quantity !== 0) {
-        this.calculateIndividualTotalPrice();
+      const { total_price: totalPrice, quantity } = this.toEdit;
+      if (quantity > 0 && totalPrice > 0) {
+        this.calculateIndividualPrice();
       } else {
         this.calculateTotalPrice();
       }
