@@ -1,9 +1,9 @@
 <template>
-  <section>
+  <form submit.prevent="">
     <BaseErrors
       :errors="errors"
     />
-    <form @submit.prevent="">
+    <section>
       <BaseInput
         name="name"
         label="Nome"
@@ -32,10 +32,10 @@
             class="base_button button_primary_lighter"
             @click="editInsertion(pIndex)"
           >
-            {{ responseProducts[product.id].name }} -
-            {{ product.individualPrice }} -
-            {{ product.quantity }} -
-            {{ product.totalPrice }}
+            R$ {{ responseProducts[product.id - 1].name }}
+            -{{ product.individualPrice }}
+            x{{ product.quantity }}
+            = R${{ product.totalPrice }}
           </button>
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
@@ -83,30 +83,60 @@
           </div>
         </article>
       </ul>
-    </form>
+    </section>
 
     <button
       class='base_button button_primary invert'
-      v-if="form.products.length > 0"
+      v-if="form.products.length > 0 && !blockEditClick"
       @click.prevent="newInsertion"
     >
       + Adicionar outro produto
     </button>
     <button
       class='base_button button_primary invert'
-      v-else
+      v-else-if="!blockEditClick"
       @click.prevent="newInsertion"
     >
       + Adicionar produto
     </button>
-  </section>
+
+    <p v-if="formularyErrors.products" class="error_message">
+      {{ formularyErrors.products }}
+    </p>
+
+    <input
+      @click.prevent="sendForm"
+      v-if="!blockEditClick"
+      type="submit"
+      class="base_button button_primary"
+      value="Cadastrar"
+    />
+    <pre>
+      {{ form }}
+    </pre>
+  </form>
 </template>
 
 <script>
 import BaseSelectProducts from '@/components/BaseSelectProducts.vue';
 import BaseEditButtons from '@/components/BaseEditButtons.vue';
 import BaseInput from '@/components/BaseInput.vue';
+
 import axios from 'axios';
+import * as yup from '@/helpers/yupbrasil';
+
+const schema = yup.object().shape({
+  name: yup.string().required().min(3).max(255),
+  description: yup.string().nullable(),
+  products: yup.array().of(
+    yup.object().shape({
+      id: yup.number().required(),
+      individualPrice: yup.number().required(),
+      quantity: yup.number().required(),
+      totalPrice: yup.number().required(),
+    }),
+  ).min(1),
+});
 
 export default {
   name: 'PurchaseRegister',
@@ -133,6 +163,33 @@ export default {
     };
   },
   methods: {
+    async sendForm() {
+      try {
+        this.formularyErrors = {};
+        this.errors = {};
+        await schema.validate(this.form, { abortEarly: false });
+        await axios.post('http://localhost:8000/api/purchase/register', this.form);
+        console.log('foi');
+        // this.$router.push({ name: 'PurchasesShow' });
+      } catch (errors) {
+        if (errors instanceof yup.ValidationError) {
+          errors.inner.forEach((e) => {
+            this.formularyErrors[e.path] = e.message;
+          });
+        } else {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic;
+          this.errors.specific = response.data.payload.errors.specific;
+          this.errors.validation = response.data.payload.errors.validation;
+        }
+      }
+    },
+
     async getProducts() {
       try {
         const response = await axios.get('http://localhost:8000/api/products/options');
@@ -247,7 +304,8 @@ export default {
       this.blockEditClick = true;
     },
 
-    cancelInsertion() {
+    cancelInsertion(index) {
+      this.form.products.splice(index, 1);
       this.editId = null;
       this.productForm = {
         id: 0,
