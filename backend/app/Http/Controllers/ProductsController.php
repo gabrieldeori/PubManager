@@ -53,6 +53,36 @@ class ProductsController extends Controller
         }
     }
 
+    public function getProductsOptions() {
+        try {
+            $products = Product::all();
+
+            if ($products->isEmpty()) {
+                throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
+            }
+
+            $products = $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                ];
+            });
+
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$products]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function getAProduct(Request $request) {
         try {
             $request->validate([

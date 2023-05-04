@@ -43,6 +43,7 @@ Route::post('/product/register', [ProductsController::class, 'createProduct'])->
 Route::put('/product/edit', [ProductsController::class, 'editAProduct'])->middleware('jwt.auth');
 Route::delete('/product/delete', [ProductsController::class, 'deleteAProduct'])->middleware('jwt.auth');
 Route::get('/product', [ProductsController::class, 'getAProduct'])->middleware('jwt.auth');
+Route::get('/products/options', [ProductsController::class, 'getProductsOptions'])->middleware('jwt.auth');
 
 use App\Http\Controllers\PurchasesController;
 Route::get('/purchases/show', [PurchasesController::class, 'getPurchases'])->middleware('jwt.auth');
