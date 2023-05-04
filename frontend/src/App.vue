@@ -14,7 +14,7 @@ export default {
     return {
       dropsMenus: [
         {
-          group: 'Clientes',
+          group: 'Home',
           options: [
             {
               id: 'home',
@@ -33,8 +33,8 @@ export default {
             },
             {
               id: 'registerProducts',
-              title: 'Ver Produtos',
-              link: '/products/show',
+              title: 'Criar Produto',
+              link: '/product/register',
             },
           ],
         },

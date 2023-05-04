@@ -22,7 +22,7 @@ export default {
   name: 'BasePubDropDown',
   props: {
     menu: {
-      type: Array,
+      type: Object,
       required: true,
     },
   },
