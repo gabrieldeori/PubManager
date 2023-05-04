@@ -63,7 +63,17 @@ class PurchasesController extends Controller
                 'id' => 'required|integer',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::with('products')->findOrFail($request->id);
+            $purchase = Purchase::with(['products' => function($query) {
+                $query->select(
+                    'products.id',
+                    'products.name',
+                    'products.description',
+                    'purchase_products.quantity',
+                    'purchase_products.individual_price'
+                );
+            }])
+            ->findOrFail($request->id);
+
 
             // if (!$purchase) {
             //     throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
