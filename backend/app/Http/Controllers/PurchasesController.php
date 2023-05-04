@@ -20,7 +20,8 @@ class PurchasesController extends Controller
 {
     public function getPurchases() {
         try {
-            $purchases = Purchase::with('products')->get();
+            $purchases = Purchase::with('products')
+            ->get();
 
             if ($purchases->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
@@ -33,9 +34,9 @@ class PurchasesController extends Controller
                     'id' => $purchase->id,
                     'Nome' => $purchase->name,
                     'Descrição' => $purchase->description,
-                    'Preço Total' => $purchase->price,
+                    'Preço Total' => $purchase->total_price,
                     'Produtos' => $purchase->products->map(function ($product) {
-                        return $product->name . ': R$ ' . $product->pivot->price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->price * $product->pivot->quantity;
+                        return $product->name . ': R$ ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->individual_price * $product->pivot->quantity;
                     })
                 ];
                 array_push($processed, $newPurchase);
