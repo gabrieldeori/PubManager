@@ -63,21 +63,21 @@ class PurchasesController extends Controller
                 'id' => 'required|integer',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::find($request->id);
+            $purchase = Purchase::with('products')->findOrFail($request->id);
 
-            if (!$purchase) {
-                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            }
+            // if (!$purchase) {
+            //     throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
+            // }
 
-            $purchase->created_by = $purchase->createdBy->name;
-            $purchase->updated_by = $purchase->updatedBy->name;
-            $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
-            $purchase->products = $purchase->products->map(function ($product) {
-                $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-                return $product;
-            });
+            // $purchase->created_by = $purchase->createdBy->name;
+            // $purchase->updated_by = $purchase->updatedBy->name;
+            // $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
+            // $purchase->products = $purchase->products->map(function ($product) {
+            //     $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
+            //     return $product;
+            // });
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_FOUND, ['purchase'=>$purchase]);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_FOUND, ['purchase' => $purchase]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -85,9 +85,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
@@ -131,8 +131,8 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_CREATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::CREATED);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
@@ -177,9 +177,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
@@ -212,9 +212,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {

@@ -117,7 +117,7 @@
       value="Cadastrar"
     />
     <pre>
-      {{ form }}
+      {{ responsePurchase }}
     </pre>
   </form>
 </template>
@@ -171,9 +171,10 @@ export default {
     },
 
     async getAPurchase() {
+      const { id } = this.$route.params;
       try {
-        const { data } = await axios.get('http://localhost:8000/api/purchase');
-        this.responsePurchase = data.payload.purchase;
+        const response = await axios.get('http://localhost:8000/api/purchase', { params: { id } });
+        this.responsePurchase = response.data.payload.purchase;
       } catch (errors) {
         const { response } = errors;
         if (!response) {
