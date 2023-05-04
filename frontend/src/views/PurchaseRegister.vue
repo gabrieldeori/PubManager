@@ -100,6 +100,11 @@
       + Adicionar produto
     </button>
 
+    <p>
+      Quantidade de produtos: {{ form.products.length }}
+      Total: R$ {{ totalPrice }}
+    </p>
+
     <p v-if="formularyErrors.products" class="error_message">
       {{ formularyErrors.products }}
     </p>
@@ -160,6 +165,7 @@ export default {
       responseProducts: [],
       formularyErrors: {},
       errors: {},
+      totalSomado: 0,
     };
   },
   methods: {
@@ -169,7 +175,7 @@ export default {
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
         await axios.post('http://localhost:8000/api/purchase/register', this.form);
-        // this.$router.push({ name: 'PurchasesShow' });
+        this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           errors.inner.forEach((e) => {
@@ -358,6 +364,18 @@ export default {
       }
     },
   },
+
+  computed: {
+    totalPrice() {
+      const total = this.form.products
+        .reduce((acc, { totalPrice }) => {
+          if (!totalPrice) return acc;
+          return acc + parseFloat(totalPrice);
+        }, 0);
+      return total.toFixed(2);
+    },
+  },
+
   mounted() {
     this.getProducts();
   },
