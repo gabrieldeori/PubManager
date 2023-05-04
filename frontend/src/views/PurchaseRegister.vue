@@ -87,9 +87,17 @@
 
     <button
       class='base_button button_primary invert'
+      v-if="form.products.length > 0"
       @click.prevent="newInsertion"
     >
-      + Adicionar outra linha
+      + Adicionar outro produto
+    </button>
+    <button
+      class='base_button button_primary invert'
+      v-else
+      @click.prevent="newInsertion"
+    >
+      + Adicionar produto
     </button>
   </section>
 </template>
