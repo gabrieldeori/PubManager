@@ -82,12 +82,12 @@ const routes = [
     component: () => import('../views/PurchasesShow.vue'),
     beforeEnter: Guard.auth,
   },
-  // {
-  //   path: '/purchase/register',
-  //   name: 'PurchaseRegister',
-  //   component: () => import('../views/PurchaseRegister.vue'),
-  //   beforeEnter: Guard.auth,
-  // },
+  {
+    path: '/purchase/register',
+    name: 'PurchaseRegister',
+    component: () => import('../views/PurchaseRegister.vue'),
+    beforeEnter: Guard.auth,
+  },
   // {
   //   path: '/purchase/:id',
   //   name: 'PurchaseEdit',

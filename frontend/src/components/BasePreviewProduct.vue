@@ -1,14 +1,12 @@
 <template>
   <div class="base_button button_highlight invert">
-    <span v-for="element, index in Object.values(preview)" :key="'key_elem_' + index">
-      {{ element }}&nbsp;
-    </span>
+    {{ preview.name }} {{ preview.price }} x {{ preview.quantity }} = {{ preview.total_price }}
   </div>
 </template>
 
 <script>
 export default {
-  name: 'BasePreview',
+  name: 'BasePreviewProduct',
   props: {
     preview: {
       type: Object,
