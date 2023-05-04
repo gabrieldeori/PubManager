@@ -1,19 +1,108 @@
 <template>
   <nav>
-    <router-link to="/">Home Components</router-link> |
-    <router-link to="/client/register">Registrar Cliente</router-link> |
-    <router-link to="/clients/show">Clientes Registrados</router-link> |
-    <router-link to="/products/show">Produtos Registrados</router-link> |
-    <router-link to="/product/register">Registrar Produto</router-link> |
-    <router-link to="/purchases/show">Compras Registrados</router-link> |
-    <router-link to="/purchase/register">Registrar Compra</router-link> |
-    <router-link to="/user/register">Registrar Usuário</router-link> |
-    <router-link to="/users/show">Usuários Registrados</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/logout">Logout</router-link>
+    <BasePubDropDown :dropsMenus="dropsMenus"/>
   </nav>
   <router-view/>
 </template>
+
+<script>
+import BasePubDropDown from './components/BasePubDropDown.vue';
+// Transform into drops
+// <router-link to="/">Home Components</router-link> |
+// <router-link to="/client/register">Registrar Cliente</router-link> |
+// <router-link to="/clients/show">Clientes Registrados</router-link> |
+// <router-link to="/products/show">Produtos Registrados</router-link> |
+// <router-link to="/product/register">Registrar Produto</router-link> |
+// <router-link to="/purchases/show">Compras Registrados</router-link> |
+// <router-link to="/purchase/register">Registrar Compra</router-link> |
+// <router-link to="/user/register">Registrar Usuário</router-link> |
+// <router-link to="/users/show">Usuários Registrados</router-link> |
+// <router-link to="/login">Login</router-link> |
+// <router-link to="/logout">Logout</router-link>
+
+export default {
+  name: 'App',
+  data() {
+    return {
+      dropsMenus: [
+        {
+          group: 'Clientes',
+          options: [
+            {
+              id: 'home',
+              title: 'Home Components',
+              link: '/',
+            },
+          ],
+        },
+        {
+          group: 'Produtos',
+          options: [
+            {
+              id: 'showProducts',
+              title: 'Ver Produtos',
+              link: '/products/show',
+            },
+            {
+              id: 'registerProducts',
+              title: 'Ver Produtos',
+              link: '/products/show',
+            },
+          ],
+        },
+        {
+          group: 'Compras',
+          options: [
+            {
+              id: 'showPurchases',
+              title: 'Ver Compras',
+              link: '/purchases/show',
+            },
+            {
+              id: 'registerPurchases',
+              title: 'Registrar Compra',
+              link: '/purchase/register',
+            },
+          ],
+        },
+        {
+          group: 'Usuários',
+          options: [
+            {
+              id: 'showUsers',
+              title: 'Ver Usuários',
+              link: '/users/show',
+            },
+            {
+              id: 'registerUsers',
+              title: 'Registrar Usuário',
+              link: '/user/register',
+            },
+          ],
+        },
+        {
+          group: 'Login',
+          options: [
+            {
+              id: 'login',
+              title: 'Login',
+              link: '/login',
+            },
+            {
+              id: 'logout',
+              title: 'Logout',
+              link: '/logout',
+            },
+          ],
+        },
+      ],
+    };
+  },
+  components: {
+    BasePubDropDown,
+  },
+};
+</script>
 
 <style>
 :root {
