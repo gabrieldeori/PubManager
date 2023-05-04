@@ -73,7 +73,8 @@ export default {
         this.form = data.payload.product;
         this.form.alcoholic = data.payload.product.alcoholic === 'Sim';
         this.form.preparable = data.payload.product.preparable === 'Sim';
-      } catch ({ response }) {
+      } catch (errors) {
+        const { response } = errors;
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
         this.errors.specific = response.data.payload.errors.specific || '';

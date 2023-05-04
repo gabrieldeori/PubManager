@@ -30,33 +30,40 @@ export default {
     BaseTableJSON,
   },
   methods: {
-    getPurchases() {
-      axios.get('http://localhost:8000/api/purchases/show')
-        .then((response) => {
-          console.log(response);
-          this.responsePurchases = response.data.payload.purchases;
-        })
-        .catch((error) => {
-          console.log(error);
-          this.errors.title = error.response.data.message || '';
-          this.errors.generic = error.response.data.payload.errors.generic || '';
-          this.errors.specific = error.response.data.payload.errors.specific || '';
-          this.errors.validation = error.response.data.payload.errors.validation || '';
-        });
+    async getPurchases() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/purchases/show');
+        this.responsePurchases = data.payload.purchases;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
     },
-    deletePurchase(id) {
+    async deletePurchase(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
-        axios.delete('http://localhost:8000/api/purchase/delete', { data: { id } })
-          .then(() => {
-            this.$router.go();
-          })
-          .catch(({ response }) => {
-            this.errors.title = response.data.message;
-            this.errors.generic = response.data.payload.errors.generic || '';
-            this.errors.specific = response.data.payload.errors.specific || '';
-            this.errors.validation = response.data.payload.errors.validation || '';
-          });
+        try {
+          await axios.delete('http://localhost:8000/api/purchase/delete', { data: { id } });
+          alert('Compra deletada com sucesso!');
+          this.$router.go();
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+        }
       }
     },
     updatePurchase(id) {

@@ -1,10 +1,9 @@
 <template>
   <section>
-    <BaseError
-      v-if="errorData"
-      :errorData="errorData"
-    />
     <h1>CLIENTS</h1>
+
+    <BaseErrors :errors="this.errors" />
+
     <BaseTableJSON
       :table_title="'Clients'"
       :table_data="responseClients"
@@ -23,7 +22,7 @@ export default {
   name: 'ClientsTable',
   data() {
     return {
-      errorData: null,
+      errors: {},
       responseClients: [],
     };
   },
@@ -31,26 +30,40 @@ export default {
     BaseTableJSON,
   },
   methods: {
-    getClients() {
-      axios.get('http://127.0.0.1:8000/api/clients/show')
-        .then((response) => {
-          this.responseClients = response.data.payload;
-        })
-        .catch((error) => {
-          this.errorData = error;
-        });
+    async getClients() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/clients/show');
+        this.responseClients = data.payload;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
     },
-    deleteClient(id) {
+    async deleteClient(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
-        axios.delete('http://localhost:8000/api/client/delete', { data: { id } })
-          .then(() => {
-            alert('Cliente deletado com sucesso!');
-            this.$router.go();
-          })
-          .catch(() => {
-            alert('Erro ao deletar cliente!');
-          });
+        try {
+          await axios.delete('http://localhost:8000/api/client/delete', { data: { id } });
+          alert('Cliente deletado com sucesso!');
+          this.$router.go();
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+        }
       }
     },
     updateClient(id) {

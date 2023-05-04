@@ -1,15 +1,12 @@
 <template>
   <section>
-    <BaseError
-      v-if="errorData"
-      :errorData="errorData"
-    />
+    <BaseErrors :errors="errors" />
     <h1>Usuários</h1>
     <BaseTableJSON
       :table_title="'Usuários'"
       :table_data="responseUsers"
       :is_crud="true"
-      @updateEmit="updateAdmin"
+      @updateEmit="updateUser"
       @deleteEmit="deleteUser"
     />
   </section>
@@ -23,40 +20,48 @@ export default {
   name: 'UsersTable',
   data() {
     return {
-      errorData: null,
       responseUsers: [],
+      errors: {},
     };
   },
   components: {
     BaseTableJSON,
   },
   methods: {
-    getUsers() {
-      axios.get('http://localhost:8000/api/users/show')
-        .then((response) => {
-          this.responseUsers = response.data.payload;
-          console.log(response);
-        })
-        .catch((error) => {
-          this.errorData = error;
-          console.log('erro:');
-          console.log(error);
-        });
-    },
-    deleteUser(id) {
-      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
-      if (confirmed) {
-        axios.delete('http://localhost:8000/api/user/delete', { data: { id } })
-          .then(() => {
-            alert('Usuário deletado com sucesso!');
-            this.$router.go();
-          })
-          .catch(() => {
-            alert('Erro ao deletar usuário!');
-          });
+    async getUsers() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/users/show');
+        this.responseUsers = response.data.payload;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    updateAdmin(id) {
+    async deleteUser(id) {
+      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
+      if (confirmed) {
+        try {
+          await axios.delete('http://localhost:8000/api/user/delete', { data: { id } });
+          this.$router.go();
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+        }
+      }
+    },
+    updateUser(id) {
       this.$router.push(`/user/${id}`);
     },
   },

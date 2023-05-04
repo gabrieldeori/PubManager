@@ -3,10 +3,15 @@
     <form @submit.prevent="SubmitClients">
       <h1>Registrar Cliente</h1>
       <p v-if="insertionList.length === 0">Insira ao menos um cliente</p>
+      <BaseErrors :errors="this.errors" />
       <div>
         <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
-          <BasePreview v-if="editId !== index" @click="editInsertion(index)" :preview="insertion" />
+          <BasePreview
+            v-if="editId !== index"
+            @click="editInsertion(index)"
+            :preview="insertion"
+            />
 
           <div v-if="editId === index">
             <BaseInput
@@ -48,6 +53,7 @@ export default {
       editId: -1,
       insertionList: [],
       toEdit: {},
+      errors: {},
     };
   },
   methods: {
@@ -92,26 +98,37 @@ export default {
       this.toEdit = {};
       this.editId = -1;
     },
-    invalidNameOnArray() {
-      return this.insertionList.some((insertion) => insertion.name === '');
-    },
-    SubmitClients() {
-      if (this.insertionList.length > 0 && !this.invalidNameOnArray()) {
-        const confirmed = window.confirm('Tem certeza que deseja salvar?');
-        if (confirmed) {
-          axios.post('http://localhost:8000/api/client/register', this.insertionList)
-            .then((res) => {
-              window.alert('Clientes registrados com sucesso!');
-              this.$router.push('/clients/show');
-              console.log(res);
-            })
-            .catch((err) => {
-              console.error(err);
-              window.alert('Erro ao registrar clientes');
-            });
+    async SubmitClients() {
+      const confirmed = window.confirm('Tem certeza que deseja salvar?');
+      if (confirmed) {
+        try {
+          if (this.insertionList.length === 0) {
+            throw new Error('Insira ao menos um cliente');
+          }
+          this.insertionList.forEach((element) => {
+            if (element.name === '') {
+              throw new Error('Insira um nome válido');
+            }
+
+            const validateRegex = /^[a-zA-ZÀ-ÿ\s]+$/;
+            if (!validateRegex.test(element.name)) {
+              throw new Error('Apenas letras e espaços em branco');
+            }
+          });
+
+          await axios.post('http://localhost:8000/api/client/register', this.insertionList);
+          this.$router.push('/clients/show');
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
         }
-      } else {
-        window.alert('Insira clientes válidos');
       }
     },
   },

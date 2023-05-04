@@ -2,6 +2,7 @@
   <section>
     <form @submit.prevent="SubmitClients">
       <h1>Registrar Compra</h1>
+      <BaseErrors :errors="errors" />
       <BaseDynamicInsertionProduct
         v-model="insertionList"
       />
@@ -14,6 +15,7 @@
 
 <script>
 import axios from 'axios';
+import yup from '@/helpers/yupbrasil';
 
 export default {
   name: 'PurchaseRegister',
@@ -74,23 +76,31 @@ export default {
     invalidNameOnArray() {
       return this.insertionList.some((insertion) => insertion.name === '');
     },
-    SubmitClients() {
+    async SubmitClients() {
       if (this.insertionList.length > 0 && !this.invalidNameOnArray()) {
         const confirmed = window.confirm('Tem certeza que deseja salvar?');
         if (confirmed) {
-          axios.post('http://localhost:8000/api/client/register', this.insertionList)
-            .then((res) => {
-              window.alert('Clientes registrados com sucesso!');
-              this.$router.push('/clients/show');
-              console.log(res);
-            })
-            .catch((err) => {
-              console.error(err);
-              window.alert('Erro ao registrar clientes');
-            });
+          try {
+            await axios.post('http://localhost:8000/api/purchase/register', this.insertionList);
+            this.$router.push('/purchases/show');
+          } catch (errors) {
+            if (errors instanceof yup.ValidationError) {
+              errors.inner.forEach((e) => {
+                this.formularyErrors[e.path] = e.message;
+              });
+            } else {
+              const { response } = errors;
+              if (!response) {
+                this.errors.generic = errors.message;
+                return;
+              }
+              this.errors.title = response.data.message;
+              this.errors.generic = response.data.payload.errors.generic;
+              this.errors.specific = response.data.payload.errors.specific;
+              this.errors.validation = response.data.payload.errors.validation;
+            }
+          }
         }
-      } else {
-        window.alert('Insira clientes válidos');
       }
     },
     registerPurchase() {

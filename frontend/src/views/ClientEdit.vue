@@ -2,24 +2,22 @@
   <section>
     <h1>Editar Cliente</h1>
 
-    <BaseError
-      v-if="errorData"
-      :errorData="errorData"
-    />
+    <BaseErrors :errors="errors" />
 
-    <div v-if="toEdit !== null">
-      <h3>{{ toEdit.id }} - {{ toEdit.name }}</h3>
+    <div v-if="form !== null">
+      <h3>{{ form.id }} - {{ form.name }}</h3>
 
       <BaseInput
-        v-model="toEdit.name"
+        v-model="form.name"
         label='Nome'
         type='text'
         placeholder='Apenas letras e espaços'
         required
+        :error="formularyErrors.name"
       />
 
-      <p>Criado em: {{ toEdit.created_at }}</p>
-      <p>Atualizado em: {{ toEdit.updated_at }}</p>
+      <p>Criado em: {{ form.created_at }}</p>
+      <p>Atualizado em: {{ form.updated_at }}</p>
 
       <button
         class="base_button button_primary"
@@ -39,13 +37,24 @@
 
 <script>
 import axios from 'axios';
+import * as yup from '@/helpers/yupbrasil';
+
+const schema = yup.object().shape({
+  name: yup.string().required().min(3).max(255)
+    .matches(/^[a-zA-ZÀ-ÿ\s]+$/, 'Apenas letras e espaços em branco'),
+});
 
 export default {
   name: 'ClientEdit',
   data() {
     return {
-      toEdit: null,
-      errorData: null,
+      form: {
+        name: '',
+      },
+      formularyErrors: {
+        name: '',
+      },
+      errors: {},
     };
   },
   methods: {
@@ -53,21 +62,43 @@ export default {
       const payload = { id: this.$route.params.id };
       try {
         const { data } = await axios.get('http://localhost:8000/api/client', { params: payload });
-        this.toEdit = data.payload.client;
-      } catch (error) {
-        this.errorData = error;
+        this.form = data.payload.client;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
     async editClient() {
       const confirmed = window.confirm('Deseja realmente atualizar este cliente?');
       if (confirmed) {
-        const payload = { ...this.toEdit };
         try {
-          const { data } = await axios.put('http://localhost:8000/api/client/edit', payload);
-          window.alert(data.message);
+          await schema.validate(this.form, { abortEarly: false });
+          const payload = { ...this.form };
+          await axios.put('http://localhost:8000/api/client/edit', payload);
           this.$router.push('/clients/show');
-        } catch (error) {
-          window.alert(error.response.data.message);
+        } catch (errors) {
+          if (errors instanceof yup.ValidationError) {
+            errors.inner.forEach((e) => {
+              this.formularyErrors[e.path] = e.message;
+            });
+          } else {
+            const { response } = errors;
+            if (!response) {
+              this.errors.generic = errors.message;
+              return;
+            }
+            this.errors.title = response.data.message || '';
+            this.errors.generic = response.data.payload.errors.generic || '';
+            this.errors.specific = response.data.payload.errors.specific || '';
+            this.errors.validation = response.data.payload.errors.validation || '';
+          }
         }
       }
     },
