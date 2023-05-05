@@ -67,7 +67,7 @@ export default {
       }
     },
     updateComanda(id) {
-      this.$router.push(`/purchase/${id}`);
+      this.$router.push(`/comanda/${id}`);
     },
   },
   mounted() {
