@@ -131,7 +131,7 @@ export default {
     async getUser() {
       const payload = { id: this.$route.params.id };
       try {
-        const response = await axios.get('http://localhost:8000/api/user', { params: payload });
+        const response = await axios.get(`${process.env.BASE_URL}/user`, { params: payload });
         this.toEdit = response.data.payload.user;
         this.form = {
           ...payload,
@@ -159,7 +159,7 @@ export default {
       if (confirmed) {
         try {
           await schema.validate(this.form, { abortEarly: false });
-          await axios.put('http://localhost:8000/api/user/edit', this.form);
+          await axios.put(`${process.env.BASE_URL}/user/edit`, this.form);
           window.alert('Usuário Atualizado com sucesso!');
           this.$router.push('/users/show');
         } catch (errors) {

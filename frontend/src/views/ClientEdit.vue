@@ -19,25 +19,12 @@
       <p>Criado em: {{ form.created_at }}</p>
       <p>Atualizado em: {{ form.updated_at }}</p>
 
-      <button
-        class="base_button button_primary"
-        @click="editClient()"
-        >
-          Atualizar
-      </button>
-      <button
-        class="base_button button_danger invert"
-        @click="this.$router.push(`/clients/show`)"
-      >
-        Cancelar
-      </button>
+      <BaseEditButtons
+        @editEmit="sendForm"
+        @deleteEmit="deleteClient"
+        @cancelEmit="cancelClient"
+      />
     </div>
-    <button
-      class="base_button button_danger"
-      @click="deleteClient"
-    >
-      <img src="../assets/icons/icon_delete.svg" alt="">
-    </button>
   </section>
 </template>
 
@@ -67,7 +54,7 @@ export default {
     async getClient() {
       const payload = { id: this.$route.params.id };
       try {
-        const { data } = await axios.get('http://localhost:8000/api/client', { params: payload });
+        const { data } = await axios.get(`${process.env.BASE_URL}/client`, { params: payload });
         this.form = data.payload.client;
       } catch (errors) {
         const { response } = errors;
@@ -81,13 +68,13 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    async editClient() {
+    async sendForm() {
       const confirmed = window.confirm('Deseja realmente atualizar este cliente?');
       if (confirmed) {
         try {
           await schema.validate(this.form, { abortEarly: false });
           const payload = { ...this.form };
-          await axios.put('http://localhost:8000/api/client/edit', payload);
+          await axios.put(`${process.env.BASE_URL}/client/edit`, payload);
           this.$router.push('/clients/show');
         } catch (errors) {
           if (errors instanceof yup.ValidationError) {
@@ -113,7 +100,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/client/delete', { data: { id } });
+          await axios.delete(`${process.env.BASE_URL}/client/delete`, { data: { id } });
           alert('Cliente deletado com sucesso!');
           this.$router.push('/clients/show');
         } catch (errors) {
@@ -134,6 +121,9 @@ export default {
           }
         }
       }
+    },
+    cancelClient() {
+      this.$router.push('/clients/show');
     },
   },
   mounted() {

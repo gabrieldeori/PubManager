@@ -20,7 +20,7 @@ export default {
       const parsedLocalToken = JSON.parse(localToken);
       const { access_token: token, token_type: tokenType } = parsedLocalToken;
       axios.defaults.headers.common.Authorization = `${tokenType} ${token}`;
-      axios.post('http://localhost:8000/api/authorize').then((response) => {
+      axios.post(`${process.env.BASE_URL}/authorize`).then((response) => {
         if (response.status === 200) {
           next({ name: 'UsersShow' });
         } else {

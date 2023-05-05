@@ -27,7 +27,7 @@ export default {
   methods: {
     async getClients() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/clients/show');
+        const { data } = await axios.get(`${process.env.BASE_URL}/clients/show`);
         this.responseClients = data.payload;
       } catch (errors) {
         const { response } = errors;
@@ -41,7 +41,7 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    updateClient(id) {
+    updateClient({ id }) {
       this.$router.push(`/client/${id}`);
     },
   },

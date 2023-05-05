@@ -28,7 +28,7 @@ export default {
   methods: {
     async getProducts() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/products/show');
+        const { data } = await axios.get(`${process.env.BASE_URL}/products/show`);
         this.responseProducts = data.payload.products;
       } catch (errors) {
         const { response } = errors;
@@ -46,7 +46,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/product/delete', { data: { id } });
+          await axios.delete(`${process.env.BASE_URL}/product/delete`, { data: { id } });
           alert('Produto deletado com sucesso!');
           this.$router.go();
         } catch (errors) {

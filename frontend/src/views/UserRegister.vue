@@ -99,7 +99,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/user/register', this.form);
+        await axios.post(`${process.env.BASE_URL}/user/register`, this.form);
         window.alert('Usuário registrado com sucesso!');
         this.$router.push('/users/show');
       } catch (errors) {

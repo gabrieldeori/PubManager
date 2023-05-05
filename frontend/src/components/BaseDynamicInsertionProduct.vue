@@ -124,7 +124,7 @@ export default {
       this.editId = -1;
     },
     getProductsList() {
-      axios.get('http://localhost:8000/api/products/show')
+      axios.get(`${process.env.BASE_URL}/products/show`)
         .then((response) => {
           const { products } = response.data.payload;
           const threated = products.map((product) => ({

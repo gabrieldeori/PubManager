@@ -126,7 +126,7 @@ export default {
             }
           });
 
-          await axios.post('http://localhost:8000/api/client/register', this.insertionList);
+          await axios.post(`${process.env.BASE_URL}/client/register`, this.insertionList);
           this.$router.push('/clients/show');
         } catch (errors) {
           const { response } = errors;

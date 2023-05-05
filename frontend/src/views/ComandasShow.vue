@@ -28,7 +28,7 @@ export default {
   methods: {
     async getComandas() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/comandas/show');
+        const { data } = await axios.get(`${process.env.BASE_URL}/comandas/show`);
         this.responseComandas = data.payload.comandas;
       } catch (errors) {
         const { response } = errors;
@@ -46,7 +46,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/comanda/delete', { data: { id } });
+          await axios.delete(`${process.env.BASE_URL}/comanda/delete`, { data: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {

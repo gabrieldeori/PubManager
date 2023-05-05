@@ -26,7 +26,7 @@ export default {
   methods: {
     async getCashRegister() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/cashregister/show');
+        const { data } = await axios.get(`${process.env.BASE_URL}/cashregister/show`);
         this.responseCashRegister = data.payload.cashRegisters;
       } catch (errors) {
         const { response } = errors;
