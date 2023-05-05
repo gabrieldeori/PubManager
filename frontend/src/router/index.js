@@ -94,6 +94,12 @@ const routes = [
     component: () => import('../views/PurchaseEdit.vue'),
     beforeEnter: Guard.auth,
   },
+  {
+    path: '/comanda/register',
+    name: 'ComandaRegister',
+    component: () => import('../views/ComandaRegister.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({

@@ -54,6 +54,21 @@ export default {
           ],
         },
         {
+          group: 'Comandas',
+          options: [
+            {
+              id: 'showComandas',
+              title: 'Ver Comandas',
+              link: '/comandas/show',
+            },
+            {
+              id: 'registerComandas',
+              title: 'Registrar Comanda',
+              link: '/comanda/register',
+            },
+          ],
+        },
+        {
           group: 'Clientes',
           options: [
             {
