@@ -43,10 +43,6 @@
 export default {
   name: 'BaseTableJson',
   props: {
-    is_crud: {
-      type: Boolean,
-      default: false,
-    },
     table_title: {
       type: String,
       default: 'Título da tabela',
@@ -88,11 +84,9 @@ export default {
         {},
       );
     },
-    updateEmit(id) {
-      this.$emit('updateEmit', id);
-    },
-    deleteEmit(id) {
-      this.$emit('deleteEmit', id);
+    async updateEmit(id) {
+      const toUpdate = this.table_data.find((item) => item.id === id);
+      this.$emit('updateEmit', toUpdate);
     },
   },
 };
