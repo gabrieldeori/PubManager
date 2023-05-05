@@ -1,18 +1,21 @@
 <template>
   <button
-    class="btn btn-secondary button_primary dropdown-toggle"
+    class="btn btn-secondary base_button button_primary dropdown-toggle"
     type="button"
     data-bs-toggle="dropdown"
     aria-expanded="false"
   >
     {{ menu.group }}
   </button>
-  <ul class="dropdown-menu">
+  <ul class="dropdown-menu ">
     <li
       v-for="option in menu.options"
       v-bind:key="option.id"
     >
-      <router-link :to="option.link">{{ option.title }}</router-link>
+      <router-link
+        :to="option.link"
+        class="dropdown-item"
+      >{{ option.title }}</router-link>
     </li>
   </ul>
 </template>
@@ -28,3 +31,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+  .base_button {
+    max-width: 7rem;
+  }
+</style>
