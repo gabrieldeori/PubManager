@@ -6,13 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Models\Comandas;
+use App\Models\Comanda;
 use App\Models\ComandaProduct;
 use App\Helpers\MSG;
 use App\Helpers\Response_Handlers;
-
-
-
 
 class ComandasController extends Controller
 {
@@ -28,7 +25,7 @@ class ComandasController extends Controller
                 'products.*.individualPrice' => 'required|numeric',
             ], MSG::COMANDA_VALIDATE);
 
-            $comanda = new Comandas();
+            $comanda = new Comanda();
             $comanda->client_id = $request->client;
             $comanda->name = $request->name;
             $comanda->description = $request->description;
@@ -65,7 +62,7 @@ class ComandasController extends Controller
 
     public function getComandas() {
         try {
-            $comandas = Comandas::with('products', 'client')
+            $comandas = Comanda::with('products', 'client')
             ->get();
 
             if ($comandas->isEmpty()) {

@@ -65,7 +65,6 @@ class Product extends Model
 
         public function comandas()
     {
-        return $this->belongsToMany(Comandas::class)->withPivot('quantity', 'individual_price');
+        return $this->belongsToMany(Comanda::class)->withPivot('quantity', 'individual_price');
     }
-
 }
