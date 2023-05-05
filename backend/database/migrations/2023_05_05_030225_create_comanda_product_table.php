@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('comanda_product', function (Blueprint $table) {
             $table->integer('quantity');
             $table->decimal('individual_price', 10, 2);
-            $table->bool('is_paid')->default(false);
+            $table->boolean('is_paid')->default(false);
             $table->timestamps();
 
             $table->unsignedBigInteger('comanda_id');
