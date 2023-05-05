@@ -13,9 +13,11 @@ class Comandas extends Model
     use HasFactory;
 
     protected $fillable = [
+        'client_id',
         'name',
         'description',
         'total_price',
+        'products',
     ];
 
     protected $casts = [

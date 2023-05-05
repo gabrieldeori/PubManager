@@ -8,12 +8,13 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Comandas;
 use App\Models\ComandaProduct;
 use App\Helpers\MSG;
+use App\Helpers\Response_Handlers;
 
 
 
 class ComandasController extends Controller
 {
-    public function createPurchase(Request $request) {
+    public function createComanda(Request $request) {
         try {
             $request->validate([
                 'client' => 'required|integer|exists:clients,id',
@@ -23,39 +24,39 @@ class ComandasController extends Controller
                 'products.*.id' => 'required|integer|exists:products,id',
                 'products.*.quantity' => 'required|numeric',
                 'products.*.individualPrice' => 'required|numeric',
-            ], MSG::PURCHASE_VALIDATE);
+            ], MSG::COMANDA_VALIDATE);
 
-            $purchase = new Comandas();
-            $purchase->client_id = $request->client;
-            $purchase->name = $request->name;
-            $purchase->description = $request->description;
-            $purchase->total_price = 0;
-            $purchase->save(); // salva a compra e atribui um ID
+            $comanda = new Comandas();
+            $comanda->client_id = $request->client;
+            $comanda->name = $request->name;
+            $comanda->description = $request->description;
+            $comanda->total_price = 0;
+            $comanda->save();
 
             foreach ($request->products as $product) {
                 $comandaProduct = new ComandaProduct();
-                $comandaProduct->purchase_id = $purchase->id;
+                $comandaProduct->comanda_id = $comanda->id;
                 $comandaProduct->product_id = $product['id'];
                 $comandaProduct->quantity = $product['quantity'];
                 $comandaProduct->individual_price = $product['individualPrice'];
                 $comandaProduct->save();
 
-                $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+                $comanda->total_price += $product['individualPrice'] * $product['quantity'];
             }
 
-            $purchase->save(); // atualiza o total_price da compra
+            $comanda->save();
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_CREATED, ['purchase'=>$purchase]);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_CREATED, ['comanda'=>$comanda]);
             return response()->json($response, MSG::CREATED);
 
         } catch (ValidationException $validator) {
             $errors = ['errors' => ['validation' => $validator->errors()]];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_CREATED, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_CREATED, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }

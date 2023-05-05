@@ -11,14 +11,14 @@ class ComandaProduct extends Model
 
     public function comandas()
     {
-        return $this->belongsToMany(Comandas::class, 'comanda_product')
+        return $this->belongsToMany(Comandas::class, 'comanda_products')
             ->withPivot('quantity')
             ->withTimestamps();
     }
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'comanda_product')
+        return $this->belongsToMany(Product::class, 'comanda_products')
             ->withPivot('quantity', 'individual_price')
             ->withTimestamps();
     }

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comanda_product', function (Blueprint $table) {
+        Schema::create('comanda_products', function (Blueprint $table) {
             $table->integer('quantity');
             $table->decimal('individual_price', 10, 2);
             $table->boolean('is_paid')->default(false);
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comanda_product');
+        Schema::dropIfExists('comanda_products');
     }
 };
