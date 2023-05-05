@@ -19,7 +19,7 @@ export default {
   methods: {
     async logout() {
       try {
-        await axios.post(`${process.env.BASE_URL}/logout`);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/logout`);
         localStorage.removeItem('pubmanager_tk_009911');
         this.$router.push({ name: 'Login' });
       } catch (errors) {

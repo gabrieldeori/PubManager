@@ -69,7 +69,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post(`${process.env.BASE_URL}/product/register`, this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/product/register`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {

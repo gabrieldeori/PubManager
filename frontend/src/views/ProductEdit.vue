@@ -69,7 +69,7 @@ export default {
     async getUser() {
       try {
         const payload = { id: this.$route.params.id };
-        const { data } = await axios.get(`${process.env.BASE_URL}/product`, { params: payload });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/product`, { params: payload });
         this.form = data.payload.product;
         this.form.alcoholic = data.payload.product.alcoholic === 'Sim';
         this.form.preparable = data.payload.product.preparable === 'Sim';
@@ -84,7 +84,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.BASE_URL}/product/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/product/edit`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {

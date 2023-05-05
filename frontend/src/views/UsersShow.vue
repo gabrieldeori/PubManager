@@ -26,7 +26,7 @@ export default {
   methods: {
     async getUsers() {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/users/show`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/users/show`);
         this.responseUsers = response.data.payload;
       } catch (errors) {
         const { response } = errors;
@@ -43,7 +43,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.BASE_URL}/user/delete`, { data: { id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/user/delete`, { data: { id } });
           this.$router.go();
         } catch (errors) {
           const { response } = errors;

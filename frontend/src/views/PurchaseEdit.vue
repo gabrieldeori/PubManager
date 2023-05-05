@@ -170,7 +170,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.BASE_URL}/purchase/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/purchase/edit`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -193,7 +193,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/products/options`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
@@ -210,7 +210,7 @@ export default {
     async getAPurchase() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get(`${process.env.BASE_URL}/purchase`, { params: { id } });
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/purchase`, { params: { id } });
         this.responsePurchase = response.data.payload.purchase;
         this.form.id = id;
         this.form.name = this.responsePurchase.name;
