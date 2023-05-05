@@ -59,8 +59,8 @@ class Purchase extends Model
             ->withPivot('quantity', 'individual_price');
     }
 
-        public function cashRegister()
+    public function cashRegisters()
     {
-        return $this->belongsTo(CashRegister::class);
+        return $this->hasMany(CashRegister::class);
     }
 }

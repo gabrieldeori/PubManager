@@ -11,6 +11,8 @@ use App\Helpers\MSG;
 use App\Helpers\Response_Handlers;
 use App\Models\CashRegister;
 
+use Illuminate\Support\Facades\DB;
+
 class CashRegisterController extends Controller
 {
     public function createComandaEntry($comandaId)
@@ -74,7 +76,7 @@ class CashRegisterController extends Controller
 
     public function getCashRegister() {
         try {
-            $cashRegister = CashRegister::has('comandas')->get();
+            $cashRegister = CashRegister::all();
 
             $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_FOUND, ['cashRegister'=>$cashRegister]);
             return response()->json($response, MSG::OK);

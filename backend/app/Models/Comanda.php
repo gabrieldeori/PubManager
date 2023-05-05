@@ -67,8 +67,8 @@ class Comanda extends Model
         return $this->belongsTo(Client::class);
     }
 
-        public function cashRegister()
+    public function cashRegisters()
     {
-        return $this->belongsTo(CashRegister::class);
+        return $this->hasMany(CashRegister::class);
     }
 }
