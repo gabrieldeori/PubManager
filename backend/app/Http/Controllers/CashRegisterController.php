@@ -18,10 +18,11 @@ class CashRegisterController extends Controller
     public function createComandaEntry($comandaId)
     {
         try {
-            $comanda = Comanda::select('id', 'name', 'description', 'total_price')->findOrFail($comandaId);
+            $comanda = Comanda::findOrFail($comandaId);
 
             $cashRegister = new CashRegister([
                 'name' => $comanda->name,
+                'comanda_id' => $comanda->id,
                 'movement' => 1,
             ]);
 

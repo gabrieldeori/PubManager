@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Comanda;
 use App\Models\ComandaProduct;
+use App\Models\CashRegister;
 use App\Helpers\MSG;
 use App\Helpers\Response_Handlers;
 
@@ -45,8 +46,11 @@ class ComandasController extends Controller
 
             $comanda->save();
 
-            $cashRegister = new CashRegisterController();
-            $cashRegister->createComandaEntry($comanda->id);
+            $cashRegister = new CashRegister();
+            $cashRegister->name = $comanda->name;
+            $cashRegister->comanda_id = $comanda->id;
+            $cashRegister->movement = 1;
+            $cashRegister->save();
 
             $response = Response_Handlers::setAndRespond(MSG::COMANDA_CREATED, ['comanda'=>$comanda]);
             return response()->json($response, MSG::CREATED);
