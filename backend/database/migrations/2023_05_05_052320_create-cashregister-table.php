@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cashregisters', function(Blueprint $table) {
+        Schema::create('cash_registers', function(Blueprint $table) {
             $table->id();
             $table->string('name', 255);
             $table->text('description')->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('updated_at')->nullable();
 
             $table->unsignedBigInteger('purchase_id')->nullable();
-            $table->unsignedInteger('comanda_id')->nullable();
+            $table->unsignedBigInteger('comanda_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
 
