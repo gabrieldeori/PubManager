@@ -62,7 +62,7 @@ export default {
         }
       }
     },
-    updateComanda(id) {
+    updateComanda({ id }) {
       this.$router.push(`/comanda/${id}`);
     },
   },

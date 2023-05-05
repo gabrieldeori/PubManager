@@ -117,7 +117,9 @@ class ComandasController extends Controller
             if (!$comanda) {
                 throw new ModelNotFoundException(MSG::COMANDA_NOT_FOUND);
             }
-
+            // Delete comanda products and cashregister
+            $cashRegister = CashRegister::where('comanda_id', $comanda->id)->first();
+            $cashRegister->delete();
             $comanda->products()->detach();
             $comanda->delete();
 

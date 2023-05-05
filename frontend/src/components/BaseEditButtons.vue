@@ -1,11 +1,21 @@
 <template>
   <div class="flex_horizontal">
     <button
+      v-if="saveTxt !== 'Cadastrar'"
+      type="button"
+      class='base_button button_highlight'
+      @click.prevent="saveInsertion"
+    >
+      {{ saveTxt }}
+    </button>
+
+    <button
+      v-else
       type="button"
       class='base_button button_primary'
       @click.prevent="saveInsertion"
     >
-      {{ txtRegister }}
+      {{ saveTxt }}
     </button>
 
     <button
@@ -13,14 +23,14 @@
       class='base_button button_danger invert'
       @click.prevent="cancelInsertion"
     >
-      {{ txtCancel }}
+      {{ cancelTxt }}
     </button>
     <button
       type="button"
       class='base_button button_danger'
       @click.prevent="deleteInsertion"
     >
-      {{ txtDelete }}
+      {{ deleteTxt }}
     </button>
   </div>
 </template>
@@ -29,15 +39,15 @@
 export default {
   name: 'BaseEditButtons',
   props: {
-    txtRegister: {
+    saveTxt: {
       type: String,
       default: 'Cadastrar',
     },
-    txtCancel: {
+    cancelTxt: {
       type: String,
       default: 'Cancelar',
     },
-    txtDelete: {
+    deleteTxt: {
       type: String,
       default: 'Deletar',
     },

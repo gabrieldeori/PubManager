@@ -62,7 +62,7 @@ export default {
         }
       }
     },
-    updatePurchase(id) {
+    updatePurchase({ id }) {
       this.$router.push(`/purchase/${id}`);
     },
   },

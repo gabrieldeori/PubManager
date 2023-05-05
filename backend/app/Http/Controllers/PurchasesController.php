@@ -15,15 +15,8 @@ class PurchasesController extends Controller
 {
     public function getPurchases() {
         try {
-            $purchases = Purchase::select(
-                'purchases.id',
-                'purchases.name as Nome',
-                'purchases.description as Descrição',
-                'purchases.total_price as Preço Total',
-                'purchases.products as Produtos',
-                'purchases.updated_at as Atualizado em',
-                'purchases.created_at as Criado em',
-            )->orderBy('purchases.updated_at')->orderBy('purchases.created_at')->get();
+            $purchases = Purchase::with('products')
+            ->get();
 
             if ($purchases->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
