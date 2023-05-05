@@ -35,11 +35,11 @@
           :key="'product_key_id_' + product.id"
         >
           <button
-            v-if="editId !== pIndex"
+            v-if="editId !== pIndex && responseProducts.length > 0"
             class="base_button button_primary_lighter"
             @click="editInsertion(pIndex)"
           >
-            R$ {{ responseProducts[product.id - 1].name }}
+            {{ responseProducts[product.id - 1].name }}
             - R${{ product.individualPrice }}
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
