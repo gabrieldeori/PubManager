@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Exception;
 use App\Models\Client;
+
 use App\Helpers\Error_Handlers;
 use App\Helpers\Response_Handlers;
 use App\Helpers\MSG;
+
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 class clientsController extends Controller
 {
@@ -22,11 +25,20 @@ class clientsController extends Controller
             $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, $clients);
         }
         return response()->json($clients);
-    } catch (\Exception $e) {
-        $error = $e->getMessage();
-        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
-        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+    } catch (ModelNotFoundException $modelError) {
+        $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (ValidationException $validator) {
+        $errors = ['errors' => ['validation' => $validator->errors()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+        return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+    } catch (\Exception $error) {
+        $errors = ['errors' => ['generic' => $error->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+        return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -54,12 +66,17 @@ class clientsController extends Controller
         return response()->json($clients);
     } catch (ModelNotFoundException $modelError) {
         $errors = ['errors' => ['generic' => $modelError->getMessage()]];
-        $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (ValidationException $validator) {
+        $errors = ['errors' => ['validation' => $validator->errors()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+        return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
     } catch (\Exception $error) {
         $errors = ['errors' => ['generic' => $error->getMessage()]];
-        $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
@@ -75,11 +92,20 @@ class clientsController extends Controller
         }
         $response = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, ['client' => $client]);
         return response()->json($response);
-    } catch (\Exception $e) {
-        $error = $e->getMessage();
-        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
-        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+    } catch (ModelNotFoundException $modelError) {
+        $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (ValidationException $validator) {
+        $errors = ['errors' => ['validation' => $validator->errors()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+        return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+    } catch (\Exception $error) {
+        $errors = ['errors' => ['generic' => $error->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+        return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -107,10 +133,19 @@ class clientsController extends Controller
         }
         $response = Response_Handlers::setAndRespond(MSG::CLIENTS_CREATED);
         return response()->json($response, MSG::CREATED);
-    } catch (\Exception $e) {
-        $error = $e->getMessage();
-        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
-        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+    } catch (ModelNotFoundException $modelError) {
+        $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+        return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (ValidationException $validator) {
+        $errors = ['errors' => ['validation' => $validator->errors()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+        return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+    } catch (\Exception $error) {
+        $errors = ['errors' => ['generic' => $error->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
@@ -128,10 +163,19 @@ class clientsController extends Controller
         $client->save();
         $response = Response_Handlers::setAndRespond(MSG::CLIENT_UPDATED);
         return response()->json($response, MSG::ACCEPTED);
-    } catch (\Exception $e) {
-        $error = $e->getMessage();
-        Error_Handlers::logError(MSG::SERVER_ERROR, $error);
-        $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+    } catch (ModelNotFoundException $modelError) {
+        $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+        return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (ValidationException $validator) {
+        $errors = ['errors' => ['validation' => $validator->errors()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+        return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+    } catch (\Exception $error) {
+        $errors = ['errors' => ['generic' => $error->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
         return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
@@ -147,12 +191,21 @@ class clientsController extends Controller
             $client->delete();
             $response = Response_Handlers::setAndRespond(MSG::CLIENTS_DELETED);
             return response()->json($response, MSG::ACCEPTED);
-        } catch (\Exception $e) {
-            $error = $e->getMessage();
-            Error_Handlers::logError(MSG::SERVER_ERROR, $error);
-            $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
-    }
+      }
 }
 ?>
