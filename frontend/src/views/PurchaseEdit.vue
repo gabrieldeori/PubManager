@@ -240,9 +240,10 @@ export default {
 
     async deletePurchase() {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${this.form.id}?`);
+      const { id } = this.$route.params;
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/purchase/delete`, { data: { id: this.form.id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/purchase/delete`, { params: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.push({ name: 'PurchasesShow' });
         } catch (errors) {

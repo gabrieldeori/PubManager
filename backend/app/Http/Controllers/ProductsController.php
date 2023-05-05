@@ -216,7 +216,7 @@ class ProductsController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::PRODUCT_NOT_DELETED, $errors);
-            return response()->json($response, MSG::SERVER_ERROR);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 }

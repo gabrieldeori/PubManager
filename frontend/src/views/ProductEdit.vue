@@ -30,7 +30,14 @@
         v-model="form.preparable"
         :error="formularyErrors.preparable"
       />
-      <input type="submit" class="base_button button_primary" value="Cadastrar">
+
+      <BaseEditButtons
+        v-if="!blockEditClick"
+        value="Cadastrar"
+        @deleteEmit="deleteProduct"
+        @cancelEmit="cancelProduct"
+        @saveEmit="sendForm"
+      />
     </form>
   </section>
 </template>
@@ -99,6 +106,28 @@ export default {
           this.errors.validation = response.data.payload.errors.validation || '';
         }
       }
+    },
+
+    async deleteProduct() {
+      try {
+        const { id } = this.$route.params;
+        await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/product/delete`, { params: { id } });
+        this.$router.push('/products/show');
+      } catch (errors) {
+        console.log(errors);
+        const { response } = errors;
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+        if (this.errors.generic.includes('Integrity constraint violation')) {
+          this.errors.generic = 'Não é possível excluir um produto que já foi utilizado em um pedido';
+        }
+      }
+    },
+
+    cancelProduct() {
+      this.$router.push('/products/show');
     },
   },
   mounted() {
