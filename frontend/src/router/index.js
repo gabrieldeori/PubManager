@@ -110,6 +110,12 @@ const routes = [
     component: () => import('../views/CashRegistersShow.vue'),
     beforeEnter: Guard.auth,
   },
+  {
+    path: '/dashboard',
+    name: 'DashBoard',
+    component: () => import('../views/DashBoard.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({

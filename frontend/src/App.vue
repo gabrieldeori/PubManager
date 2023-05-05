@@ -64,6 +64,11 @@ export default {
               title: 'Ver Fluxo de Caixa',
               link: '/cashregisters/show',
             },
+            {
+              id: 'showDashBoard',
+              title: 'DashBoard',
+              link: '/dashboard',
+            },
           ],
         },
         {
