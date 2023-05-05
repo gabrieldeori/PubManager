@@ -33,7 +33,7 @@ class clientsController extends Controller
   public function getClientsOptions(Request $request)
   {
     try {
-        $clients = Client::all();
+        $clients = Client::orderBy('name')->get();
 
         if ($clients->isEmpty()) {
             throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
@@ -49,7 +49,7 @@ class clientsController extends Controller
         if (count($clients) == 0) {
             throw new Exception(MSG::CLIENTS_NOT_FOUND);
         } else {
-            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, [$clients]);
+            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, $clients->toArray());
         }
         return response()->json($clients);
     } catch (ModelNotFoundException $modelError) {

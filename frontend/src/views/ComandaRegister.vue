@@ -4,6 +4,13 @@
       :errors="errors"
     />
     <section>
+      <BaseSelectProducts
+        name="clients"
+        label="Cliente"
+        v-model="form.client"
+        :options="responseClients"
+        :error="formularyErrors.client"
+      />
       <BaseInput
         name="name"
         label="Nome"
@@ -148,7 +155,7 @@ export default {
   data() {
     return {
       form: {
-        cliente: '',
+        client: '',
         name: '',
         description: '',
         products: [],
