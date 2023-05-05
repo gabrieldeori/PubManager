@@ -112,6 +112,12 @@ const routes = [
     component: () => import('../views/ComandaEdit.vue'),
     beforeEnter: Guard.auth,
   },
+  {
+    path: '/cashregisters/show',
+    name: 'CashRegistersShow',
+    component: () => import('../views/CashRegistersShow.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({

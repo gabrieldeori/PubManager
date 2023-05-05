@@ -69,6 +69,16 @@ export default {
           ],
         },
         {
+          group: 'Caixa',
+          options: [
+            {
+              id: 'showComandas',
+              title: 'Ver Fluxo de Caixa',
+              link: '/cashregisters/show',
+            },
+          ],
+        },
+        {
           group: 'Clientes',
           options: [
             {
