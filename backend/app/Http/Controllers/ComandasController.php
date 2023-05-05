@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Comandas;
 use App\Models\ComandaProduct;
 use App\Helpers\MSG;
 use App\Helpers\Response_Handlers;
+
 
 
 
@@ -57,6 +59,45 @@ class ComandasController extends Controller
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
             $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_CREATED, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getComandas() {
+        try {
+            $comandas = Comandas::with('products', 'client')
+            ->get();
+
+            if ($comandas->isEmpty()) {
+                throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
+            }
+
+            $processed = [];
+
+            foreach ($comandas as $comanda) {
+                $newComanda = [
+                    'id' => $comanda->id,
+                    'Nome' => $comanda->name,
+                    'Descrição' => $comanda->description,
+                    'Preço Total' => $comanda->total_price,
+                    'Produtos' => $comanda->products->map(function ($product) {
+                        return $product->name . ': R$ ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->individual_price * $product->pivot->quantity;
+                    })
+                ];
+                array_push($processed, $newComanda);
+            }
+
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$processed]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }

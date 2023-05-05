@@ -152,7 +152,7 @@ const schema = yup.object().shape({
 });
 
 export default {
-  name: 'PurchaseRegister',
+  name: 'ComandaRegister',
   data() {
     return {
       form: {
@@ -185,7 +185,7 @@ export default {
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
         await axios.post('http://localhost:8000/api/comanda/register', this.form);
-        this.$router.push({ name: 'PurchasesShow' });
+        this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           errors.inner.forEach((e) => {

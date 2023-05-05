@@ -100,6 +100,12 @@ const routes = [
     component: () => import('../views/ComandaRegister.vue'),
     beforeEnter: Guard.auth,
   },
+  {
+    path: '/comandas/show',
+    name: 'ComandasShow',
+    component: () => import('../views/ComandasShow.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({
