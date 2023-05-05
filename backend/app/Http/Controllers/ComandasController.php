@@ -45,6 +45,9 @@ class ComandasController extends Controller
 
             $comanda->save();
 
+            $cashRegister = new CashRegisterController();
+            $cashRegister->createComandaEntry($comanda->id);
+
             $response = Response_Handlers::setAndRespond(MSG::COMANDA_CREATED, ['comanda'=>$comanda]);
             return response()->json($response, MSG::CREATED);
 
