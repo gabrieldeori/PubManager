@@ -53,10 +53,9 @@ class Comandas extends Model
         });
     }
 
-    public function products(): BelongsToMany
+    public function products()
     {
-        return $this->belongsToMany(Product::class, 'purchase_products', 'purchase_id', 'product_id')
-            ->withPivot('quantity', 'individual_price');
+        return $this->belongsToMany(Product::class)->withPivot('quantity', 'individual_price');
     }
 
     public function client(): BelongsTo
