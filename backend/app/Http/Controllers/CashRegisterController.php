@@ -98,4 +98,35 @@ class CashRegisterController extends Controller
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getCashRegisterToLeft() {
+        try {
+            $cashRegisters = CashRegister::select(
+                'cash_registers.*',
+                'purchases.total_price as purchase_total_price',
+                'comandas.total_price as comanda_total_price'
+            )
+            ->leftJoin('purchases', 'cash_registers.purchase_id', '=', 'purchases.id')
+            ->leftJoin('comandas', 'cash_registers.comanda_id', '=', 'comandas.id')
+            ->get();
+
+            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_FOUND, ['cashRegisters'=>$cashRegisters]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
 }

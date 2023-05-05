@@ -5,16 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Helpers\Response_Handlers;
+use \Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Helpers\MSG;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\PurchasesProduct;
-use App\Models\Product;
 use App\Models\PurchaseProduct;
-use App\Models\Unit;
-use \Illuminate\Validation\ValidationException;
+use App\Models\CashRegister;
 
 class PurchasesController extends Controller
 {
@@ -123,6 +118,12 @@ class PurchasesController extends Controller
             }
 
             $purchase->save(); // atualiza o total_price da compra
+
+            $cashRegister = new CashRegister();
+            $cashRegister->name = $purchase->name;
+            $cashRegister->purchase_id = $purchase->id;
+            $cashRegister->movement = 0;
+            $cashRegister->save();
 
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_CREATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::CREATED);
