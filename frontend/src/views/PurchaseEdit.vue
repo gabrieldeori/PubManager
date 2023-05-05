@@ -141,7 +141,7 @@ const schema = yup.object().shape({
 });
 
 export default {
-  name: 'PurchaseRegister',
+  name: 'PurchaseEdit',
   data() {
     return {
 
