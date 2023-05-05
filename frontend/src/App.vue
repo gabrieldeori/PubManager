@@ -277,6 +277,13 @@ th, td {
   margin: 0;
 }
 
+tbody tr:hover {
+  background-color: var(--primary_lighter);
+  cursor: pointer;
+  border-top: 2px solid var(--primary_darker);
+  border-bottom: 2px solid var(--primary_darker);
+}
+
 /* SPECIAL */
 .flex_horizontal {
   align-items: center;

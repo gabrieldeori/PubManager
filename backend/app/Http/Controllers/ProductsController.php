@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Helpers\Response_Handlers;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -14,31 +15,26 @@ class ProductsController extends Controller
     public function getProducts()
     {
         try {
-            $products = Product::all();
+            $products = Product::select(
+                'products.id',
+                'products.name as nome',
+                'products.description as Descrição',
+                DB::raw("IF(products.alcoholic, 'Sim', 'Não') as Alcoólico"),
+                DB::raw("IF(products.preparable, 'Sim', 'Não') as Preparável"),
+                'created_by_user.name as Criado por',
+                'updated_by_user.name as Atualizado por',
+                'products.created_at as Criado em',
+                'products.updated_at as Atualizado em',
+            )
+            ->leftJoin('users as created_by_user', 'created_by_user.id', '=', 'products.created_by')
+            ->leftJoin('users as updated_by_user', 'updated_by_user.id', '=', 'products.updated_by')
+            ->get();
 
             if ($products->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
             }
 
-            $products = $products->map(function ($product) {
-                $product->alcoholic = $product->alcoholic ? 'Sim' : 'Não';
-                $product->preparable = $product->preparable ? 'Sim' : 'Não';
-                return $product;
-            });
-
-            // rename products column to ptbr
-            $productsRenamedColumns = collect([]);
-            foreach ($products as $product) {
-                $productsRenamedColumns->push([
-                    'id' => $product->id,
-                    'nome' => $product->name,
-                    'Descrição' => $product->description,
-                    'Alcoólico' => $product->alcoholic,
-                    'Preparável' => $product->preparable,
-                ]);
-            }
-
-            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$productsRenamedColumns]);
+            $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_FOUND, ['products'=>$products]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {

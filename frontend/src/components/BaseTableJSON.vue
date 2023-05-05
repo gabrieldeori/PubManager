@@ -4,17 +4,14 @@
       <caption>{{ table_title }}</caption>
       <thead>
         <tr>
+          <th v-if="is_crud">
+            Deletar
+          </th>
           <th
             v-for="tHeadData, thindex in Object.keys(getHeadersForTable())"
             v-bind:key="'key_tHeadData_' + thindex"
           >
             {{ tHeadData }}
-          </th>
-          <th v-if="is_crud">
-            Atualizar
-          </th>
-          <th v-if="is_crud">
-            Deletar
           </th>
         </tr>
       </thead>
@@ -22,7 +19,16 @@
         <tr
           v-for="tBodyRow, tbri in table_data"
           v-bind:key="'key_tBodyRow_' + tbri"
+          @click="updateEmit(tBodyRow.id)"
         >
+          <td v-if="is_crud">
+            <button
+              class="base_button button_danger"
+              @click="deleteEmit(tBodyRow.id)"
+            >
+              <img src="../assets/icons/icon_delete.svg" alt="">
+            </button>
+          </td>
           <td
             v-for="tBodyData, tbdi in Object.values(tBodyRow)"
             v-bind:key="'key_tBodyData_' + tbdi"
@@ -37,22 +43,6 @@
               ...
             </ul>
             <div v-else>{{ tBodyData }}</div>
-          </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_highlight invert"
-              @click="updateEmit(tBodyRow.id)"
-              >
-                <img src="../assets/icons/icon_edit.svg" alt="">
-              </button>
-          </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_danger"
-              @click="deleteEmit(tBodyRow.id)"
-            >
-              <img src="../assets/icons/icon_delete.svg" alt="">
-            </button>
           </td>
         </tr>
       </tbody>
