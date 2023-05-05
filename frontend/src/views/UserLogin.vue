@@ -70,8 +70,13 @@ export default {
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
+        if (errors instanceof yup.ValidationError) {
+          errors.inner.forEach((e) => {
+            this.formularyErrors[e.path] = e.message;
+          });
+        }
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
           return;
         }

@@ -24,7 +24,7 @@ export default {
         this.$router.push({ name: 'Login' });
       } catch (errors) {
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';

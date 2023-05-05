@@ -114,7 +114,6 @@ export default {
         await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/product/delete`, { params: { id } });
         this.$router.push('/products/show');
       } catch (errors) {
-        console.log(errors);
         const { response } = errors;
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
