@@ -51,6 +51,16 @@ class CashRegister extends Model
                 $model->updated_by = $user->id;
             }
         });
+
+        static::created(function () {
+            $dashboard = Dashboard::firstOrCreate([]);
+            $dashboard->save();
+        });
+
+        static::deleted(function () {
+            $dashboard = Dashboard::firstOrCreate();
+            $dashboard->save();
+        });
     }
 
         public function comandas()

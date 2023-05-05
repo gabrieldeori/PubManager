@@ -27,6 +27,14 @@
       :error="formularyErrors.email"
     />
     <BaseInput
+      name="password_old"
+      label="(Obrigatória) Senha atual"
+      placeholder="Digite a senha atual"
+      type="password"
+      v-model="form.password_old"
+      :error="formularyErrors.password_old"
+    />
+    <BaseInput
       name="password"
       label="(Opcional) Nova senha"
       placeholder="(Opcional) Mínimo 6 caracteres"
@@ -41,14 +49,6 @@
       type="password"
       v-model="form.password_confirmation"
       :error="formularyErrors.password_confirmation"
-    />
-    <BaseInput
-      name="password_old"
-      label="(Obrigatória) Senha atual"
-      placeholder="Digite a senha atual"
-      type="password"
-      v-model="form.password_old"
-      :error="formularyErrors.password_old"
     />
     <BaseRadioGroup
       v-model="form.userType"
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       toEdit: null,
-      errorData: null,
+      errors: {},
       form: {
         name: '',
         nickname: '',
@@ -144,7 +144,7 @@ export default {
         };
       } catch (errors) {
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -168,8 +168,9 @@ export default {
               this.formularyErrors[e.path] = e.message;
             });
           } else {
+            console.log(errors);
             const { response } = errors;
-            if (!response) {
+            if (!response.data.payload.errors && !response.data.payload && !response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -192,7 +193,7 @@ export default {
           this.$router.push('/users/show');
         } catch (errors) {
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.generic = errors.message;
             return;
           }

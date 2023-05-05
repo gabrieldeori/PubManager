@@ -27,8 +27,8 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       :notDelete="true"
-      txtCancel="Voltar"
-      txtSave="Login"
+      cancelTxt="Voltar"
+      saveTxt="Login"
       value="Login"
       @cancelEmit="this.$router.push('/')"
       @saveEmit="login"
@@ -43,7 +43,7 @@ import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
   email: yup.string().required().email(),
-  password: yup.string().required().min(6).max(255),
+  password: yup.string().required().min(6),
 });
 
 export default {
@@ -70,21 +70,25 @@ export default {
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
-        if (false) {
-          errors.inner.forEach((e) => {
-            this.formularyErrors[e.path] = e.message;
+        if (errors instanceof yup.ValidationError) {
+          errors.inner.forEach((error) => {
+            this.formularyErrors[error.path] = error.message;
           });
-        } else {
-          const { response } = errors;
-          if (!response) {
-            this.errors.generic = errors.message;
+          return;
+        }
+        const { response } = errors;
+        if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!errors.message) {
+            this.errors.generic = 'Email ou senha incorretos';
             return;
           }
-          this.errors.title = response.data.message;
-          this.errors.generic = response.data.payload.errors.generic;
-          this.errors.specific = response.data.payload.errors.specific;
-          this.errors.validation = response.data.payload.errors.validation;
+          this.errors.generic = errors.message;
+          return;
         }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
   },

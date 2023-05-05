@@ -116,7 +116,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.generic = errors.message;
             return;
           }

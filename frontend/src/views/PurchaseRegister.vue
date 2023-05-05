@@ -49,6 +49,15 @@
               {{ formularyErrors.id }}
             </p>
             <BaseInput
+              name="quantity"
+              label="Quantidade"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.quantity"
+              :error="formularyErrors.quantity"
+              @input="calculateTotalPrice"
+            />
+            <BaseInput
               name="individualPrice"
               label="Preço individual"
               placeholder="Apenas números"
@@ -56,15 +65,6 @@
               v-model="productForm.individualPrice"
               :error="formularyErrors.individualPrice"
               @input="calculateTotalPrice"
-            />
-            <BaseInput
-              name="quantity"
-              label="Quantidade"
-              placeholder="Apenas números"
-              type="number"
-              v-model="productForm.quantity"
-              :error="formularyErrors.quantity"
-              @input="calculateboth"
             />
             <BaseInput
               name="totalPrice"
@@ -177,7 +177,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -195,7 +195,7 @@ export default {
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';
@@ -346,15 +346,6 @@ export default {
         this.productForm.individualPrice = (totalPrice / quantity).toFixed(4);
       } else {
         this.productForm.individualPrice = 0;
-      }
-    },
-
-    calculateboth() {
-      const { totalPrice, quantity } = this.productForm;
-      if (quantity > 0 && totalPrice > 0) {
-        this.calculateIndividualPrice();
-      } else {
-        this.calculateTotalPrice();
       }
     },
   },

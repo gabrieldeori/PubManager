@@ -179,7 +179,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -197,7 +197,7 @@ export default {
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';
@@ -227,7 +227,7 @@ export default {
         }));
       } catch (errors) {
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -248,7 +248,7 @@ export default {
           this.$router.push({ name: 'PurchasesShow' });
         } catch (errors) {
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.generic = errors.message;
             return;
           }

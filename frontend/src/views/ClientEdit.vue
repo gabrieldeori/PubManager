@@ -57,8 +57,13 @@ export default {
         const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/client`, { params: payload });
         this.form = data.payload.client;
       } catch (errors) {
+        if (errors instanceof yup.ValidationError) {
+          errors.inner.forEach((e) => {
+            this.formularyErrors[e.path] = e.message;
+          });
+        }
         const { response } = errors;
-        if (!response) {
+        if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -83,7 +88,7 @@ export default {
             });
           } else {
             const { response } = errors;
-            if (!response) {
+            if (!response.data.payload.errors && !response.data.payload && !response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -106,7 +111,7 @@ export default {
         } catch (errors) {
           console.log(errors);
           const { response } = errors;
-          if (!response) {
+          if (!response.data.payload.errors && !response.data.payload && !response) {
             this.errors.title = errors.message;
             this.errors.generic = 'Veja se o servidor está ligado';
             return;

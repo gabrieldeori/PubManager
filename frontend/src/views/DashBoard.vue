@@ -1,8 +1,8 @@
-// Logout laravel vue jwt-auth
 <template>
   <div>
-    <h2>Logout</h2>
-    <BaseErrors :errors="errors" />
+    <h1>Dashboard</h1>
+    <p>Total Income: {{ dashboard.total_income }}</p>
+    <p>Total Outcome: {{ dashboard.total_outcome }}</p>
   </div>
 </template>
 
@@ -10,22 +10,30 @@
 import axios from 'axios';
 
 export default {
-  name: 'UserLogout',
+  name: 'DashBoard',
   data() {
     return {
-      errors: {},
+      dashboard: {
+        totalIncome: 0,
+        totalOutcome: 0,
+      },
     };
   },
   methods: {
-    async logout() {
+    async getDashboard() {
       try {
-        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/logout`);
-        localStorage.removeItem('pubmanager_tk_009911');
-        this.$router.push({ name: 'Login' });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/dashboard`);
+        const {
+          total_income: totalIncome,
+          total_outcome: totalOutcome,
+        } = data.payload.dashboard;
+
+        this.dashboard = { totalIncome, totalOutcome };
       } catch (errors) {
         const { response } = errors;
         if (!response.data.payload.errors && !response.data.payload && !response) {
           this.errors.generic = errors.message;
+          return;
         }
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
@@ -35,7 +43,7 @@ export default {
     },
   },
   mounted() {
-    this.logout();
+    this.getDashboard();
   },
 };
 </script>
