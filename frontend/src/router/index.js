@@ -3,14 +3,6 @@ import Guard from '../middlewares/authorization';
 
 const routes = [
   {
-    path: '/',
-    name: 'components',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Components.vue'),
-  },
-  {
     path: '/client/register',
     name: 'ClientRegister',
     component: () => import('../views/ClientRegister.vue'),

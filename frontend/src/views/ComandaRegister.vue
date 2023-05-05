@@ -124,9 +124,6 @@
       value="Cadastrar"
     />
   </form>
-  <pre>
-    {{ form }}
-  </pre>
 </template>
 
 <script>

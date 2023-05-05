@@ -124,13 +124,6 @@
       value="Cadastrar"
     />
   </form>
-  <pre>
-    <!-- {{ form }} -->
-    <!-- {{ productForm }} -->
-    {{ responseProducts }}
-    <!-- {{ responseClients }} -->
-    <!-- {{ errors }} -->
-  </pre>
 </template>
 
 <script>

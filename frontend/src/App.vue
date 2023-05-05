@@ -14,16 +14,6 @@ export default {
     return {
       dropsMenus: [
         {
-          group: 'Home',
-          options: [
-            {
-              id: 'home',
-              title: 'Home Components',
-              link: '/',
-            },
-          ],
-        },
-        {
           group: 'Produtos',
           options: [
             {
