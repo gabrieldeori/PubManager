@@ -258,32 +258,6 @@ form {
   width: 100%;
 }
 
-/* Tables */
-table {
-  background-color: var(--primary_lighter);
-  border: 0.1rem solid var(--primary_stronger);
-  border-collapse: collapse;
-  width: fit-content;
-}
-
-.table_wrapper {
-  max-width: 100%;
-  overflow: scroll;
-}
-
-th, td {
-  border: 0.1rem solid var(--primary_stronger);
-  padding: 0.5rem;
-  margin: 0;
-}
-
-tbody tr:hover {
-  background-color: var(--primary_lighter);
-  cursor: pointer;
-  border-top: 2px solid var(--primary_darker);
-  border-bottom: 2px solid var(--primary_darker);
-}
-
 /* SPECIAL */
 .flex_horizontal {
   align-items: center;

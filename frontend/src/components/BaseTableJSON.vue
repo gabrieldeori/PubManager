@@ -1,6 +1,6 @@
 <template>
-  <div class="table_wrapper table-responsive">
-    <table class="table_field" v-if="table_data.length > 0">
+  <div class="table-responsive">
+    <table class="table" v-if="table_data.length > 0">
       <caption>{{ table_title }}</caption>
       <thead>
         <tr>
@@ -93,32 +93,51 @@ export default {
 </script>
 
 <style scoped>
-caption {
-  font-size: 1rem;
-  font-weight: bold;
-  background-color: var(--primary_lighter);
-  border: 0.1rem solid var(--primary_strong);
-  border-bottom: 0;
-}
-
-img {
-  max-width: 2rem;
-  max-height: 2rem;
-}
-
-button {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  padding: 0.25rem;
-  width: 100%;
-  height: 3rem;
-  max-height: 3rem;
-  max-width: 100%;
+table {
+  background-color: white;
 }
 
 li {
   text-align: left;
 }
+
+/* Tables */
+table {
+  background-color: var(--smooth_white);
+  border-top: 0.1rem solid var(--primary_stronger);
+  border-bottom: 0.1rem solid var(--primary_stronger);
+  border-collapse: collapse;
+  width: fit-content;
+}
+
+.table_wrapper {
+  max-width: 100%;
+  overflow: scroll;
+}
+
+tr:nth-child(odd) {
+  background-color: var(--primary_lighter);
+}
+
+tr:nth-child(even) {
+  background-color: var(--primary_light);
+}
+
+th {
+  background-color: var(--primary_light);
+}
+
+/* th, td {
+  border: 0.1rem solid var(--primary_stronger);
+  padding: 0.5rem;
+  margin: 0;
+} */
+
+tbody tr:hover {
+  background-color: var(--primary_lighter);
+  cursor: pointer;
+  border-top: 2px solid var(--primary_darker);
+  border-bottom: 2px solid var(--primary_darker);
+}
+
 </style>
