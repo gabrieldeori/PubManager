@@ -109,15 +109,14 @@ class PurchasesController extends Controller
 
     public function createPurchase(Request $request) {
         try {
-            // $request->validate([
-            //     'name' => 'required|string',
-            //     'description' => 'required|string',
-            //     'products' => 'required|array|min:1',
-            //     'products.*.id' => 'required|integer',
-            //     'products.*.quantity' => 'required|integer',
-            //     'products.*.unit' => 'required|string',
-            //     'products.*.individualPrice' => 'required|numeric',
-            // ], MSG::PURCHASE_VALIDATE);
+            $request->validate([
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'products' => 'required|array|min:1',
+                'products.*.id' => 'required|integer',
+                'products.*.quantity' => 'required|numeric',
+                'products.*.individualPrice' => 'required|numeric',
+            ], MSG::PURCHASE_VALIDATE);
 
             $purchase = new Purchase();
             $purchase->name = $request->name;
@@ -156,28 +155,30 @@ class PurchasesController extends Controller
     public function editAPurchase(Request $request) {
         try {
             $request->validate([
-                'id' => 'required|integer',
+                'name' => 'required|string',
                 'description' => 'required|string',
-                'total_price' => 'required|numeric',
-                'products' => 'required|array',
+                'products' => 'required|array|min:1',
                 'products.*.id' => 'required|integer',
-                'products.*.quantity' => 'required|integer',
-                'products.*.unit' => 'required|string',
-                'products.*.individual_price' => 'required|numeric',
+                'products.*.quantity' => 'required|numeric',
+                'products.*.individualPrice' => 'required|numeric',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::find($request->id);
-
-            if (!$purchase) {
-                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            }
-
+            $purchase = Purchase::findOrFail($request->id);
+            $purchase->name = $request->name;
             $purchase->description = $request->description;
-            $purchase->total_price = $request->totalPrice;
-            $purchase->save();
+            $purchase->total_price = 0;
 
             $purchase->products()->detach();
-            $purchase->products()->attach($request->products);
+            $newProducts = [];
+            foreach ($request->products as $product) {
+                $newProducts[$product['id']] = [
+                    'quantity' => $product['quantity'],
+                    'individual_price' => $product['individualPrice']
+                ];
+                $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+            }
+            $purchase->save();
+            $purchase->products()->sync($newProducts);
 
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_UPDATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::OK);
