@@ -56,4 +56,4 @@ Route::get('/purchase', [PurchasesController::class, 'getAPurchase'])->middlewar
 use App\Http\Controllers\ComandasController;
 Route::get('/comandas/show', [ComandasController::class, 'getComandas'])->middleware('jwt.auth');
 Route::post('/comanda/register', [ComandasController::class, 'createComanda'])->middleware('jwt.auth');
-Route::post('/comanda/delete', [ComandasController::class, 'deleteAComanda'])->middleware('jwt.auth');
+Route::delete('/comanda/delete', [ComandasController::class, 'deleteAComanda'])->middleware('jwt.auth');

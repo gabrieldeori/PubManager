@@ -57,7 +57,9 @@ class Comanda extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('quantity', 'individual_price');
+        return $this->belongsToMany(Product::class, 'comanda_products')
+            ->withPivot('quantity', 'individual_price')
+            ->withTimestamps();
     }
 
     public function client(): BelongsTo

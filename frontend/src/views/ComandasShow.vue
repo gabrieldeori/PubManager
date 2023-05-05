@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Compras</h1>
+    <h1>Comandas</h1>
 
     <BaseErrors :errors="errors" />
 

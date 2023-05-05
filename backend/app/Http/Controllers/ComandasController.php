@@ -66,7 +66,7 @@ class ComandasController extends Controller
             ->get();
 
             if ($comandas->isEmpty()) {
-                throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
+                throw new ModelNotFoundException(MSG::COMANDAS_TABLE_EMPTY);
             }
 
             $processed = [];
@@ -84,17 +84,17 @@ class ComandasController extends Controller
                 array_push($processed, $newComanda);
             }
 
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_FOUND, ['purchases'=>$processed]);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDAS_FOUND, ['comandas'=>$processed]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
             $errors = ['errors' => ['generic' => $modelError->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDAS_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASES_NOT_FOUND, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::COMANDAS_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
