@@ -70,21 +70,15 @@ export default {
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
-        if (false) {
-          errors.inner.forEach((e) => {
-            this.formularyErrors[e.path] = e.message;
-          });
-        } else {
-          const { response } = errors;
-          if (!response) {
-            this.errors.generic = errors.message;
-            return;
-          }
-          this.errors.title = response.data.message;
-          this.errors.generic = response.data.payload.errors.generic;
-          this.errors.specific = response.data.payload.errors.specific;
-          this.errors.validation = response.data.payload.errors.validation;
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
         }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
   },
