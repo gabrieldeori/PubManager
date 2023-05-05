@@ -98,4 +98,39 @@ class ComandasController extends Controller
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function deleteAComanda(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+            ], MSG::COMANDA_VALIDATE);
+
+            $purchase = Comanda::find($request->id);
+
+            if (!$purchase) {
+                throw new ModelNotFoundException(MSG::COMANDA_NOT_FOUND);
+            }
+
+            $purchase->products()->detach();
+            $purchase->delete();
+
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_DELETED, ['purchase'=>$purchase]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_DELETED, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
 }

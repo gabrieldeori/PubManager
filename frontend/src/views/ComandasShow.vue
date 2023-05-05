@@ -50,7 +50,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/purchase/delete', { data: { id } });
+          await axios.delete('http://localhost:8000/api/comanda/delete', { data: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {
