@@ -55,11 +55,11 @@ class CashRegister extends Model
 
         public function comandas()
     {
-        return $this->hasMany(Comanda::class);
+        return $this->belongsTo(Comanda::class);
     }
 
         public function purchase()
     {
-        return $this->hasMany(Purchase::class);
+        return $this->belongsTo(Purchase::class);
     }
 }

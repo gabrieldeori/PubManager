@@ -25,8 +25,8 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
 
-            $table->foreign('purchase_id')->references('id')->on('purchases');
-            $table->foreign('comanda_id')->references('id')->on('comandas');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->nullable();
+            $table->foreign('comanda_id')->references('id')->on('comandas')->nullable();
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });
