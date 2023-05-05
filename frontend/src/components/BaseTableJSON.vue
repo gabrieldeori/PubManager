@@ -62,7 +62,7 @@
 
 <script>
 export default {
-  name: 'BaseTableJSON',
+  name: 'BaseTableJson',
   props: {
     is_crud: {
       type: Boolean,

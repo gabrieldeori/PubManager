@@ -2,7 +2,7 @@
   <section>
     <BaseErrors :errors="errors" />
     <h1>Usuários</h1>
-    <BaseTableJSON
+    <BaseTableJson
       :table_title="'Usuários'"
       :table_data="responseUsers"
       :is_crud="true"
@@ -14,7 +14,6 @@
 
 <script>
 import axios from 'axios';
-import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
   name: 'UsersTable',
@@ -23,9 +22,6 @@ export default {
       responseUsers: [],
       errors: {},
     };
-  },
-  components: {
-    BaseTableJSON,
   },
   methods: {
     async getUsers() {

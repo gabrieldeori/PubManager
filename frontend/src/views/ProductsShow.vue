@@ -4,7 +4,7 @@
 
     <BaseErrors :errors="errors"/>
 
-    <BaseTableJSON
+    <BaseTableJson
       :table_title="'Usuários'"
       :table_data="responseProducts"
       :is_crud="true"
@@ -16,7 +16,6 @@
 
 <script>
 import axios from 'axios';
-import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
   name: 'ProductsShow',
@@ -25,9 +24,6 @@ export default {
       errors: {},
       responseProducts: [],
     };
-  },
-  components: {
-    BaseTableJSON,
   },
   methods: {
     async getProducts() {

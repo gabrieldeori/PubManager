@@ -4,7 +4,7 @@
 
     <BaseErrors :errors="errors" />
 
-    <BaseTableJSON
+    <BaseTableJson
       :table_title="'Comandas'"
       :table_data="responseComandas"
       :is_crud="true"
@@ -16,7 +16,6 @@
 
 <script>
 import axios from 'axios';
-import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
   name: 'ComandasShow',
@@ -25,9 +24,6 @@ export default {
       errors: {},
       responseComandas: [],
     };
-  },
-  components: {
-    BaseTableJSON,
   },
   methods: {
     async getComandas() {

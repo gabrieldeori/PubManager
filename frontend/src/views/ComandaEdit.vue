@@ -127,10 +127,6 @@
 </template>
 
 <script>
-import BaseSelectProducts from '@/components/BaseSelectProducts.vue';
-import BaseEditButtons from '@/components/BaseEditButtons.vue';
-import BaseInput from '@/components/BaseInput.vue';
-
 import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
@@ -437,7 +433,6 @@ export default {
     this.getClients();
     this.getProducts();
   },
-  components: { BaseSelectProducts, BaseInput, BaseEditButtons },
 };
 </script>
 

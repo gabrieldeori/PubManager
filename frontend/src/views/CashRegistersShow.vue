@@ -4,7 +4,7 @@
 
     <BaseErrors :errors="errors" />
 
-    <BaseTableJSON
+    <BaseTableJson
       :table_title="'Compras'"
       :table_data="responseCashRegister"
       :is_crud="true"
@@ -16,7 +16,6 @@
 
 <script>
 import axios from 'axios';
-import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
   name: 'CashRegistersShow',
@@ -25,9 +24,6 @@ export default {
       errors: {},
       responseCashRegister: [],
     };
-  },
-  components: {
-    BaseTableJSON,
   },
   methods: {
     async getCashRegister() {

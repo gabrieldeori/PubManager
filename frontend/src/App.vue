@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import BasePubDropDown from './components/BasePubDropDown.vue';
-
 export default {
   name: 'App',
   data() {
@@ -115,9 +113,6 @@ export default {
         },
       ],
     };
-  },
-  components: {
-    BasePubDropDown,
   },
 };
 </script>
