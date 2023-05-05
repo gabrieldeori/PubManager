@@ -61,22 +61,11 @@
       >
         + Adicionar outra linha
       </button>
-
-      <!-- Apenas Preview Dos dados -->
-      <section>
-        <pre>
-          editId: {{ editId }}
-          insertionList: {{ insertionList }}
-          toEdit: {{ toEdit }}
-          responseProducts: {{ responseProducts }}
-        </pre>
-      </section>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-import BaseInput from './BaseInput.vue';
 
 export default {
   name: 'BaseDynamicInsertion',
@@ -179,6 +168,5 @@ export default {
   mounted() {
     this.getProductsList();
   },
-  components: { BaseInput },
 };
 </script>

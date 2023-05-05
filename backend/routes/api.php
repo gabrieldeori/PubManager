@@ -35,6 +35,7 @@ Route::get('/clients/show', [ClientsController::class, 'getClients'])->middlewar
 Route::post('/client/register', [ClientsController::class, 'createClients'])->middleware('jwt.auth');
 Route::put('/client/edit', [ClientsController::class, 'editAClient'])->middleware('jwt.auth');
 Route::delete('/client/delete', [ClientsController::class, 'deleteAClient'])->middleware('jwt.auth');
+Route::get('/clients/options', [ClientsController::class, 'getClientsOptions'])->middleware('jwt.auth');
 Route::get('/client', [ClientsController::class, 'getAClient'])->middleware('jwt.auth');
 
 use App\Http\Controllers\ProductsController;
@@ -42,8 +43,8 @@ Route::get('/products/show', [ProductsController::class, 'getProducts'])->middle
 Route::post('/product/register', [ProductsController::class, 'createProduct'])->middleware('jwt.auth');
 Route::put('/product/edit', [ProductsController::class, 'editAProduct'])->middleware('jwt.auth');
 Route::delete('/product/delete', [ProductsController::class, 'deleteAProduct'])->middleware('jwt.auth');
-Route::get('/product', [ProductsController::class, 'getAProduct'])->middleware('jwt.auth');
 Route::get('/products/options', [ProductsController::class, 'getProductsOptions'])->middleware('jwt.auth');
+Route::get('/product', [ProductsController::class, 'getAProduct'])->middleware('jwt.auth');
 
 use App\Http\Controllers\PurchasesController;
 Route::get('/purchases/show', [PurchasesController::class, 'getPurchases'])->middleware('jwt.auth');
@@ -51,3 +52,14 @@ Route::post('/purchase/register', [PurchasesController::class, 'createPurchase']
 Route::put('/purchase/edit', [PurchasesController::class, 'editAPurchase'])->middleware('jwt.auth');
 Route::delete('/purchase/delete', [PurchasesController::class, 'deleteAPurchase'])->middleware('jwt.auth');
 Route::get('/purchase', [PurchasesController::class, 'getAPurchase'])->middleware('jwt.auth');
+
+use App\Http\Controllers\ComandasController;
+Route::get('/comandas/show', [ComandasController::class, 'getComandas'])->middleware('jwt.auth');
+Route::post('/comanda/register', [ComandasController::class, 'createComanda'])->middleware('jwt.auth');
+Route::delete('/comanda/delete', [ComandasController::class, 'deleteAComanda'])->middleware('jwt.auth');
+Route::delete('/comanda/edit', [ComandasController::class, 'editAComanda'])->middleware('jwt.auth');
+Route::get('/comanda', [ComandasController::class, 'getAComanda'])->middleware('jwt.auth');
+
+use App\Http\Controllers\CashRegisterController;
+Route::get('/cashregister/show', [CashRegisterController::class, 'getCashRegisterToLeft'])->middleware('jwt.auth');
+Route::post('/cashregister/register', [CashRegisterController::class, 'createCashRegister'])->middleware('jwt.auth');

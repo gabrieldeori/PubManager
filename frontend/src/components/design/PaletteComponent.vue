@@ -39,13 +39,8 @@
 </template>
 
 <script>
-import ColorComponent from '@/components/design/ColorComponent.vue';
-
 export default {
   name: 'PaletteComponent',
-  components: {
-    ColorComponent,
-  },
   data() {
     return {
       classesColorBase: [

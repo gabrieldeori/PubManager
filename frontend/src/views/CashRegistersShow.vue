@@ -1,13 +1,15 @@
 <template>
   <section>
+    <h1>Compras</h1>
+
     <BaseErrors :errors="errors" />
-    <h1>Usuários</h1>
+
     <BaseTableJson
-      :table_title="'Usuários'"
-      :table_data="responseUsers"
+      :table_title="'Compras'"
+      :table_data="responseCashRegister"
       :is_crud="true"
-      @updateEmit="updateUser"
-      @deleteEmit="deleteUser"
+      @updateEmit="updateRegister"
+      @deleteEmit="deleteRegister"
     />
   </section>
 </template>
@@ -16,22 +18,23 @@
 import axios from 'axios';
 
 export default {
-  name: 'UsersTable',
+  name: 'CashRegistersShow',
   data() {
     return {
-      responseUsers: [],
       errors: {},
+      responseCashRegister: [],
     };
   },
   methods: {
-    async getUsers() {
+    async getCashRegister() {
       try {
-        const response = await axios.get('http://localhost:8000/api/users/show');
-        this.responseUsers = response.data.payload;
+        const { data } = await axios.get('http://localhost:8000/api/cashregister/show');
+        this.responseCashRegister = data.payload.cashRegisters;
       } catch (errors) {
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
+          return;
         }
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
@@ -39,30 +42,36 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    async deleteUser(id) {
+    async deleteRegister(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/user/delete', { data: { id } });
+          // Depende
+          await axios.delete('http://localhost:8000/api/purchase/delete', { data: { id } });
+          // await axios.delete('http://localhost:8000/api/comanda/delete', { data: { id } });
+          alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {
           const { response } = errors;
           if (!response) {
             this.errors.generic = errors.message;
+            return;
           }
-          this.errors.title = response.data.message || '';
+          this.errors.title = response.data.message;
           this.errors.generic = response.data.payload.errors.generic || '';
           this.errors.specific = response.data.payload.errors.specific || '';
           this.errors.validation = response.data.payload.errors.validation || '';
         }
       }
     },
-    updateUser(id) {
-      this.$router.push(`/user/${id}`);
+    updateRegister(id) {
+      // Depende
+      this.$router.push(`/purchase/${id}`);
+      // this.$router.push(`/comanda/${id}`);
     },
   },
   mounted() {
-    this.getUsers();
+    this.getCashRegister();
   },
 };
 </script>

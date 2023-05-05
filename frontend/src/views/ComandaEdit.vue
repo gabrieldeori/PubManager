@@ -4,6 +4,13 @@
       :errors="errors"
     />
     <section>
+      <BaseSelectProducts
+        name="clients"
+        label="Cliente"
+        v-model="form.client"
+        :options="responseClients"
+        :error="formularyErrors.client"
+      />
       <BaseInput
         name="name"
         label="Nome"
@@ -124,6 +131,7 @@ import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
+  client: yup.number().required(),
   name: yup.string().required().min(3).max(255),
   description: yup.string().nullable(),
   products: yup.array().of(
@@ -137,10 +145,11 @@ const schema = yup.object().shape({
 });
 
 export default {
-  name: 'PurchaseRegister',
+  name: 'ComandaEdit',
   data() {
     return {
       form: {
+        client: '',
         name: '',
         description: '',
         products: [],
@@ -156,6 +165,7 @@ export default {
       editId: null,
       blockEditClick: false,
       responseProducts: [],
+      responseClients: [],
       formularyErrors: {},
       errors: {},
       totalSomado: 0,
@@ -167,8 +177,8 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/purchase/register', this.form);
-        this.$router.push({ name: 'PurchasesShow' });
+        await axios.put('http://localhost:8000/api/comanda/edit', this.form);
+        this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           errors.inner.forEach((e) => {
@@ -188,6 +198,23 @@ export default {
       }
     },
 
+    async getClients() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/clients/options');
+        this.responseClients = data.payload;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
     async getProducts() {
       try {
         const response = await axios.get('http://localhost:8000/api/products/options');
@@ -196,6 +223,38 @@ export default {
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
+    async getAComanda() {
+      const { id } = this.$route.params;
+      try {
+        const response = await axios.get('http://localhost:8000/api/comanda', { params: { id } });
+        this.responseComanda = response.data.payload.comanda;
+        this.form.client = this.responseComanda.client_id;
+        this.form.id = id;
+        this.form.name = this.responseComanda.name;
+        this.form.description = this.responseComanda.description;
+        this.totalPrice = this.responseComanda.total_price;
+        this.form.products = this.responseComanda.products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          individualPrice: parseFloat(product.individual_price).toFixed(2),
+          quantity: parseFloat(product.quantity).toFixed(2),
+          totalPrice: (parseFloat(product.individual_price)
+            * parseFloat(product.quantity)).toFixed(2),
+        }));
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
         }
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
@@ -370,6 +429,8 @@ export default {
   },
 
   mounted() {
+    this.getAComanda();
+    this.getClients();
     this.getProducts();
   },
 };

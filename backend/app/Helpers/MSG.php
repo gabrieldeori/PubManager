@@ -106,6 +106,24 @@
         public const STOCK_INVALID_FORMAT = "Formato inválido para estoque";
         public const STOCKS_TABLE_EMPTY = "Tabela de estoques vazia";
 
+        public const COMANDA_CREATED = "Comanda criada";
+        public const COMANDA_NOT_CREATED = "Comanda não criada";
+        public const COMANDA_FOUND = "Comanda encontrada";
+        public const COMANDAS_FOUND = "Comandas encontradas";
+        public const COMANDAS_NOT_FOUND = "Nenhuma comanda encontrada";
+        public const COMANDA_NOT_FOUND = "Comanda não encontrada";
+        public const COMANDA_UPDATED = "Comanda atualizada";
+        public const COMANDA_NOT_UPDATED = "Comanda não atualizada";
+        public const COMANDA_DELETED = "Comanda deletada";
+        public const COMANDA_NOT_DELETED = "Comanda não deletada";
+        public const COMANDA_INVALID_FORMAT = "Formato inválido para comanda";
+        public const COMANDAS_TABLE_EMPTY = "Tabela de comandas vazia";
+
+        public const CASH_REGISTER_FOUND = "Registro de caixa encontrado";
+        public const CASH_REGISTER_NOT_FOUND = "Nenhum registro de caixa encontrado";
+        public const CASH_REGISTER_NOT_CREATED = "Registro de caixa não criado";
+        public const CASH_REGISTER_CREATED = "Registro de caixa criado";
+
         public const SERVER_ERROR = "Erro no servidor";
         public const INVALID_DATA = "Dados inválidos";
 
@@ -173,6 +191,26 @@
             'date.date' => 'A data deve ser uma data válida.',
             'date.date_format' => 'A data deve estar no formato "Y-m-d".',
 
+        ];
+
+        public const COMANDA_VALIDATE = [
+            'client.required' => 'O id do cliente é obrigatório.',
+            'client.integer' => 'O id do cliente deve ser um número inteiro.',
+            'client.exists' => 'O id do cliente deve existir na tabela de clientes.',
+            'name.required' => 'O nome é obrigatório.',
+            'name.string' => 'O nome deve ser uma string.',
+            'description.required' => 'A descrição é obrigatória.',
+            'description.string' => 'A descrição deve ser uma string.',
+            'products.required' => 'Os produtos são obrigatórios.',
+            'products.array' => 'Os produtos devem ser um array.',
+            'products.min' => 'Os produtos devem ter pelo menos :min.',
+            'products.*.id.required' => 'O id do produto é obrigatório.',
+            'products.*.id.integer' => 'O id do produto deve ser um número inteiro.',
+            'products.*.id.exists' => 'O id do produto deve existir na tabela de produtos.',
+            'products.*.quantity.required' => 'A quantidade é obrigatória.',
+            'products.*.quantity.numeric' => 'A quantidade deve ser um número.',
+            'products.*.individualPrice.required' => 'O preço individual é obrigatório.',
+            'products.*.individualPrice.numeric' => 'O preço individual deve ser um número.',
         ];
     }
 ?>

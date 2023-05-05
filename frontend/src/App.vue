@@ -6,35 +6,11 @@
 </template>
 
 <script>
-import BasePubDropDown from './components/BasePubDropDown.vue';
-// Transform into drops
-// <router-link to="/">Home Components</router-link> |
-// <router-link to="/client/register">Registrar Cliente</router-link> |
-// <router-link to="/clients/show">Clientes Registrados</router-link> |
-// <router-link to="/products/show">Produtos Registrados</router-link> |
-// <router-link to="/product/register">Registrar Produto</router-link> |
-// <router-link to="/purchases/show">Compras Registrados</router-link> |
-// <router-link to="/purchase/register">Registrar Compra</router-link> |
-// <router-link to="/user/register">Registrar Usuário</router-link> |
-// <router-link to="/users/show">Usuários Registrados</router-link> |
-// <router-link to="/login">Login</router-link> |
-// <router-link to="/logout">Logout</router-link>
-
 export default {
   name: 'App',
   data() {
     return {
       dropsMenus: [
-        {
-          group: 'Clientes',
-          options: [
-            {
-              id: 'home',
-              title: 'Home Components',
-              link: '/',
-            },
-          ],
-        },
         {
           group: 'Produtos',
           options: [
@@ -45,8 +21,8 @@ export default {
             },
             {
               id: 'registerProducts',
-              title: 'Ver Produtos',
-              link: '/products/show',
+              title: 'Criar Produto',
+              link: '/product/register',
             },
           ],
         },
@@ -62,6 +38,46 @@ export default {
               id: 'registerPurchases',
               title: 'Registrar Compra',
               link: '/purchase/register',
+            },
+          ],
+        },
+        {
+          group: 'Comandas',
+          options: [
+            {
+              id: 'showComandas',
+              title: 'Ver Comandas',
+              link: '/comandas/show',
+            },
+            {
+              id: 'registerComandas',
+              title: 'Registrar Comanda',
+              link: '/comanda/register',
+            },
+          ],
+        },
+        {
+          group: 'Caixa',
+          options: [
+            {
+              id: 'showComandas',
+              title: 'Ver Fluxo de Caixa',
+              link: '/cashregisters/show',
+            },
+          ],
+        },
+        {
+          group: 'Clientes',
+          options: [
+            {
+              id: 'showClients',
+              title: 'Ver Clientes',
+              link: '/clients/show',
+            },
+            {
+              id: 'registerClients',
+              title: 'Registrar Cliente',
+              link: '/client/register',
             },
           ],
         },
@@ -98,9 +114,6 @@ export default {
       ],
     };
   },
-  components: {
-    BasePubDropDown,
-  },
 };
 </script>
 
@@ -112,7 +125,7 @@ export default {
   --grey_0: #3a3a3a;
   --grey_1: #4d4d4d;
   --grey_2: #7c7c7c;
-  --smooth_white: #E0E0E0;
+  --smooth_white: #eeeeee;
   --white: white;
 
   /* Primary */
@@ -229,6 +242,11 @@ section {
   justify-content: center;
 }
 
+select {
+  font-size: 1.2rem;
+  padding: 0.25rem 0.75rem;
+}
+
 /* Forms */
 
 form {
@@ -237,6 +255,7 @@ form {
   flex-flow: column;
   justify-content: center;
   gap: 1rem;
+  width: 100%;
 }
 
 /* Tables */
@@ -452,5 +471,46 @@ th, td {
   background-color: var(--danger_strong);
   border-color: var(--danger_stronger);
   color: var(--danger_lighter);
+}
+
+.base_button {
+  align-items: center;
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.base_button:hover,
+.base_button:focus {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.base_button:hover {
+  transform: translateY(-1px);
+}
+
+.base_button:active {
+  box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+  transform: translateY(0);
 }
 </style>

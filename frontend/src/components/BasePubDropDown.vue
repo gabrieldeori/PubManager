@@ -9,13 +9,8 @@
 </template>
 
 <script>
-import BasePubDropRouter from './BasePubDropRouter.vue';
-
 export default {
   name: 'BasePubDropDown',
-  components: {
-    BasePubDropRouter,
-  },
   props: {
     dropsMenus: {
       type: Array,

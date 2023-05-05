@@ -137,10 +137,12 @@ const schema = yup.object().shape({
 });
 
 export default {
-  name: 'PurchaseRegister',
+  name: 'PurchaseEdit',
   data() {
     return {
+
       form: {
+        id: null,
         name: '',
         description: '',
         products: [],
@@ -153,6 +155,7 @@ export default {
         totalPrice: '',
       },
 
+      responsePurchase: {},
       editId: null,
       blockEditClick: false,
       responseProducts: [],
@@ -167,7 +170,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/purchase/register', this.form);
+        await axios.put('http://localhost:8000/api/purchase/edit', this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -196,6 +199,37 @@ export default {
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
+    async getAPurchase() {
+      const { id } = this.$route.params;
+      try {
+        const response = await axios.get('http://localhost:8000/api/purchase', { params: { id } });
+        this.responsePurchase = response.data.payload.purchase;
+        this.form.id = id;
+        this.form.name = this.responsePurchase.name;
+        this.form.description = this.responsePurchase.description;
+        this.totalPrice = this.responsePurchase.total_price;
+        this.form.products = this.responsePurchase.products.map((product) => ({
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          individualPrice: parseFloat(product.individual_price).toFixed(2),
+          quantity: parseFloat(product.quantity).toFixed(2),
+          totalPrice: (parseFloat(product.individual_price)
+            * parseFloat(product.quantity)).toFixed(2),
+        }));
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
         }
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
@@ -371,6 +405,7 @@ export default {
 
   mounted() {
     this.getProducts();
+    this.getAPurchase();
   },
 };
 </script>

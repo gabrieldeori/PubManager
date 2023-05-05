@@ -33,15 +33,6 @@
     >
       + Adicionar outra linha
     </button>
-
-    <!-- Apenas Preview Dos dados -->
-    <section>
-      <pre>
-        editId: {{ editId }}
-        insertionList: {{ insertionList }}
-        toEdit: {{ toEdit }}
-      </pre>
-    </section>
 </template>
 
 <script>

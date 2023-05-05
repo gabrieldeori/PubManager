@@ -4,7 +4,7 @@
 
     <BaseErrors :errors="errors" />
 
-    <BaseTableJSON
+    <BaseTableJson
       :table_title="'Compras'"
       :table_data="responsePurchases"
       :is_crud="true"
@@ -16,7 +16,6 @@
 
 <script>
 import axios from 'axios';
-import BaseTableJSON from '@/components/BaseTableJSON.vue';
 
 export default {
   name: 'PurchasesShow',
@@ -25,9 +24,6 @@ export default {
       errors: {},
       responsePurchases: [],
     };
-  },
-  components: {
-    BaseTableJSON,
   },
   methods: {
     async getPurchases() {
@@ -67,7 +63,7 @@ export default {
       }
     },
     updatePurchase(id) {
-      this.$router.push(`/purchases/edit/${id}`);
+      this.$router.push(`/purchase/${id}`);
     },
   },
   mounted() {

@@ -4,23 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Product extends Model
+class Comanda extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'client_id',
         'name',
         'description',
-        'alcoholic',
-        'preparable',
-        'active_recipe',
-        'created_at',
-        'updated_at',
-        'created_by',
-        'updated_by',
+        'total_price',
+        'products',
     ];
 
     protected $casts = [
@@ -58,15 +55,20 @@ class Product extends Model
         });
     }
 
-    public function purchase(): BelongsToMany
+    public function products()
     {
-        return $this->belongsToMany(Purchase::class);
+        return $this->belongsToMany(Product::class, 'comanda_products')
+            ->withPivot('quantity', 'individual_price')
+            ->withTimestamps();
     }
 
-    public function comandas()
+    public function client(): BelongsTo
     {
-        return $this->belongsToMany(Comanda::class, 'comanda_products')
-            ->withPivot('quantity, individual_price')
-            ->withTimestamps();
+        return $this->belongsTo(Client::class);
+    }
+
+    public function cashRegisters()
+    {
+        return $this->hasMany(CashRegister::class);
     }
 }

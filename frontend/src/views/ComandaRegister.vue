@@ -4,6 +4,13 @@
       :errors="errors"
     />
     <section>
+      <BaseSelectProducts
+        name="clients"
+        label="Cliente"
+        v-model="form.client"
+        :options="responseClients"
+        :error="formularyErrors.client"
+      />
       <BaseInput
         name="name"
         label="Nome"
@@ -124,6 +131,7 @@ import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
+  client: yup.number().required(),
   name: yup.string().required().min(3).max(255),
   description: yup.string().nullable(),
   products: yup.array().of(
@@ -137,10 +145,11 @@ const schema = yup.object().shape({
 });
 
 export default {
-  name: 'PurchaseRegister',
+  name: 'ComandaRegister',
   data() {
     return {
       form: {
+        client: '',
         name: '',
         description: '',
         products: [],
@@ -156,6 +165,7 @@ export default {
       editId: null,
       blockEditClick: false,
       responseProducts: [],
+      responseClients: [],
       formularyErrors: {},
       errors: {},
       totalSomado: 0,
@@ -167,8 +177,8 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/purchase/register', this.form);
-        this.$router.push({ name: 'PurchasesShow' });
+        await axios.post('http://localhost:8000/api/comanda/register', this.form);
+        this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           errors.inner.forEach((e) => {
@@ -185,6 +195,23 @@ export default {
           this.errors.specific = response.data.payload.errors.specific;
           this.errors.validation = response.data.payload.errors.validation;
         }
+      }
+    },
+
+    async getClients() {
+      try {
+        const { data } = await axios.get('http://localhost:8000/api/clients/options');
+        this.responseClients = data.payload;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
 
@@ -371,6 +398,7 @@ export default {
 
   mounted() {
     this.getProducts();
+    this.getClients();
   },
 };
 </script>

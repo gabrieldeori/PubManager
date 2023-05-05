@@ -84,7 +84,7 @@ export default {
   border-radius: 0.5rem;
   display: flex;
   justify-content: center;
-  padding: 0.25rem;
+  padding: 0.5rem;
   gap: 0.25rem;
 }
 

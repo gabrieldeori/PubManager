@@ -32,9 +32,19 @@
 
         </div>
       </div>
-
-      <button type="button" class='base_button button_primary invert' @click="newInsertion">
-        + Adicionar outra linha
+      <button
+      v-if="insertionList.length > 0"
+      type="button"
+      class='base_button button_primary invert'
+      @click="newInsertion">
+        + Adicionar outro cliente
+      </button>
+      <button
+      v-else
+      type="button"
+      class='base_button button_primary invert'
+      @click="newInsertion">
+        + Adicionar cliente
       </button>
       <button class='base_button button_primary' type="submit">
         Enviar

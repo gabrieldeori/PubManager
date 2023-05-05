@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Helpers\Error_Handlers;
 use App\Helpers\Response_Handlers;
 use App\Helpers\MSG;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class clientsController extends Controller
 {
@@ -26,6 +27,40 @@ class clientsController extends Controller
         Error_Handlers::logError(MSG::SERVER_ERROR, $error);
         $response = Response_Handlers::setAndRespond(MSG::SERVER_ERROR, ['error'=>$error]);
         return response()->json($response, MSG::NOT_FOUND);
+    }
+  }
+
+  public function getClientsOptions(Request $request)
+  {
+    try {
+        $clients = Client::orderBy('name')->get();
+
+        if ($clients->isEmpty()) {
+            throw new ModelNotFoundException(MSG::PRODUCTS_TABLE_EMPTY);
+        }
+
+        $clients = $clients->map(function ($client) {
+            return [
+                'id' => $client->id,
+                'name' => $client->name,
+            ];
+        });
+
+        if (count($clients) == 0) {
+            throw new Exception(MSG::CLIENTS_NOT_FOUND);
+        } else {
+            $clients = Response_Handlers::setAndRespond(MSG::CLIENTS_FOUND, $clients->toArray());
+        }
+        return response()->json($clients);
+    } catch (ModelNotFoundException $modelError) {
+        $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+        return response()->json($response, MSG::NOT_FOUND);
+
+    } catch (\Exception $error) {
+        $errors = ['errors' => ['generic' => $error->getMessage()]];
+        $response = Response_Handlers::setAndRespond(MSG::PRODUCTS_NOT_FOUND, $errors);
+        return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
     }
   }
 

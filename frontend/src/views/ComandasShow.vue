@@ -1,13 +1,15 @@
 <template>
   <section>
+    <h1>Comandas</h1>
+
     <BaseErrors :errors="errors" />
-    <h1>Usuários</h1>
+
     <BaseTableJson
-      :table_title="'Usuários'"
-      :table_data="responseUsers"
+      :table_title="'Comandas'"
+      :table_data="responseComandas"
       :is_crud="true"
-      @updateEmit="updateUser"
-      @deleteEmit="deleteUser"
+      @updateEmit="updateComanda"
+      @deleteEmit="deleteComanda"
     />
   </section>
 </template>
@@ -16,22 +18,23 @@
 import axios from 'axios';
 
 export default {
-  name: 'UsersTable',
+  name: 'ComandasShow',
   data() {
     return {
-      responseUsers: [],
       errors: {},
+      responseComandas: [],
     };
   },
   methods: {
-    async getUsers() {
+    async getComandas() {
       try {
-        const response = await axios.get('http://localhost:8000/api/users/show');
-        this.responseUsers = response.data.payload;
+        const { data } = await axios.get('http://localhost:8000/api/comandas/show');
+        this.responseComandas = data.payload.comandas;
       } catch (errors) {
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
+          return;
         }
         this.errors.title = response.data.message || '';
         this.errors.generic = response.data.payload.errors.generic || '';
@@ -39,30 +42,32 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    async deleteUser(id) {
+    async deleteComanda(id) {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete('http://localhost:8000/api/user/delete', { data: { id } });
+          await axios.delete('http://localhost:8000/api/comanda/delete', { data: { id } });
+          alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {
           const { response } = errors;
           if (!response) {
             this.errors.generic = errors.message;
+            return;
           }
-          this.errors.title = response.data.message || '';
+          this.errors.title = response.data.message;
           this.errors.generic = response.data.payload.errors.generic || '';
           this.errors.specific = response.data.payload.errors.specific || '';
           this.errors.validation = response.data.payload.errors.validation || '';
         }
       }
     },
-    updateUser(id) {
-      this.$router.push(`/user/${id}`);
+    updateComanda(id) {
+      this.$router.push(`/comanda/${id}`);
     },
   },
   mounted() {
-    this.getUsers();
+    this.getComandas();
   },
 };
 </script>

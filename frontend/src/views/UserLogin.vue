@@ -1,7 +1,7 @@
 <template>
 <main>
   <form @submit.prevent="login">
-    <img src="@/assets/logo.png" alt="" width="72" height="57">
+    <img src="@/assets/icons/PubManager.png" alt="" width="72" height="57">
     <h1>Login</h1>
 
     <BaseErrors :errors="errors" />
@@ -25,7 +25,6 @@
     />
 
     <button class="base_button button_primary" type="submit">Login</button>
-    <p>PubManager &copy; 2023–2026 - gabriel_deori</p>
   </form>
 </main>
 </template>
@@ -83,3 +82,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+img {
+  margin-bottom: 1rem;
+  height: 6rem;
+  width: 6rem;
+}
+</style>

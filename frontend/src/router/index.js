@@ -3,14 +3,6 @@ import Guard from '../middlewares/authorization';
 
 const routes = [
   {
-    path: '/',
-    name: 'components',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Components.vue'),
-  },
-  {
     path: '/client/register',
     name: 'ClientRegister',
     component: () => import('../views/ClientRegister.vue'),
@@ -88,12 +80,36 @@ const routes = [
     component: () => import('../views/PurchaseRegister.vue'),
     beforeEnter: Guard.auth,
   },
-  // {
-  //   path: '/purchase/:id',
-  //   name: 'PurchaseEdit',
-  //   component: () => import('../views/PurchaseEdit.vue'),
-  //   beforeEnter: Guard.auth,
-  // },
+  {
+    path: '/purchase/:id',
+    name: 'PurchaseEdit',
+    component: () => import('../views/PurchaseEdit.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/comanda/register',
+    name: 'ComandaRegister',
+    component: () => import('../views/ComandaRegister.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/comandas/show',
+    name: 'ComandasShow',
+    component: () => import('../views/ComandasShow.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/comanda/:id',
+    name: 'ComandaEdit',
+    component: () => import('../views/ComandaEdit.vue'),
+    beforeEnter: Guard.auth,
+  },
+  {
+    path: '/cashregisters/show',
+    name: 'CashRegistersShow',
+    component: () => import('../views/CashRegistersShow.vue'),
+    beforeEnter: Guard.auth,
+  },
 ];
 
 const router = createRouter({

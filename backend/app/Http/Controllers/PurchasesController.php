@@ -5,21 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Purchase;
 use App\Helpers\Response_Handlers;
+use \Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Helpers\MSG;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\Models\PurchasesProduct;
-use App\Models\Product;
-use App\Models\Unit;
-use \Illuminate\Validation\ValidationException;
+use App\Models\PurchaseProduct;
+use App\Models\CashRegister;
 
 class PurchasesController extends Controller
 {
     public function getPurchases() {
         try {
-            $purchases = Purchase::with('products')->get();
+            $purchases = Purchase::with('products')
+            ->get();
 
             if ($purchases->isEmpty()) {
                 throw new ModelNotFoundException(MSG::PURCHASES_TABLE_EMPTY);
@@ -32,9 +29,9 @@ class PurchasesController extends Controller
                     'id' => $purchase->id,
                     'Nome' => $purchase->name,
                     'Descrição' => $purchase->description,
-                    'Preço Total' => $purchase->price,
+                    'Preço Total' => $purchase->total_price,
                     'Produtos' => $purchase->products->map(function ($product) {
-                        return $product->name . ': R$ ' . $product->pivot->price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->price * $product->pivot->quantity;
+                        return $product->name . ': R$ ' . $product->pivot->individual_price . ' x' . $product->pivot->quantity . ' = R$ ' . $product->pivot->individual_price * $product->pivot->quantity;
                     })
                 ];
                 array_push($processed, $newPurchase);
@@ -61,21 +58,18 @@ class PurchasesController extends Controller
                 'id' => 'required|integer',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::find($request->id);
+            $purchase = Purchase::with(['products' => function($query) {
+                $query->select(
+                    'products.id',
+                    'products.name',
+                    'products.description',
+                    'purchase_products.quantity',
+                    'purchase_products.individual_price'
+                );
+            }])
+            ->findOrFail($request->id);
 
-            if (!$purchase) {
-                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            }
-
-            $purchase->created_by = $purchase->createdBy->name;
-            $purchase->updated_by = $purchase->updatedBy->name;
-            $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
-            $purchase->products = $purchase->products->map(function ($product) {
-                $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-                return $product;
-            });
-
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_FOUND, ['purchase'=>$purchase]);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_FOUND, ['purchase' => $purchase]);
             return response()->json($response, MSG::OK);
 
         } catch (ModelNotFoundException $modelError) {
@@ -83,9 +77,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
@@ -98,29 +92,44 @@ class PurchasesController extends Controller
     public function createPurchase(Request $request) {
         try {
             $request->validate([
+                'name' => 'required|string',
                 'description' => 'required|string',
-                'total_price' => 'required|numeric',
-                'products' => 'required|array',
+                'products' => 'required|array|min:1',
                 'products.*.id' => 'required|integer',
-                'products.*.quantity' => 'required|integer',
-                'products.*.unit' => 'required|string',
-                'products.*.individual_price' => 'required|numeric',
+                'products.*.quantity' => 'required|numeric',
+                'products.*.individualPrice' => 'required|numeric',
             ], MSG::PURCHASE_VALIDATE);
 
             $purchase = new Purchase();
+            $purchase->name = $request->name;
             $purchase->description = $request->description;
-            $purchase->total_price = $request->total_price;
-            $purchase->created_by = auth()->user()->id;
-            $purchase->updated_by = auth()->user()->id;
-            $purchase->save();
+            $purchase->total_price = 0;
+            $purchase->save(); // salva a compra e atribui um ID
 
-            $purchase->products()->attach($request->products);
+            foreach ($request->products as $product) {
+                $purchaseProduct = new PurchaseProduct();
+                $purchaseProduct->purchase_id = $purchase->id;
+                $purchaseProduct->product_id = $product['id'];
+                $purchaseProduct->quantity = $product['quantity'];
+                $purchaseProduct->individual_price = $product['individualPrice'];
+                $purchaseProduct->save();
+
+                $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+            }
+
+            $purchase->save(); // atualiza o total_price da compra
+
+            $cashRegister = new CashRegister();
+            $cashRegister->name = $purchase->name;
+            $cashRegister->purchase_id = $purchase->id;
+            $cashRegister->movement = 0;
+            $cashRegister->save();
 
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_CREATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::CREATED);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
@@ -134,29 +143,30 @@ class PurchasesController extends Controller
     public function editAPurchase(Request $request) {
         try {
             $request->validate([
-                'id' => 'required|integer',
+                'name' => 'required|string',
                 'description' => 'required|string',
-                'total_price' => 'required|numeric',
-                'products' => 'required|array',
+                'products' => 'required|array|min:1',
                 'products.*.id' => 'required|integer',
-                'products.*.quantity' => 'required|integer',
-                'products.*.unit' => 'required|string',
-                'products.*.individual_price' => 'required|numeric',
+                'products.*.quantity' => 'required|numeric',
+                'products.*.individualPrice' => 'required|numeric',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::find($request->id);
-
-            if (!$purchase) {
-                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            }
-
+            $purchase = Purchase::findOrFail($request->id);
+            $purchase->name = $request->name;
             $purchase->description = $request->description;
-            $purchase->total_price = $request->total_price;
-            $purchase->updated_by = auth()->user()->id;
-            $purchase->save();
+            $purchase->total_price = 0;
 
             $purchase->products()->detach();
-            $purchase->products()->attach($request->products);
+            $newProducts = [];
+            foreach ($request->products as $product) {
+                $newProducts[$product['id']] = [
+                    'quantity' => $product['quantity'],
+                    'individual_price' => $product['individualPrice']
+                ];
+                $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+            }
+            $purchase->save();
+            $purchase->products()->sync($newProducts);
 
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_UPDATED, ['purchase'=>$purchase]);
             return response()->json($response, MSG::OK);
@@ -166,9 +176,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
@@ -201,9 +211,9 @@ class PurchasesController extends Controller
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::NOT_FOUND);
 
-        } catch (ValidationException $validationError) {
-            $errors = ['errors' => $validationError->errors()];
-            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_VALIDATE, $errors);
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
             return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
 
         } catch (\Exception $error) {
