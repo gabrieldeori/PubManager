@@ -138,6 +138,7 @@ import axios from 'axios';
 import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
+  client: yup.number().required(),
   name: yup.string().required().min(3).max(255),
   description: yup.string().nullable(),
   products: yup.array().of(
@@ -183,7 +184,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/purchase/register', this.form);
+        await axios.post('http://localhost:8000/api/comanda/register', this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
