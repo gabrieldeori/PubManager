@@ -125,7 +125,7 @@
     />
   </form>
   <pre>
-    {{ responseClients }}
+    {{ form }}
   </pre>
 </template>
 

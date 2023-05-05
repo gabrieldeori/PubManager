@@ -61,16 +61,6 @@
       >
         + Adicionar outra linha
       </button>
-
-      <!-- Apenas Preview Dos dados -->
-      <section>
-        <pre>
-          editId: {{ editId }}
-          insertionList: {{ insertionList }}
-          toEdit: {{ toEdit }}
-          responseProducts: {{ responseProducts }}
-        </pre>
-      </section>
   </div>
 </template>
 

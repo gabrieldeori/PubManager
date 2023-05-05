@@ -116,9 +116,6 @@
       class="base_button button_primary"
       value="Cadastrar"
     />
-    <pre>
-      {{ form }}
-    </pre>
   </form>
 </template>
 
