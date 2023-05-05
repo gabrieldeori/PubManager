@@ -1,6 +1,6 @@
 <template>
-  <div class="table_wrapper table-responsive">
-    <table class="table_field" v-if="table_data.length > 0">
+  <div class="table-responsive table_wrapper">
+    <table class="table" v-if="table_data.length > 0">
       <caption>{{ table_title }}</caption>
       <thead>
         <tr>
@@ -10,18 +10,13 @@
           >
             {{ tHeadData }}
           </th>
-          <th v-if="is_crud">
-            Atualizar
-          </th>
-          <th v-if="is_crud">
-            Deletar
-          </th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="tBodyRow, tbri in table_data"
           v-bind:key="'key_tBodyRow_' + tbri"
+          @click="updateEmit(tBodyRow.id)"
         >
           <td
             v-for="tBodyData, tbdi in Object.values(tBodyRow)"
@@ -38,22 +33,6 @@
             </ul>
             <div v-else>{{ tBodyData }}</div>
           </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_highlight invert"
-              @click="updateEmit(tBodyRow.id)"
-              >
-                <img src="../assets/icons/icon_edit.svg" alt="">
-              </button>
-          </td>
-          <td v-if="is_crud">
-            <button
-              class="base_button button_danger"
-              @click="deleteEmit(tBodyRow.id)"
-            >
-              <img src="../assets/icons/icon_delete.svg" alt="">
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -64,10 +43,6 @@
 export default {
   name: 'BaseTableJson',
   props: {
-    is_crud: {
-      type: Boolean,
-      default: false,
-    },
     table_title: {
       type: String,
       default: 'Título da tabela',
@@ -109,43 +84,62 @@ export default {
         {},
       );
     },
-    updateEmit(id) {
-      this.$emit('updateEmit', id);
-    },
-    deleteEmit(id) {
-      this.$emit('deleteEmit', id);
+    async updateEmit(id) {
+      const toUpdate = this.table_data.find((item) => item.id === id);
+      this.$emit('updateEmit', toUpdate);
     },
   },
 };
 </script>
 
 <style scoped>
-caption {
-  font-size: 1rem;
-  font-weight: bold;
-  background-color: var(--primary_lighter);
-  border: 0.1rem solid var(--primary_strong);
-  border-bottom: 0;
-}
-
-img {
-  max-width: 2rem;
-  max-height: 2rem;
-}
-
-button {
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin: 0;
-  padding: 0.25rem;
-  width: 100%;
-  height: 3rem;
-  max-height: 3rem;
-  max-width: 100%;
+table {
+  background-color: white;
 }
 
 li {
   text-align: left;
 }
+
+/* Tables */
+table {
+  background-color: var(--smooth_white);
+  border-top: 0.1rem solid var(--primary_stronger);
+  border-bottom: 0.1rem solid var(--primary_stronger);
+  border-collapse: collapse;
+  width: fit-content;
+}
+
+.table_wrapper {
+  max-width: 100%;
+  overflow: scroll;
+}
+
+td {
+  cursor: pointer;
+}
+
+tr:nth-child(odd) {
+  background-color: var(--primary_lighter);
+}
+
+tr:nth-child(even) {
+  background-color: var(--primary_light);
+}
+
+th {
+  background-color: var(--primary_light);
+}
+
+tbody tr:hover {
+  background-color: var(--highlight_white);
+  border-top: 2px solid var(--primary_darker);
+  border-bottom: 2px solid var(--primary_darker);
+}
+
+.table_wrapper {
+  max-width: 100%;
+  overflow: auto;
+}
+
 </style>

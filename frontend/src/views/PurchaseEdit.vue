@@ -109,12 +109,12 @@
       {{ formularyErrors.products }}
     </p>
 
-    <input
-      @click.prevent="sendForm"
+    <BaseEditButtons
       v-if="!blockEditClick"
-      type="submit"
-      class="base_button button_primary"
       value="Cadastrar"
+      @deleteEmit="deletePurchase"
+      @cancelEmit="cancelPurchase"
+      @saveEmit="sendForm"
     />
   </form>
 </template>
@@ -170,7 +170,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put('http://localhost:8000/api/purchase/edit', this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/purchase/edit`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -193,7 +193,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get('http://localhost:8000/api/products/options');
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
@@ -210,7 +210,7 @@ export default {
     async getAPurchase() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get('http://localhost:8000/api/purchase', { params: { id } });
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/purchase`, { params: { id } });
         this.responsePurchase = response.data.payload.purchase;
         this.form.id = id;
         this.form.name = this.responsePurchase.name;
@@ -236,6 +236,32 @@ export default {
         this.errors.specific = response.data.payload.errors.specific || '';
         this.errors.validation = response.data.payload.errors.validation || '';
       }
+    },
+
+    async deletePurchase() {
+      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${this.form.id}?`);
+      const { id } = this.$route.params;
+      if (confirmed) {
+        try {
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/purchase/delete`, { params: { id } });
+          alert('Compra deletada com sucesso!');
+          this.$router.push({ name: 'PurchasesShow' });
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+        }
+      }
+    },
+
+    async cancelPurchase() {
+      this.$router.push({ name: 'PurchasesShow' });
     },
 
     newInsertion() {

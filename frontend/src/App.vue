@@ -258,25 +258,6 @@ form {
   width: 100%;
 }
 
-/* Tables */
-table {
-  background-color: var(--smooth_white);
-  border: 0.1rem solid var(--primary_stronger);
-  border-collapse: collapse;
-  width: fit-content;
-}
-
-.table_wrapper {
-  max-width: 100%;
-  overflow: scroll;
-}
-
-th, td {
-  border: 0.1rem solid var(--primary_stronger);
-  padding: 0.5rem;
-  margin: 0;
-}
-
 /* SPECIAL */
 .flex_horizontal {
   align-items: center;
@@ -512,5 +493,12 @@ th, td {
 .base_button:active {
   box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
   transform: translateY(0);
+}
+
+.product_form {
+  border-top: 0.1rem solid var(--primary_dark);
+  border-bottom: 0.1rem solid var(--primary_dark);
+  padding: 1rem 0;
+  margin: 1rem 0;
 }
 </style>

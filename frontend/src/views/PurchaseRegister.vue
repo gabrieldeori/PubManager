@@ -109,13 +109,14 @@
       {{ formularyErrors.products }}
     </p>
 
-    <input
-      @click.prevent="sendForm"
-      v-if="!blockEditClick"
-      type="submit"
-      class="base_button button_primary"
-      value="Cadastrar"
-    />
+    <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="this.$router.push('/purchases/show')"
+        @saveEmit="sendForm"
+      />
   </form>
 </template>
 
@@ -167,7 +168,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/purchase/register', this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/purchase/register`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -190,7 +191,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get('http://localhost:8000/api/products/options');
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;

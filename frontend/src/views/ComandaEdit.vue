@@ -83,6 +83,7 @@
               @input="calculateIndividualPrice"
             />
             <BaseEditButtons
+              saveTxt="Salvar"
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
               @saveEmit="saveInsertion(pIndex)"
@@ -116,12 +117,12 @@
       {{ formularyErrors.products }}
     </p>
 
-    <input
-      @click.prevent="sendForm"
+    <BaseEditButtons
       v-if="!blockEditClick"
-      type="submit"
-      class="base_button button_primary"
       value="Cadastrar"
+      @deleteEmit="deleteComanda"
+      @cancelEmit="cancelComanda"
+      @saveEmit="sendForm"
     />
   </form>
 </template>
@@ -177,7 +178,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put('http://localhost:8000/api/comanda/edit', this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/comanda/edit`, this.form);
         this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -198,10 +199,32 @@ export default {
       }
     },
 
+    cancelComanda() {
+      this.$router.push({ name: 'ComandasShow' });
+    },
+
     async getClients() {
       try {
-        const { data } = await axios.get('http://localhost:8000/api/clients/options');
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/clients/options`);
         this.responseClients = data.payload;
+      } catch (errors) {
+        const { response } = errors;
+        if (!response) {
+          this.errors.generic = errors.message;
+          return;
+        }
+        this.errors.title = response.data.message || '';
+        this.errors.generic = response.data.payload.errors.generic || '';
+        this.errors.specific = response.data.payload.errors.specific || '';
+        this.errors.validation = response.data.payload.errors.validation || '';
+      }
+    },
+
+    async deleteComanda() {
+      const { id } = this.$route.params;
+      try {
+        await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/comanda/delete`, { params: { id } });
+        this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         const { response } = errors;
         if (!response) {
@@ -217,7 +240,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get('http://localhost:8000/api/products/options');
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
@@ -234,7 +257,7 @@ export default {
     async getAComanda() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get('http://localhost:8000/api/comanda', { params: { id } });
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/comanda`, { params: { id } });
         this.responseComanda = response.data.payload.comanda;
         this.form.client = this.responseComanda.client_id;
         this.form.id = id;

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Editar Usuário</h1>
+    <h2>Editar Usuário</h2>
     <BaseErrors :errors="errors" />
     <BaseInput
       name="name"
@@ -57,18 +57,15 @@
       :error="formularyErrors.userType"
     />
 
-    <button
-      class="base_button button_primary"
-      @click="editUser()"
-      >
-        Atualizar
-    </button>
-    <button
-      class="base_button button_danger invert"
-      @click="this.$router.push(`/users/show`)"
-    >
-      Cancelar
-    </button>
+    <BaseEditButtons
+        v-if="!blockEditClick"
+        txtCancel="Cancelar"
+        txtSave="Atualizar"
+        value="Atualizar"
+        @deleteEmit="deleteUser"
+        @cancelEmit="this.$router.push('/users/show')"
+        @saveEmit="editUser"
+      />
   </section>
 </template>
 
@@ -131,7 +128,10 @@ export default {
     async getUser() {
       const payload = { id: this.$route.params.id };
       try {
-        const response = await axios.get('http://localhost:8000/api/user', { params: payload });
+        const response = await axios.get(
+          `${process.env.VUE_APP_ROOT_API}/api/user`,
+          { params: payload, form: this.form },
+        );
         this.toEdit = response.data.payload.user;
         this.form = {
           ...payload,
@@ -159,7 +159,7 @@ export default {
       if (confirmed) {
         try {
           await schema.validate(this.form, { abortEarly: false });
-          await axios.put('http://localhost:8000/api/user/edit', this.form);
+          await axios.put(`${process.env.VUE_APP_ROOT_API}/api/user/edit`, this.form);
           window.alert('Usuário Atualizado com sucesso!');
           this.$router.push('/users/show');
         } catch (errors) {
@@ -178,6 +178,28 @@ export default {
             this.errors.specific = response.data.payload.errors.specific;
             this.errors.validation = response.data.payload.errors.validation;
           }
+        }
+      }
+    },
+
+    deleteUser() {
+      const confirmed = window.confirm('Deseja realmente deletar este usuário?');
+      const { id } = this.$route.params;
+      if (confirmed) {
+        try {
+          axios.delete(`${process.env.VUE_APP_ROOT_API}/api/user/delete`, { params: { id } });
+          window.alert('Usuário deletado com sucesso!');
+          this.$router.push('/users/show');
+        } catch (errors) {
+          const { response } = errors;
+          if (!response) {
+            this.errors.generic = errors.message;
+            return;
+          }
+          this.errors.title = response.data.message;
+          this.errors.generic = response.data.payload.errors.generic;
+          this.errors.specific = response.data.payload.errors.specific;
+          this.errors.validation = response.data.payload.errors.validation;
         }
       }
     },

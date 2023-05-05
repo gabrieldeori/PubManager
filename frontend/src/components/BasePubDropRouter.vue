@@ -1,12 +1,4 @@
 <template>
-  <button
-    class="btn btn-secondary base_button button_primary dropdown-toggle"
-    type="button"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    {{ menu.group }}
-  </button>
   <ul class="dropdown-menu ">
     <li
       v-for="option in menu.options"
@@ -33,7 +25,23 @@ export default {
 </script>
 
 <style scoped>
-  .base_button {
-    max-width: 7rem;
+  ul {
+    background-color: var(--primary_white);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    width: 100%;
+  }
+
+  li {
+    width: 100%;
+  }
+
+  .dropdown-item {
+    color: var(--smooth_black);
+  }
+
+  .dropdown-item:hover {
+    background-color: var(--primary_light);
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <form class="base_form" @submit.prevent="sendForm">
+    <form class="base_form" @submit.prevent="">
       <BaseErrors :errors="errors" />
       <BaseInput
         name="name"
@@ -30,7 +30,14 @@
         v-model="form.preparable"
         :error="formularyErrors.preparable"
       />
-      <input type="submit" class="base_button button_primary" value="Cadastrar">
+      <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="this.$router.push('/products/show')"
+        @saveEmit="saveEvent"
+      />
     </form>
   </section>
 </template>
@@ -66,10 +73,10 @@ export default {
     };
   },
   methods: {
-    async sendForm() {
+    async saveEvent() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/product/register', this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/product/register`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {

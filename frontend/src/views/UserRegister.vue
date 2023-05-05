@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>form</h1>
+    <h2>form</h2>
     <BaseErrors :errors="errors" />
     <form class="base_form" @submit.prevent="sendForm">
       <BaseInput
@@ -49,7 +49,14 @@
         name="user_type"
         :error="formularyErrors.userType"
       />
-      <input type="submit" class="base_button button_primary" value="Cadastrar">
+      <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="this.$router.push('/users/show')"
+        @saveEmit="sendForm"
+      />
     </form>
   </section>
 </template>
@@ -99,7 +106,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post('http://localhost:8000/api/user/register', this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/user/register`, this.form);
         window.alert('Usuário registrado com sucesso!');
         this.$router.push('/users/show');
       } catch (errors) {

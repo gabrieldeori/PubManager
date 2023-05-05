@@ -1,7 +1,7 @@
 // Logout laravel vue jwt-auth
 <template>
   <div>
-    <h1>Logout</h1>
+    <h2>Logout</h2>
     <BaseErrors :errors="errors" />
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
   methods: {
     async logout() {
       try {
-        await axios.post('http://localhost:8000/api/logout');
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/logout`);
         localStorage.removeItem('pubmanager_tk_009911');
         this.$router.push({ name: 'Login' });
       } catch (errors) {

@@ -194,11 +194,10 @@ class PurchasesController extends Controller
                 'id' => 'required|integer',
             ], MSG::PURCHASE_VALIDATE);
 
-            $purchase = Purchase::find($request->id);
+            $purchase = Purchase::findOrFail($request->id);
 
-            if (!$purchase) {
-                throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            }
+            $cashRegister = CashRegister::where('purchase_id', $purchase->id)->first();
+            $cashRegister->delete();
 
             $purchase->products()->detach();
             $purchase->delete();

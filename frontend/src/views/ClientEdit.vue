@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Editar Cliente</h1>
+    <h2>Editar Cliente</h2>
 
     <BaseErrors :errors="errors" />
 
@@ -19,18 +19,11 @@
       <p>Criado em: {{ form.created_at }}</p>
       <p>Atualizado em: {{ form.updated_at }}</p>
 
-      <button
-        class="base_button button_primary"
-        @click="editClient()"
-        >
-          Atualizar
-      </button>
-      <button
-        class="base_button button_danger invert"
-        @click="this.$router.push(`/clients/show`)"
-      >
-        Cancelar
-      </button>
+      <BaseEditButtons
+        @saveEmit="sendForm"
+        @deleteEmit="deleteClient"
+        @cancelEmit="this.$router.push('/clients/show')"
+      />
     </div>
   </section>
 </template>
@@ -61,7 +54,7 @@ export default {
     async getClient() {
       const payload = { id: this.$route.params.id };
       try {
-        const { data } = await axios.get('http://localhost:8000/api/client', { params: payload });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/client`, { params: payload });
         this.form = data.payload.client;
       } catch (errors) {
         const { response } = errors;
@@ -75,13 +68,13 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
-    async editClient() {
+    async sendForm() {
       const confirmed = window.confirm('Deseja realmente atualizar este cliente?');
       if (confirmed) {
         try {
           await schema.validate(this.form, { abortEarly: false });
           const payload = { ...this.form };
-          await axios.put('http://localhost:8000/api/client/edit', payload);
+          await axios.put(`${process.env.VUE_APP_ROOT_API}/api/client/edit`, payload);
           this.$router.push('/clients/show');
         } catch (errors) {
           if (errors instanceof yup.ValidationError) {
@@ -98,6 +91,33 @@ export default {
             this.errors.generic = response.data.payload.errors.generic || '';
             this.errors.specific = response.data.payload.errors.specific || '';
             this.errors.validation = response.data.payload.errors.validation || '';
+          }
+        }
+      }
+    },
+    async deleteClient() {
+      const { id } = this.$route.params;
+      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
+      if (confirmed) {
+        try {
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/client/delete`, { data: { id } });
+          alert('Cliente deletado com sucesso!');
+          this.$router.push('/clients/show');
+        } catch (errors) {
+          console.log(errors);
+          const { response } = errors;
+          if (!response) {
+            this.errors.title = errors.message;
+            this.errors.generic = 'Veja se o servidor está ligado';
+            return;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+          if (this.errors.generic.includes('Integrity constraint violation:')) {
+            this.errors
+              .generic = 'Este cliente talvez possua outros registros e não pode ser deletado';
           }
         }
       }
