@@ -58,4 +58,9 @@ class Purchase extends Model
         return $this->belongsToMany(Product::class, 'purchase_products', 'purchase_id', 'product_id')
             ->withPivot('quantity', 'individual_price');
     }
+
+        public function cashRegister()
+    {
+        return $this->belongsTo(CashRegister::class);
+    }
 }
