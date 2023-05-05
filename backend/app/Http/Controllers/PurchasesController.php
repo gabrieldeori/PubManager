@@ -74,19 +74,6 @@ class PurchasesController extends Controller
             }])
             ->findOrFail($request->id);
 
-
-            // if (!$purchase) {
-            //     throw new ModelNotFoundException(MSG::PURCHASE_NOT_FOUND);
-            // }
-
-            // $purchase->created_by = $purchase->createdBy->name;
-            // $purchase->updated_by = $purchase->updatedBy->name;
-            // $purchase->total_price = 'R$ ' . number_format($purchase->total_price, 2, ',', '.');
-            // $purchase->products = $purchase->products->map(function ($product) {
-            //     $product->pivot->individual_price = 'R$ ' . number_format($product->pivot->individual_price, 2, ',', '.');
-            //     return $product;
-            // });
-
             $response = Response_Handlers::setAndRespond(MSG::PURCHASE_FOUND, ['purchase' => $purchase]);
             return response()->json($response, MSG::OK);
 
