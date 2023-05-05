@@ -57,7 +57,7 @@ use App\Http\Controllers\ComandasController;
 Route::get('/comandas/show', [ComandasController::class, 'getComandas'])->middleware('jwt.auth');
 Route::post('/comanda/register', [ComandasController::class, 'createComanda'])->middleware('jwt.auth');
 Route::delete('/comanda/delete', [ComandasController::class, 'deleteAComanda'])->middleware('jwt.auth');
-Route::delete('/comanda/edit', [ComandasController::class, 'editAComanda'])->middleware('jwt.auth');
+Route::put('/comanda/edit', [ComandasController::class, 'editAComanda'])->middleware('jwt.auth');
 Route::get('/comanda', [ComandasController::class, 'getAComanda'])->middleware('jwt.auth');
 
 use App\Http\Controllers\CashRegisterController;

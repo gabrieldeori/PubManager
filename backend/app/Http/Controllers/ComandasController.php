@@ -177,4 +177,59 @@ class ComandasController extends Controller
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function editAComanda(Request $request) {
+        try {
+            $request->validate([
+                'id' => 'required|integer',
+                'client' => 'required|integer|exists:clients,id',
+                'name' => 'required|string',
+                'description' => 'required|string',
+                'products' => 'required|array|min:1',
+                'products.*.id' => 'required|integer|exists:products,id',
+                'products.*.quantity' => 'required|numeric',
+                'products.*.individualPrice' => 'required|numeric',
+            ], MSG::COMANDA_VALIDATE);
+
+            $comanda = Comanda::findOrFail($request->id);
+            $comanda->client_id = $request->client;
+            $comanda->name = $request->name;
+            $comanda->description = $request->description;
+            $comanda->total_price = 0;
+            $comanda->save();
+
+            $comanda->products()->detach();
+
+            foreach ($request->products as $product) {
+                $comandaProduct = new ComandaProduct();
+                $comandaProduct->comanda_id = $comanda->id;
+                $comandaProduct->product_id = $product['id'];
+                $comandaProduct->quantity = $product['quantity'];
+                $comandaProduct->individual_price = $product['individualPrice'];
+                $comandaProduct->save();
+
+                $comanda->total_price += $product['individualPrice'] * $product['quantity'];
+            }
+
+            $comanda->save();
+
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_UPDATED, ['comanda'=>$comanda]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_FOUND, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
 }
