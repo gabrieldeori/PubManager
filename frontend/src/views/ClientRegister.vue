@@ -1,6 +1,6 @@
 <template>
   <section>
-    <form @submit.prevent="SubmitClients">
+    <form @submit.prevent="">
       <h1>Registrar Cliente</h1>
       <p v-if="insertionList.length === 0">Insira ao menos um cliente</p>
       <BaseErrors :errors="this.errors" />
@@ -46,9 +46,15 @@
       @click="newInsertion">
         + Adicionar cliente
       </button>
-      <button class='base_button button_primary' type="submit">
-        Enviar
-      </button>
+
+      <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="this.$router.push('/clients/show')"
+        @saveEmit="saveEvent"
+      />
     </form>
   </section>
 </template>
@@ -108,7 +114,7 @@ export default {
       this.toEdit = {};
       this.editId = -1;
     },
-    async SubmitClients() {
+    async saveEvent() {
       const confirmed = window.confirm('Tem certeza que deseja salvar?');
       if (confirmed) {
         try {

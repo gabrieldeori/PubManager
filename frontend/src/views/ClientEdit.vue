@@ -22,7 +22,7 @@
       <BaseEditButtons
         @saveEmit="sendForm"
         @deleteEmit="deleteClient"
-        @cancelEmit="cancelClient"
+        @cancelEmit="this.$router.push('/clients/show')"
       />
     </div>
   </section>
@@ -121,9 +121,6 @@ export default {
           }
         }
       }
-    },
-    cancelClient() {
-      this.$router.push('/clients/show');
     },
   },
   mounted() {

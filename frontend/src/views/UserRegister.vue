@@ -49,7 +49,14 @@
         name="user_type"
         :error="formularyErrors.userType"
       />
-      <input type="submit" class="base_button button_primary" value="Cadastrar">
+      <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="this.$router.push('/users/show')"
+        @saveEmit="sendForm"
+      />
     </form>
   </section>
 </template>

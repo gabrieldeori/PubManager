@@ -1,6 +1,6 @@
 <template>
 <main>
-  <form @submit.prevent="login">
+  <form @submit.prevent="">
     <img src="@/assets/icons/PubManager.png" alt="" width="72" height="57">
     <h1>Login</h1>
 
@@ -24,19 +24,27 @@
       :error="formularyErrors.password"
     />
 
-    <button class="base_button button_primary" type="submit">Login</button>
+    <BaseEditButtons
+      v-if="!blockEditClick"
+      :notDelete="true"
+      txtCancel="Voltar"
+      txtSave="Login"
+      value="Login"
+      @cancelEmit="this.$router.push('/')"
+      @saveEmit="login"
+    />
   </form>
 </main>
 </template>
 
 <script>
 import axios from 'axios';
-// import * as yup from '@/helpers/yupbrasil';
+import * as yup from '@/helpers/yupbrasil';
 
-// const schema = yup.object().shape({
-//   email: yup.string().required().email(),
-//   password: yup.string().required().min(6).max(255),
-// });
+const schema = yup.object().shape({
+  email: yup.string().required().email(),
+  password: yup.string().required().min(6).max(255),
+});
 
 export default {
   name: 'UserLogin',
@@ -53,7 +61,7 @@ export default {
   methods: {
     async login() {
       try {
-        // await schema.validate(this.form, { abortEarly: false });
+        await schema.validate(this.form, { abortEarly: false });
         const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/api/login`, {
           email: this.form.email,
           password: this.form.password,

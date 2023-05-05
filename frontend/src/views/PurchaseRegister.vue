@@ -109,13 +109,14 @@
       {{ formularyErrors.products }}
     </p>
 
-    <input
-      @click.prevent="sendForm"
-      v-if="!blockEditClick"
-      type="submit"
-      class="base_button button_primary"
-      value="Cadastrar"
-    />
+    <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        value="Cadastrar"
+        @cancelEmit="cancelComanda"
+        @saveEmit="sendForm"
+      />
   </form>
 </template>
 

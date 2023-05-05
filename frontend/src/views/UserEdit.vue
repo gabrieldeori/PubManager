@@ -57,18 +57,15 @@
       :error="formularyErrors.userType"
     />
 
-    <button
-      class="base_button button_primary"
-      @click="editUser()"
-      >
-        Atualizar
-    </button>
-    <button
-      class="base_button button_danger invert"
-      @click="this.$router.push(`/users/show`)"
-    >
-      Cancelar
-    </button>
+    <BaseEditButtons
+        v-if="!blockEditClick"
+        :notDelete="true"
+        txtCancel="Voltar"
+        txtSave="Atualizar"
+        value="Atualizar"
+        @cancelEmit="this.$router.push('/users/show')"
+        @saveEmit="editUser"
+      />
   </section>
 </template>
 
