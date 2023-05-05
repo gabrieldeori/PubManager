@@ -112,13 +112,10 @@ class ComandasController extends Controller
                 'id' => 'required|integer',
             ], MSG::COMANDA_VALIDATE);
 
-            $comanda = Comanda::find($request->id);
+            $comanda = Comanda::findOrFail($request->id);
 
-            if (!$comanda) {
-                throw new ModelNotFoundException(MSG::COMANDA_NOT_FOUND);
-            }
-            // Delete comanda products and cashregister
             $cashRegister = CashRegister::where('comanda_id', $comanda->id)->first();
+
             $cashRegister->delete();
             $comanda->products()->detach();
             $comanda->delete();
