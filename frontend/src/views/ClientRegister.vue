@@ -1,7 +1,7 @@
 <template>
   <section>
     <form @submit.prevent="">
-      <h1>Registrar Cliente</h1>
+      <h2>Registrar Cliente</h2>
       <p v-if="insertionList.length === 0">Insira ao menos um cliente</p>
       <BaseErrors :errors="this.errors" />
       <div>

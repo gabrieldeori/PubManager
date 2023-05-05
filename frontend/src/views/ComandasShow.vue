@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Comandas</h1>
+    <h2>Comandas</h2>
 
     <BaseErrors :errors="errors" />
 

@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Fluxo de Caixa</h1>
+    <h2>Fluxo de Caixa</h2>
 
     <BaseErrors :errors="errors" />
 

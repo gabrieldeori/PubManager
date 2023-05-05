@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>CLIENTS</h1>
+    <h2>CLIENTS</h2>
 
     <BaseErrors :errors="this.errors" />
 
