@@ -1,5 +1,5 @@
 <template>
-  <div class="table_wrapper">
+  <div class="table_wrapper table-responsive">
     <table class="table_field" v-if="table_data.length > 0">
       <caption>{{ table_title }}</caption>
       <thead>
