@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div class="table-responsive table_wrapper">
     <table class="table" v-if="table_data.length > 0">
       <caption>{{ table_title }}</caption>
       <thead>
@@ -115,6 +115,10 @@ table {
   overflow: scroll;
 }
 
+td {
+  cursor: pointer;
+}
+
 tr:nth-child(odd) {
   background-color: var(--primary_lighter);
 }
@@ -127,17 +131,15 @@ th {
   background-color: var(--primary_light);
 }
 
-/* th, td {
-  border: 0.1rem solid var(--primary_stronger);
-  padding: 0.5rem;
-  margin: 0;
-} */
-
 tbody tr:hover {
-  background-color: var(--primary_lighter);
-  cursor: pointer;
+  background-color: var(--highlight_white);
   border-top: 2px solid var(--primary_darker);
   border-bottom: 2px solid var(--primary_darker);
+}
+
+.table_wrapper {
+  max-width: 100%;
+  overflow: auto;
 }
 
 </style>
