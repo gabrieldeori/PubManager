@@ -62,3 +62,4 @@ Route::get('/comanda', [ComandasController::class, 'getAComanda'])->middleware('
 
 use App\Http\Controllers\CashRegisterController;
 Route::get('/cashregister/show', [CashRegisterController::class, 'getCashRegister'])->middleware('jwt.auth');
+Route::post('/cashregister/register', [CashRegisterController::class, 'createCashRegister'])->middleware('jwt.auth');

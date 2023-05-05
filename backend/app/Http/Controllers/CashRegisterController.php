@@ -26,23 +26,72 @@ class CashRegisterController extends Controller
             $cashRegister->comanda()->associate($comanda);
             $cashRegister->save();
 
+            return response()->json(MSG::CASH_REGISTER_CREATED, MSG::CREATED);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_NOT_CREATED, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function createCashRegister() {
+        try {
+            $cashRegister = new CashRegister();
+            $cashRegister->name = 'Caja 1';
+            $cashRegister->movement = 0;
+            $cashRegister->save();
+
+            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_CREATED, ['cashRegister'=>$cashRegister]);
+            return response()->json($response, MSG::CREATED);
+
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
 
     public function getCashRegister() {
         try {
-            $cashRegister = CashRegister::with('comanda')->get();
+            $cashRegister = CashRegister::has('comandas')->get();
 
             $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_FOUND, ['cashRegister'=>$cashRegister]);
             return response()->json($response, MSG::OK);
 
+        } catch (ModelNotFoundException $modelError) {
+            $errors = ['errors' => ['generic' => $modelError->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
+            return response()->json($response, MSG::NOT_FOUND);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_NOT_FOUND, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::PURCHASE_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
