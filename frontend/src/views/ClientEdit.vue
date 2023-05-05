@@ -32,6 +32,12 @@
         Cancelar
       </button>
     </div>
+    <button
+      class="base_button button_danger"
+      @click="deleteClient"
+    >
+      <img src="../assets/icons/icon_delete.svg" alt="">
+    </button>
   </section>
 </template>
 
@@ -98,6 +104,33 @@ export default {
             this.errors.generic = response.data.payload.errors.generic || '';
             this.errors.specific = response.data.payload.errors.specific || '';
             this.errors.validation = response.data.payload.errors.validation || '';
+          }
+        }
+      }
+    },
+    async deleteClient() {
+      const { id } = this.$route.params;
+      const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
+      if (confirmed) {
+        try {
+          await axios.delete('http://localhost:8000/api/client/delete', { data: { id } });
+          alert('Cliente deletado com sucesso!');
+          this.$router.push('/clients/show');
+        } catch (errors) {
+          console.log(errors);
+          const { response } = errors;
+          if (!response) {
+            this.errors.title = errors.message;
+            this.errors.generic = 'Veja se o servidor está ligado';
+            return;
+          }
+          this.errors.title = response.data.message || '';
+          this.errors.generic = response.data.payload.errors.generic || '';
+          this.errors.specific = response.data.payload.errors.specific || '';
+          this.errors.validation = response.data.payload.errors.validation || '';
+          if (this.errors.generic.includes('Integrity constraint violation:')) {
+            this.errors
+              .generic = 'Este cliente talvez possua outros registros e não pode ser deletado';
           }
         }
       }
