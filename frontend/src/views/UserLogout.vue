@@ -1,7 +1,7 @@
 // Logout laravel vue jwt-auth
 <template>
   <div>
-    <h1>Logout</h1>
+    <h2>Logout</h2>
     <BaseErrors :errors="errors" />
   </div>
 </template>

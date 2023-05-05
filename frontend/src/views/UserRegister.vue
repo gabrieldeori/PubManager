@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>form</h1>
+    <h2>form</h2>
     <BaseErrors :errors="errors" />
     <form class="base_form" @submit.prevent="sendForm">
       <BaseInput

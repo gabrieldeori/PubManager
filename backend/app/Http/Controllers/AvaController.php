@@ -13,7 +13,16 @@ class AvaController extends Controller
     public function getUsers(Request $request)
     {
         try {
-            $users = User::all()->toArray();
+            $users = User::select(
+                'id',
+                'name as Nome',
+                'nickname as Apelido',
+                'email as Email',
+                'userType as Tipo de Usuário',
+                'created_at as Criado em',
+                'updated_at as Atualizado em'
+            )->get()->toarray();
+
             if (count($users) == 0) {
                 throw new Exception(MSG::USERS_NOT_FOUND);
             } else {

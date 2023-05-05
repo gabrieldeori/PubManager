@@ -2,7 +2,7 @@
 <main>
   <form @submit.prevent="">
     <img src="@/assets/icons/PubManager.png" alt="" width="72" height="57">
-    <h1>Login</h1>
+    <h2>Login</h2>
 
     <BaseErrors :errors="errors" />
 
