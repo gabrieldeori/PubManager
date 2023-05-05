@@ -260,7 +260,7 @@ form {
 
 /* Tables */
 table {
-  background-color: var(--smooth_white);
+  background-color: var(--primary_lighter);
   border: 0.1rem solid var(--primary_stronger);
   border-collapse: collapse;
   width: fit-content;
