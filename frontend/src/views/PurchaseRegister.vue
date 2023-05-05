@@ -114,7 +114,7 @@
         :notDelete="true"
         txtCancel="Voltar"
         value="Cadastrar"
-        @cancelEmit="cancelComanda"
+        @cancelEmit="this.$router.push('/purchases/show')"
         @saveEmit="sendForm"
       />
   </form>
