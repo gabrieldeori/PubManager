@@ -247,6 +247,11 @@ section {
   justify-content: center;
 }
 
+select {
+  font-size: 1.2rem;
+  padding: 0.25rem 0.75rem;
+}
+
 /* Forms */
 
 form {
