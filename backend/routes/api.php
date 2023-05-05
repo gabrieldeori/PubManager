@@ -35,6 +35,7 @@ Route::get('/clients/show', [ClientsController::class, 'getClients'])->middlewar
 Route::post('/client/register', [ClientsController::class, 'createClients'])->middleware('jwt.auth');
 Route::put('/client/edit', [ClientsController::class, 'editAClient'])->middleware('jwt.auth');
 Route::delete('/client/delete', [ClientsController::class, 'deleteAClient'])->middleware('jwt.auth');
+Route::get('/clients/options', [ClientsController::class, 'getClientsOptions'])->middleware('jwt.auth');
 Route::get('/client', [ClientsController::class, 'getAClient'])->middleware('jwt.auth');
 
 use App\Http\Controllers\ProductsController;
