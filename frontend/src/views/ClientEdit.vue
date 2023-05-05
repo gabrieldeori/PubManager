@@ -20,7 +20,7 @@
       <p>Atualizado em: {{ form.updated_at }}</p>
 
       <BaseEditButtons
-        @editEmit="sendForm"
+        @saveEmit="sendForm"
         @deleteEmit="deleteClient"
         @cancelEmit="cancelClient"
       />
