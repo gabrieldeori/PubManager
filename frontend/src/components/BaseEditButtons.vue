@@ -1,7 +1,7 @@
 <template>
   <div class="flex_horizontal">
     <button
-      v-if="saveTxt !== 'Cadastrar' && !notSave"
+      v-if="saveTxt !== 'Cadastrar' && saveTxt !== 'Login'  && !notSave"
       type="button"
       class='base_button button_highlight'
       @click.prevent="saveInsertion"

@@ -27,8 +27,8 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       :notDelete="true"
-      txtCancel="Voltar"
-      txtSave="Login"
+      cancelTxt="Voltar"
+      saveTxt="Login"
       value="Login"
       @cancelEmit="this.$router.push('/')"
       @saveEmit="login"
@@ -43,7 +43,7 @@ import * as yup from '@/helpers/yupbrasil';
 
 const schema = yup.object().shape({
   email: yup.string().required().email(),
-  password: yup.string().required().min(6).max(255),
+  password: yup.string().required().min(6),
 });
 
 export default {
@@ -71,12 +71,17 @@ export default {
         this.$router.push('/users/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
-          errors.inner.forEach((e) => {
-            this.formularyErrors[e.path] = e.message;
+          errors.inner.forEach((error) => {
+            this.formularyErrors[error.path] = error.message;
           });
+          return;
         }
         const { response } = errors;
         if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!errors.message) {
+            this.errors.generic = 'Email ou senha incorretos';
+            return;
+          }
           this.errors.generic = errors.message;
           return;
         }
