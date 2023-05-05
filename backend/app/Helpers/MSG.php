@@ -119,6 +119,10 @@
         public const COMANDA_INVALID_FORMAT = "Formato inválido para comanda";
         public const COMANDAS_TABLE_EMPTY = "Tabela de comandas vazia";
 
+        public const CASH_REGISTER_FOUND = "Registro de caixa encontrado";
+        public const CASH_REGISTER_NOT_FOUND = "Nenhum registro de caixa encontrado";
+        public const CASH_REGISTER_NOT_CREATED = "Registro de caixa não criado";
+
         public const SERVER_ERROR = "Erro no servidor";
         public const INVALID_DATA = "Dados inválidos";
 

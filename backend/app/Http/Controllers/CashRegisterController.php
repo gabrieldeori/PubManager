@@ -28,7 +28,21 @@ class CashRegisterController extends Controller
 
         } catch (\Exception $error) {
             $errors = ['errors' => ['generic' => $error->getMessage()]];
-            $response = Response_Handlers::setAndRespond(MSG::COMANDA_NOT_CREATED, $errors);
+            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_NOT_CREATED, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getCashRegister() {
+        try {
+            $cashRegister = CashRegister::with('comanda')->get();
+
+            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_FOUND, ['cashRegister'=>$cashRegister]);
+            return response()->json($response, MSG::OK);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::CASH_REGISTER_NOT_FOUND, $errors);
             return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
     }
