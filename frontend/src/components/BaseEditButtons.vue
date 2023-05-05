@@ -2,10 +2,10 @@
   <div class="flex_horizontal">
     <button
       type="button"
-      class='base_button button_primary invert'
+      class='base_button button_primary'
       @click.prevent="saveInsertion"
     >
-      Registrar
+      {{ txtRegister }}
     </button>
 
     <button
@@ -13,14 +13,14 @@
       class='base_button button_danger invert'
       @click.prevent="cancelInsertion"
     >
-      Cancelar
+      {{ txtCancel }}
     </button>
     <button
       type="button"
       class='base_button button_danger'
       @click.prevent="deleteInsertion"
     >
-      Deletar
+      {{ txtDelete }}
     </button>
   </div>
 </template>
@@ -28,6 +28,20 @@
 <script>
 export default {
   name: 'BaseEditButtons',
+  props: {
+    txtRegister: {
+      type: String,
+      default: 'Cadastrar',
+    },
+    txtCancel: {
+      type: String,
+      default: 'Cancelar',
+    },
+    txtDelete: {
+      type: String,
+      default: 'Deletar',
+    },
+  },
   methods: {
     saveInsertion() {
       this.$emit('saveEmit');
