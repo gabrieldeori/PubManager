@@ -33,7 +33,7 @@
             @click="editInsertion(pIndex)"
           >
             R$ {{ responseProducts[product.id - 1].name }}
-            -{{ product.individualPrice }}
+            - R${{ product.individualPrice }}
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>

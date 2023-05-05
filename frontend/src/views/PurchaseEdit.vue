@@ -32,8 +32,8 @@
             class="base_button button_primary_lighter"
             @click="editInsertion(pIndex)"
           >
-            R$ {{ responseProducts[product.id - 1].name }}
-            -{{ product.individualPrice }}
+            {{ responseProducts[product.id - 1].name }}
+            - R${{ product.individualPrice }}
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
@@ -116,6 +116,9 @@
       class="base_button button_primary"
       value="Cadastrar"
     />
+    <pre>
+      {{ form }}
+    </pre>
   </form>
 </template>
 
@@ -146,6 +149,7 @@ export default {
     return {
 
       form: {
+        id: null,
         name: '',
         description: '',
         products: [],
@@ -215,6 +219,7 @@ export default {
       try {
         const response = await axios.get('http://localhost:8000/api/purchase', { params: { id } });
         this.responsePurchase = response.data.payload.purchase;
+        this.form.id = id;
         this.form.name = this.responsePurchase.name;
         this.form.description = this.responsePurchase.description;
         this.totalPrice = this.responsePurchase.total_price;
