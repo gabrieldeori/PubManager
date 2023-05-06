@@ -63,7 +63,7 @@ export default {
           });
         }
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -88,7 +88,7 @@ export default {
             });
           } else {
             const { response } = errors;
-            if (!response.data.payload.errors && !response.data.payload && !response) {
+            if (!response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -111,7 +111,7 @@ export default {
         } catch (errors) {
           console.log(errors);
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.title = errors.message;
             this.errors.generic = 'Veja se o servidor está ligado';
             return;

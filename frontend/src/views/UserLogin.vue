@@ -77,7 +77,7 @@ export default {
           return;
         }
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           if (!errors.message) {
             this.errors.generic = 'Email ou senha incorretos';
             return;

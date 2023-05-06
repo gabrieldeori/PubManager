@@ -144,7 +144,7 @@ export default {
         };
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -170,7 +170,7 @@ export default {
           } else {
             console.log(errors);
             const { response } = errors;
-            if (!response.data.payload.errors && !response.data.payload && !response) {
+            if (!response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -193,7 +193,7 @@ export default {
           this.$router.push('/users/show');
         } catch (errors) {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }

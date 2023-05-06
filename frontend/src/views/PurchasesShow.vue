@@ -32,7 +32,7 @@ export default {
         this.responsePurchases = data.payload.purchases;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -51,7 +51,7 @@ export default {
           this.$router.go();
         } catch (errors) {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }

@@ -30,7 +30,7 @@ export default {
         this.responseCashRegister = data.payload.cashRegisters;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
