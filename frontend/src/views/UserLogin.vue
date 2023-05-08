@@ -12,7 +12,7 @@
       placeholder="Insira o email"
       type="email"
       v-model="form.email"
-      :error="formularyErrors.name"
+      :error="formularyErrors.email"
     />
 
     <BaseInput
@@ -69,8 +69,10 @@ export default {
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
+        console.log(errors);
         if (errors instanceof yup.ValidationError) {
           errors.inner.forEach((error) => {
+            console.log(error);
             this.formularyErrors[error.path] = error.message;
           });
           return;
