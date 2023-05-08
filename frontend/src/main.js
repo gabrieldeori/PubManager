@@ -1,9 +1,10 @@
-// import './assets/styles/main.scss';
-import 'bootstrap/dist/css/bootstrap.css';
+import * as Bootstrap from 'bootstrap';
+
 import upperFirst from 'lodash/upperFirst';
 import camelCase from 'lodash/camelCase';
-import * as bootstrap from 'bootstrap/dist/js/bootstrap';
+
 import { createApp } from 'vue';
+
 import App from './App.vue';
 import router from './router';
 
@@ -13,7 +14,7 @@ const requireComponent = require.context(
   /Base[A-Z]\w+\.(vue|js)$/,
 );
 
-const app = createApp(App).use(router).use(bootstrap);
+const app = createApp(App).use(router);
 
 requireComponent.keys().forEach((fileName) => {
   const componentConfig = requireComponent(fileName);
@@ -23,6 +24,13 @@ requireComponent.keys().forEach((fileName) => {
   );
 
   app.component(componentName, componentConfig.default || componentConfig);
+});
+
+Object.keys(Bootstrap).forEach((componentKey) => {
+  const component = Bootstrap[componentKey];
+  if (typeof component === 'object' && 'name' in component) {
+    app.component(component.name, component);
+  }
 });
 
 app.mount('#app');
