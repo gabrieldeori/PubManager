@@ -178,7 +178,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/comanda/edit`, this.form);
+        await axios.put(`${process.env.VUE_API_URL}/comanda/edit`, this.form);
         this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -205,7 +205,7 @@ export default {
 
     async getClients() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/clients/options`);
+        const { data } = await axios.get(`${process.env.VUE_API_URL}/clients/options`);
         this.responseClients = data.payload;
       } catch (errors) {
         const { response } = errors;
@@ -223,7 +223,7 @@ export default {
     async deleteComanda() {
       const { id } = this.$route.params;
       try {
-        await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/comanda/delete`, { params: { id } });
+        await axios.delete(`${process.env.VUE_API_URL}/comanda/delete`, { params: { id } });
         this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         const { response } = errors;
@@ -240,7 +240,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
+        const response = await axios.get(`${process.env.VUE_API_URL}/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
@@ -257,7 +257,7 @@ export default {
     async getAComanda() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/comanda`, { params: { id } });
+        const response = await axios.get(`${process.env.VUE_API_URL}/comanda`, { params: { id } });
         this.responseComanda = response.data.payload.comanda;
         this.form.client = this.responseComanda.client_id;
         this.form.id = id;

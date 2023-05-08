@@ -106,7 +106,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/user/register`, this.form);
+        await axios.post(`${process.env.VUE_API_URL}/user/register`, this.form);
         window.alert('Usuário registrado com sucesso!');
         this.$router.push('/users/show');
       } catch (errors) {

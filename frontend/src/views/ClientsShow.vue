@@ -27,7 +27,7 @@ export default {
   methods: {
     async getClients() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/clients/show`);
+        const { data } = await axios.get(`${process.env.VUE_API_URL}/clients/show`);
         this.responseClients = data.payload;
       } catch (errors) {
         const { response } = errors;

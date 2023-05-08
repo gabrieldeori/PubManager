@@ -168,7 +168,7 @@ export default {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/purchase/register`, this.form);
+        await axios.post(`${process.env.VUE_API_URL}/purchase/register`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -191,7 +191,7 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
+        const response = await axios.get(`${process.env.VUE_API_URL}/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;

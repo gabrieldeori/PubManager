@@ -22,7 +22,7 @@ export default {
   methods: {
     async getDashboard() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/dashboard`);
+        const { data } = await axios.get(`${process.env.VUE_API_URL}/dashboard`);
         const {
           total_income: totalIncome,
           total_outcome: totalOutcome,
