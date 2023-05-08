@@ -26,7 +26,7 @@ export default {
   methods: {
     async getCashRegister() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_API_URL}/cashregister/show`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/cashregister/show`);
         this.responseCashRegister = data.payload.cashRegisters;
       } catch (errors) {
         const { response } = errors;

@@ -25,7 +25,7 @@ export default {
   methods: {
     async getUsers() {
       try {
-        const response = await axios.get(`${process.env.VUE_API_URL}/users/show`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/users/show`);
         this.responseUsers = response.data.payload;
       } catch (errors) {
         const { response } = errors;

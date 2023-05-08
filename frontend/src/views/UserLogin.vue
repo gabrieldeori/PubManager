@@ -61,7 +61,7 @@ export default {
     async login() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        const response = await axios.post(`${process.env.VUE_API_URL}/login`, {
+        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/login`, {
           email: this.form.email,
           password: this.form.password,
         });

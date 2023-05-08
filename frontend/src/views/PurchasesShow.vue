@@ -28,7 +28,7 @@ export default {
   methods: {
     async getPurchases() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_API_URL}/purchases/show`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/purchases/show`);
         this.responsePurchases = data.payload.purchases;
       } catch (errors) {
         const { response } = errors;
@@ -46,7 +46,7 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.VUE_API_URL}/purchase/delete`, { data: { id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/purchase/delete`, { data: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {

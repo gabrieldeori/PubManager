@@ -76,7 +76,7 @@ export default {
     async getUser() {
       try {
         const payload = { id: this.$route.params.id };
-        const { data } = await axios.get(`${process.env.VUE_API_URL}/product`, { params: payload });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/product`, { params: payload });
         this.form = data.payload.product;
         this.form.alcoholic = data.payload.product.alcoholic === 'Sim';
         this.form.preparable = data.payload.product.preparable === 'Sim';
@@ -91,7 +91,7 @@ export default {
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.VUE_API_URL}/product/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/product/edit`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -111,7 +111,7 @@ export default {
     async deleteProduct() {
       try {
         const { id } = this.$route.params;
-        await axios.delete(`${process.env.VUE_API_URL}/product/delete`, { params: { id } });
+        await axios.delete(`${process.env.VUE_APP_ROOT_API}/product/delete`, { params: { id } });
         this.$router.push('/products/show');
       } catch (errors) {
         const { response } = errors;
