@@ -25,7 +25,6 @@
     />
 
     <BaseEditButtons
-      v-if="!blockEditClick"
       :notDelete="true"
       cancelTxt="Voltar"
       saveTxt="Login"
