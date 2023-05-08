@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Helpers\Response_Handlers;
+use App\Helpers\MSG;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -25,13 +28,33 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $credentials = $request->validated();
+        try {
+            $credentials = $request->validated();
+            $token = auth()->attempt($credentials);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            if (!$token) {
+                throw new \Exception('Email ou senha inválidos');
+            }
+
+            $tokenType = 'Bearer';
+            $token = [
+                'access_token' => $token,
+                'token_type' => $tokenType,
+            ];
+
+            $response = Response_Handlers::setAndRespond(MSG::LOGIN_SUCCESS, ['token' => $token]);
+            return response()->json($response, MSG::OK);
+
+        } catch (ValidationException $validator) {
+            $errors = ['errors' => ['validation' => $validator->errors()]];
+            $response = Response_Handlers::setAndRespond(MSG::LOGIN_INVALID_FORMAT, $errors);
+            return response()->json($response, MSG::UNPROCESSABLE_ENTITY);
+
+        } catch (\Exception $error) {
+            $errors = ['errors' => ['generic' => $error->getMessage()]];
+            $response = Response_Handlers::setAndRespond(MSG::LOGIN_FAIL, $errors);
+            return response()->json($response, MSG::INTERNAL_SERVER_ERROR);
         }
-
-        return $this->respondWithToken($token);
     }
 
     public function authorizeToken() {

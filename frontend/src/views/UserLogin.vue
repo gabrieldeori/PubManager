@@ -60,12 +60,14 @@ export default {
   methods: {
     async login() {
       try {
+        this.formularyErrors = {};
         await schema.validate(this.form, { abortEarly: false });
         const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/login`, {
           email: this.form.email,
           password: this.form.password,
         });
-        const toString = JSON.stringify(response.data);
+        console.log(response);
+        const toString = JSON.stringify(response.data.payload.token);
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
