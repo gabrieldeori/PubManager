@@ -286,11 +286,11 @@ Um bar tem:
 - Uma comanda pode ter vários clientes e um cliente pode estar em várias comandas. Isso indica uma relação muitos-para-muitos entre as tabelas Comandas e Clientes, resolvida pela criação da tabela intermediária Comandas\_Clients.
 ### <a name="_eje06x677w6i"></a>Esquema resultante
 #### <a name="_2nfkev3vg5ps"></a>Esquema completo:
-![](/imgs/MySQLTabelasComAdmin.jpeg)
+![](/imgs/MySQLTabelasComAdmin.jpg)
 
 #### <a name="_vxo80fpxx6bv"></a>
 #### <a name="_7vvt0j7krw5j"></a>Esquema sem admin, apenas relações primordiais de tabelas
-![](/imgs/MySQLTabelasSemAdmin.jpeg)
+![](/imgs/MySQLTabelasSemAdmin.jpg)
 
 
 ## <a name="_feapgajnuxin"></a>Análises estatísticas de interesse
