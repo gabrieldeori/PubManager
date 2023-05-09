@@ -341,7 +341,9 @@ export default {
     },
 
     cancelInsertion(index) {
-      this.form.products.splice(index, 1);
+      if (this.form.products[index].id === 0) {
+        this.form.products.splice(index, 1);
+      }
       this.editId = null;
       this.productForm = {
         id: 0,

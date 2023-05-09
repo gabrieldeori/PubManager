@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         Client::factory(10)->create();
 
         $this->call([
-            RootUserSeeder::class,
+            SuperUserSeeder::class,
             ProductsSeeder::class,
         ]);
     }
