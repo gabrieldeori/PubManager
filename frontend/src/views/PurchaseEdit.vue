@@ -78,6 +78,7 @@
             />
 
             <BaseEditButtons
+              saveTxt="Salvar Produto"
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
               @saveEmit="saveInsertion(pIndex)"
@@ -114,6 +115,7 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       value="Cadastrar"
+      saveTxt="Atualizar Compra"
       @deleteEmit="deletePurchase"
       @cancelEmit="cancelPurchase"
       @saveEmit="sendForm"

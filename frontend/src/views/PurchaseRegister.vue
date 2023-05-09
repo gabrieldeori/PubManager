@@ -113,7 +113,8 @@
     <BaseEditButtons
         v-if="!blockEditClick"
         :notDelete="true"
-        txtCancel="Voltar"
+        saveTxt="Cadastrar Compra"
+        cancelTxt="Voltar"
         value="Cadastrar"
         @cancelEmit="this.$router.push('/purchases/show')"
         @saveEmit="sendForm"
