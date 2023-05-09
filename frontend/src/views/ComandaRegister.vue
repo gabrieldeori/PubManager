@@ -58,16 +58,6 @@
             </p>
 
             <BaseInput
-              name="individualPrice"
-              label="Preço individual"
-              placeholder="Apenas números"
-              type="number"
-              v-model="productForm.individualPrice"
-              :error="formularyErrors.individualPrice"
-              @input="calculateTotalPrice"
-            />
-
-            <BaseInput
               name="quantity"
               label="Quantidade"
               placeholder="Apenas números"
@@ -76,7 +66,15 @@
               :error="formularyErrors.quantity"
               @input="calculateboth"
             />
-
+            <BaseInput
+              name="individualPrice"
+              label="Preço individual"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.individualPrice"
+              :error="formularyErrors.individualPrice"
+              @input="calculateTotalPrice"
+            />
             <BaseInput
               name="totalPrice"
               label="Preço Total"

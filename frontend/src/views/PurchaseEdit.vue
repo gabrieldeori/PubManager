@@ -50,15 +50,6 @@
             </p>
 
             <BaseInput
-              name="individualPrice"
-              label="Preço individual"
-              placeholder="Apenas números"
-              type="number"
-              v-model="productForm.individualPrice"
-              :error="formularyErrors.individualPrice"
-              @input="calculateTotalPrice"
-            />
-            <BaseInput
               name="quantity"
               label="Quantidade"
               placeholder="Apenas números"
@@ -66,6 +57,15 @@
               v-model="productForm.quantity"
               :error="formularyErrors.quantity"
               @input="calculateboth"
+            />
+            <BaseInput
+              name="individualPrice"
+              label="Preço individual"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.individualPrice"
+              :error="formularyErrors.individualPrice"
+              @input="calculateTotalPrice"
             />
             <BaseInput
               name="totalPrice"
@@ -104,7 +104,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ comandaPrice }}
+      Total: R$ {{ purchaseTotalPrice }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -365,7 +365,9 @@ export default {
     },
 
     cancelInsertion(index) {
-      this.form.products.splice(index, 1);
+      if (this.form.products[index].id === 0) {
+        this.form.products.splice(index, 1);
+      }
       this.editId = null;
       this.productForm = {
         id: 0,
@@ -421,7 +423,7 @@ export default {
   },
 
   computed: {
-    comandaPrice() {
+    purchaseTotalPrice() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;

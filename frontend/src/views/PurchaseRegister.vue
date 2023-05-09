@@ -58,7 +58,6 @@
               :error="formularyErrors.quantity"
               @input="calculateTotalPrice"
             />
-
             <BaseInput
               name="individualPrice"
               label="Preço individual"
@@ -68,7 +67,6 @@
               :error="formularyErrors.individualPrice"
               @input="calculateTotalPrice"
             />
-
             <BaseInput
               name="totalPrice"
               label="Preço Total"
@@ -78,7 +76,6 @@
               :error="formularyErrors.totalPrice"
               @input="calculateIndividualPrice"
             />
-
             <BaseEditButtons
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
@@ -106,7 +103,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ totalPrice }}
+      Total: R$ {{ purchaseTotalPrice }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -356,7 +353,7 @@ export default {
   },
 
   computed: {
-    totalPrice() {
+    purchaseTotalPrice() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;
