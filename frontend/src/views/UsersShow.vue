@@ -25,11 +25,11 @@ export default {
   methods: {
     async getUsers() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/users/show`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/users/show`);
         this.responseUsers = response.data.payload;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';

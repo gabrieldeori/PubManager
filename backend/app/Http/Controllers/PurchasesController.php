@@ -158,13 +158,19 @@ class PurchasesController extends Controller
 
             $purchase->products()->detach();
             $newProducts = [];
+
             foreach ($request->products as $product) {
-                $newProducts[$product['id']] = [
-                    'quantity' => $product['quantity'],
-                    'individual_price' => $product['individualPrice']
-                ];
+                $purchaseProduct = new PurchaseProduct();
+                $purchaseProduct->purchase_id = $purchase->id;
+                $purchaseProduct->product_id = $product['id'];
+                $purchaseProduct->quantity = $product['quantity'];
+                $purchaseProduct->individual_price = $product['individualPrice'];
+                $purchaseProduct->save();
+
                 $purchase->total_price += $product['individualPrice'] * $product['quantity'];
+                array_push($newProducts, $product['id']);
             }
+
             $purchase->save();
             $purchase->products()->sync($newProducts);
 

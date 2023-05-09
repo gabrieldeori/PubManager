@@ -27,11 +27,11 @@ export default {
   methods: {
     async getClients() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/clients/show`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/clients/show`);
         this.responseClients = data.payload;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }

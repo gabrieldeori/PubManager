@@ -20,6 +20,7 @@
       <p>Atualizado em: {{ form.updated_at }}</p>
 
       <BaseEditButtons
+        saveTxt="Atualizar Cliente"
         @saveEmit="sendForm"
         @deleteEmit="deleteClient"
         @cancelEmit="this.$router.push('/clients/show')"
@@ -54,7 +55,7 @@ export default {
     async getClient() {
       const payload = { id: this.$route.params.id };
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/client`, { params: payload });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/client`, { params: payload });
         this.form = data.payload.client;
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -63,7 +64,7 @@ export default {
           });
         }
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -79,7 +80,7 @@ export default {
         try {
           await schema.validate(this.form, { abortEarly: false });
           const payload = { ...this.form };
-          await axios.put(`${process.env.VUE_APP_ROOT_API}/api/client/edit`, payload);
+          await axios.put(`${process.env.VUE_APP_ROOT_API}/client/edit`, payload);
           this.$router.push('/clients/show');
         } catch (errors) {
           if (errors instanceof yup.ValidationError) {
@@ -88,7 +89,7 @@ export default {
             });
           } else {
             const { response } = errors;
-            if (!response.data.payload.errors && !response.data.payload && !response) {
+            if (!response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -105,13 +106,12 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/client/delete`, { data: { id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/client/delete`, { data: { id } });
           alert('Cliente deletado com sucesso!');
           this.$router.push('/clients/show');
         } catch (errors) {
-          console.log(errors);
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.title = errors.message;
             this.errors.generic = 'Veja se o servidor está ligado';
             return;

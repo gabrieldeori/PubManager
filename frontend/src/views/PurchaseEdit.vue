@@ -1,8 +1,6 @@
 <template>
   <form submit.prevent="">
-    <BaseErrors
-      :errors="errors"
-    />
+    <BaseErrors :errors="errors" />
     <section>
       <BaseInput
         name="name"
@@ -20,7 +18,7 @@
         v-model="form.description"
         :error="formularyErrors.description"
       />
-      <!-- produtos -->
+
       <ul v-if="form.products.length > 0">
         <article
           v-for="(product, pIndex) in form.products"
@@ -37,6 +35,7 @@
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
+
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
               name="products"
@@ -45,18 +44,11 @@
               :options="responseProducts"
               :error="formularyErrors.id"
             />
+
             <p v-if="formularyErrors.id" class="error_message">
               {{ formularyErrors.id }}
             </p>
-            <BaseInput
-              name="individualPrice"
-              label="Preço individual"
-              placeholder="Apenas números"
-              type="number"
-              v-model="productForm.individualPrice"
-              :error="formularyErrors.individualPrice"
-              @input="calculateTotalPrice"
-            />
+
             <BaseInput
               name="quantity"
               label="Quantidade"
@@ -67,6 +59,15 @@
               @input="calculateboth"
             />
             <BaseInput
+              name="individualPrice"
+              label="Preço individual"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.individualPrice"
+              :error="formularyErrors.individualPrice"
+              @input="calculateTotalPrice"
+            />
+            <BaseInput
               name="totalPrice"
               label="Preço Total"
               placeholder="Apenas números"
@@ -75,7 +76,9 @@
               :error="formularyErrors.totalPrice"
               @input="calculateIndividualPrice"
             />
+
             <BaseEditButtons
+              saveTxt="Salvar Produto"
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
               @saveEmit="saveInsertion(pIndex)"
@@ -102,7 +105,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ totalPrice }}
+      Total: R$ {{ purchaseTotalPrice }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -112,6 +115,7 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       value="Cadastrar"
+      saveTxt="Atualizar Compra"
       @deleteEmit="deletePurchase"
       @cancelEmit="cancelPurchase"
       @saveEmit="sendForm"
@@ -138,9 +142,9 @@ const schema = yup.object().shape({
 
 export default {
   name: 'PurchaseEdit',
+
   data() {
     return {
-
       form: {
         id: null,
         name: '',
@@ -155,22 +159,23 @@ export default {
         totalPrice: '',
       },
 
-      responsePurchase: {},
       editId: null,
       blockEditClick: false,
       responseProducts: [],
+      responsePurchase: {},
       formularyErrors: {},
       errors: {},
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/purchase/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/purchase/edit`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -179,7 +184,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -193,11 +198,11 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';
@@ -210,7 +215,7 @@ export default {
     async getAPurchase() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/purchase`, { params: { id } });
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/purchase`, { params: { id } });
         this.responsePurchase = response.data.payload.purchase;
         this.form.id = id;
         this.form.name = this.responsePurchase.name;
@@ -227,7 +232,7 @@ export default {
         }));
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -243,12 +248,12 @@ export default {
       const { id } = this.$route.params;
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/purchase/delete`, { params: { id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/purchase/delete`, { params: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.push({ name: 'PurchasesShow' });
         } catch (errors) {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -363,7 +368,9 @@ export default {
     },
 
     cancelInsertion(index) {
-      this.form.products.splice(index, 1);
+      if (this.form.products[index].id === 0) {
+        this.form.products.splice(index, 1);
+      }
       this.editId = null;
       this.productForm = {
         id: 0,
@@ -419,7 +426,7 @@ export default {
   },
 
   computed: {
-    totalPrice() {
+    purchaseTotalPrice() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;

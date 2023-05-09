@@ -22,7 +22,7 @@ export default {
   methods: {
     async getDashboard() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/dashboard`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/dashboard`);
         const {
           total_income: totalIncome,
           total_outcome: totalOutcome,
@@ -31,7 +31,7 @@ export default {
         this.dashboard = { totalIncome, totalOutcome };
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }

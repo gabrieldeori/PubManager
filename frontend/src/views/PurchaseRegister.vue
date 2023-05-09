@@ -1,8 +1,6 @@
 <template>
   <form submit.prevent="">
-    <BaseErrors
-      :errors="errors"
-    />
+    <BaseErrors :errors="errors" />
     <section>
       <BaseInput
         name="name"
@@ -20,7 +18,7 @@
         v-model="form.description"
         :error="formularyErrors.description"
       />
-      <!-- produtos -->
+
       <ul v-if="form.products.length > 0">
         <article
           v-for="(product, pIndex) in form.products"
@@ -37,6 +35,7 @@
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
+
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
               name="products"
@@ -45,9 +44,11 @@
               :options="responseProducts"
               :error="formularyErrors.id"
             />
+
             <p v-if="formularyErrors.id" class="error_message">
               {{ formularyErrors.id }}
             </p>
+
             <BaseInput
               name="quantity"
               label="Quantidade"
@@ -102,7 +103,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ totalPrice }}
+      Total: R$ {{ purchaseTotalPrice }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -112,7 +113,8 @@
     <BaseEditButtons
         v-if="!blockEditClick"
         :notDelete="true"
-        txtCancel="Voltar"
+        saveTxt="Cadastrar Compra"
+        cancelTxt="Voltar"
         value="Cadastrar"
         @cancelEmit="this.$router.push('/purchases/show')"
         @saveEmit="sendForm"
@@ -162,13 +164,14 @@ export default {
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/purchase/register`, this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/purchase/register`, this.form);
         this.$router.push({ name: 'PurchasesShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -177,7 +180,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -191,11 +194,11 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';
@@ -351,7 +354,7 @@ export default {
   },
 
   computed: {
-    totalPrice() {
+    purchaseTotalPrice() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;

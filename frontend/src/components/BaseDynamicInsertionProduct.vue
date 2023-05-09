@@ -124,7 +124,7 @@ export default {
       this.editId = -1;
     },
     getProductsList() {
-      axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/show`)
+      axios.get(`${process.env.VUE_APP_ROOT_API}/products/show`)
         .then((response) => {
           const { products } = response.data.payload;
           const threated = products.map((product) => ({

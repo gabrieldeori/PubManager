@@ -119,7 +119,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.VUE_APP_ROOT_API),
+  history: createWebHistory(process.env.BASE_URL || '/'),
   routes,
 });
 

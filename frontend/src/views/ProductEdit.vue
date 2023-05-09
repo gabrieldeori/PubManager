@@ -30,9 +30,7 @@
         v-model="form.preparable"
         :error="formularyErrors.preparable"
       />
-
       <BaseEditButtons
-        v-if="!blockEditClick"
         value="Cadastrar"
         @deleteEmit="deleteProduct"
         @cancelEmit="cancelProduct"
@@ -55,6 +53,7 @@ const schema = yup.object().shape({
 
 export default {
   name: 'ProductEdit',
+
   data() {
     return {
       form: {
@@ -63,20 +62,23 @@ export default {
         alcoholic: false,
         preparable: false,
       },
+
       formularyErrors: {
         name: '',
         description: '',
         alcoholic: false,
         preparable: false,
       },
+
       errors: {},
     };
   },
+
   methods: {
     async getUser() {
       try {
         const payload = { id: this.$route.params.id };
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/product`, { params: payload });
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/product`, { params: payload });
         this.form = data.payload.product;
         this.form.alcoholic = data.payload.product.alcoholic === 'Sim';
         this.form.preparable = data.payload.product.preparable === 'Sim';
@@ -88,10 +90,11 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
+
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/product/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/product/edit`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -111,7 +114,7 @@ export default {
     async deleteProduct() {
       try {
         const { id } = this.$route.params;
-        await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/product/delete`, { params: { id } });
+        await axios.delete(`${process.env.VUE_APP_ROOT_API}/product/delete`, { params: { id } });
         this.$router.push('/products/show');
       } catch (errors) {
         const { response } = errors;
@@ -129,6 +132,7 @@ export default {
       this.$router.push('/products/show');
     },
   },
+
   mounted() {
     this.getUser();
   },

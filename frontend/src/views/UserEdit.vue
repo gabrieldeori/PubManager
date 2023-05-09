@@ -59,8 +59,8 @@
 
     <BaseEditButtons
         v-if="!blockEditClick"
-        txtCancel="Cancelar"
-        txtSave="Atualizar"
+        cancelTxt="Cancelar"
+        saveTxt="Atualizar usuário"
         value="Atualizar"
         @deleteEmit="deleteUser"
         @cancelEmit="this.$router.push('/users/show')"
@@ -129,7 +129,7 @@ export default {
       const payload = { id: this.$route.params.id };
       try {
         const response = await axios.get(
-          `${process.env.VUE_APP_ROOT_API}/api/user`,
+          `${process.env.VUE_APP_ROOT_API}/user`,
           { params: payload, form: this.form },
         );
         this.toEdit = response.data.payload.user;
@@ -144,7 +144,7 @@ export default {
         };
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -159,7 +159,7 @@ export default {
       if (confirmed) {
         try {
           await schema.validate(this.form, { abortEarly: false });
-          await axios.put(`${process.env.VUE_APP_ROOT_API}/api/user/edit`, this.form);
+          await axios.put(`${process.env.VUE_APP_ROOT_API}/user/edit`, this.form);
           window.alert('Usuário Atualizado com sucesso!');
           this.$router.push('/users/show');
         } catch (errors) {
@@ -168,9 +168,8 @@ export default {
               this.formularyErrors[e.path] = e.message;
             });
           } else {
-            console.log(errors);
             const { response } = errors;
-            if (!response.data.payload.errors && !response.data.payload && !response) {
+            if (!response) {
               this.errors.generic = errors.message;
               return;
             }
@@ -188,12 +187,12 @@ export default {
       const { id } = this.$route.params;
       if (confirmed) {
         try {
-          axios.delete(`${process.env.VUE_APP_ROOT_API}/api/user/delete`, { params: { id } });
+          axios.delete(`${process.env.VUE_APP_ROOT_API}/user/delete`, { params: { id } });
           window.alert('Usuário deletado com sucesso!');
           this.$router.push('/users/show');
         } catch (errors) {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }

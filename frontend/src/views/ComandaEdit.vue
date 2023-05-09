@@ -1,8 +1,6 @@
 <template>
   <form submit.prevent="">
-    <BaseErrors
-      :errors="errors"
-    />
+    <BaseErrors :errors="errors" />
     <section>
       <BaseSelectProducts
         name="clients"
@@ -27,13 +25,14 @@
         v-model="form.description"
         :error="formularyErrors.description"
       />
-      <!-- produtos -->
+
       <ul v-if="form.products.length > 0">
         <article
           v-for="(product, pIndex) in form.products"
           v-bind="product"
           :key="'product_key_id_' + product.id"
         >
+
           <button
             v-if="editId !== pIndex && responseProducts.length > 0"
             class="base_button button_primary_lighter"
@@ -44,6 +43,7 @@
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
+
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
               name="products"
@@ -52,18 +52,11 @@
               :options="responseProducts"
               :error="formularyErrors.id"
             />
+
             <p v-if="formularyErrors.id" class="error_message">
               {{ formularyErrors.id }}
             </p>
-            <BaseInput
-              name="individualPrice"
-              label="Preço individual"
-              placeholder="Apenas números"
-              type="number"
-              v-model="productForm.individualPrice"
-              :error="formularyErrors.individualPrice"
-              @input="calculateTotalPrice"
-            />
+
             <BaseInput
               name="quantity"
               label="Quantidade"
@@ -74,6 +67,15 @@
               @input="calculateboth"
             />
             <BaseInput
+              name="individualPrice"
+              label="Preço individual"
+              placeholder="Apenas números"
+              type="number"
+              v-model="productForm.individualPrice"
+              :error="formularyErrors.individualPrice"
+              @input="calculateTotalPrice"
+            />
+            <BaseInput
               name="totalPrice"
               label="Preço Total"
               placeholder="Apenas números"
@@ -82,8 +84,9 @@
               :error="formularyErrors.totalPrice"
               @input="calculateIndividualPrice"
             />
+
             <BaseEditButtons
-              saveTxt="Salvar"
+              saveTxt="Salvar Produto"
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
               @saveEmit="saveInsertion(pIndex)"
@@ -110,7 +113,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ totalPrice }}
+      Total: R$ {{ totalComanda }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -120,6 +123,7 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       value="Cadastrar"
+      saveTxt="Atualizar Comanda"
       @deleteEmit="deleteComanda"
       @cancelEmit="cancelComanda"
       @saveEmit="sendForm"
@@ -172,13 +176,14 @@ export default {
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
         this.formularyErrors = {};
         this.errors = {};
         await schema.validate(this.form, { abortEarly: false });
-        await axios.put(`${process.env.VUE_APP_ROOT_API}/api/comanda/edit`, this.form);
+        await axios.put(`${process.env.VUE_APP_ROOT_API}/comanda/edit`, this.form);
         this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -187,7 +192,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }
@@ -205,11 +210,11 @@ export default {
 
     async getClients() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/clients/options`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/clients/options`);
         this.responseClients = data.payload;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -223,11 +228,11 @@ export default {
     async deleteComanda() {
       const { id } = this.$route.params;
       try {
-        await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/comanda/delete`, { params: { id } });
+        await axios.delete(`${process.env.VUE_APP_ROOT_API}/comanda/delete`, { params: { id } });
         this.$router.push({ name: 'ComandasShow' });
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -240,11 +245,11 @@ export default {
 
     async getProducts() {
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/products/options`);
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/products/options`);
         this.responseProducts = response.data.payload.products;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
         }
         this.errors.title = response.data.message || '';
@@ -257,7 +262,7 @@ export default {
     async getAComanda() {
       const { id } = this.$route.params;
       try {
-        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/comanda`, { params: { id } });
+        const response = await axios.get(`${process.env.VUE_APP_ROOT_API}/comanda`, { params: { id } });
         this.responseComanda = response.data.payload.comanda;
         this.form.client = this.responseComanda.client_id;
         this.form.id = id;
@@ -275,7 +280,7 @@ export default {
         }));
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -287,7 +292,7 @@ export default {
     },
 
     newInsertion() {
-      if (this.blockEditClick) return;
+      this.blockEditClick = true;
       this.editId = this.form.products.length;
       this.productForm = {
         id: 0,
@@ -296,7 +301,6 @@ export default {
         totalPrice: '',
       };
       this.form.products.push({ ...this.productForm });
-      this.blockEditClick = true;
     },
 
     validateInsertion() {
@@ -385,17 +389,21 @@ export default {
     },
 
     cancelInsertion(index) {
-      this.form.products.splice(index, 1);
-      this.editId = null;
+      if (this.form.products[index].id === 0) {
+        this.form.products.splice(index, 1);
+      }
+
       this.productForm = {
         id: 0,
         individualPrice: '',
         quantity: '',
         totalPrice: '',
       };
-      this.formularyErrors = {};
-      this.errors = {};
+
+      this.editId = null;
       this.blockEditClick = false;
+      this.errors = {};
+      this.formularyErrors = {};
     },
 
     deleteInsertion(index) {
@@ -441,7 +449,7 @@ export default {
   },
 
   computed: {
-    totalPrice() {
+    totalComanda() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;

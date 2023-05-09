@@ -12,7 +12,7 @@
       placeholder="Insira o email"
       type="email"
       v-model="form.email"
-      :error="formularyErrors.name"
+      :error="formularyErrors.email"
     />
 
     <BaseInput
@@ -25,7 +25,6 @@
     />
 
     <BaseEditButtons
-      v-if="!blockEditClick"
       :notDelete="true"
       cancelTxt="Voltar"
       saveTxt="Login"
@@ -61,12 +60,13 @@ export default {
   methods: {
     async login() {
       try {
+        this.formularyErrors = {};
         await schema.validate(this.form, { abortEarly: false });
-        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/api/login`, {
+        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/login`, {
           email: this.form.email,
           password: this.form.password,
         });
-        const toString = JSON.stringify(response.data);
+        const toString = JSON.stringify(response.data.payload.token);
         localStorage.setItem('pubmanager_tk_009911', toString);
         this.$router.push('/users/show');
       } catch (errors) {
@@ -77,7 +77,7 @@ export default {
           return;
         }
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           if (!errors.message) {
             this.errors.generic = 'Email ou senha incorretos';
             return;

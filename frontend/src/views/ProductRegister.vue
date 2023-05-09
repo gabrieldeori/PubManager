@@ -31,7 +31,6 @@
         :error="formularyErrors.preparable"
       />
       <BaseEditButtons
-        v-if="!blockEditClick"
         :notDelete="true"
         txtCancel="Voltar"
         value="Cadastrar"
@@ -55,6 +54,7 @@ const schema = yup.object().shape({
 
 export default {
   name: 'ProductRegister',
+
   data() {
     return {
       form: {
@@ -63,20 +63,23 @@ export default {
         alcoholic: false,
         preparable: false,
       },
+
       formularyErrors: {
         name: '',
         description: '',
         alcoholic: '',
         preparable: '',
       },
+
       errors: {},
     };
   },
+
   methods: {
     async saveEvent() {
       try {
         await schema.validate(this.form, { abortEarly: false });
-        await axios.post(`${process.env.VUE_APP_ROOT_API}/api/product/register`, this.form);
+        await axios.post(`${process.env.VUE_APP_ROOT_API}/product/register`, this.form);
         this.$router.push('/products/show');
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
@@ -85,7 +88,7 @@ export default {
           });
         } else {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }

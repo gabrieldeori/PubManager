@@ -28,11 +28,11 @@ export default {
   methods: {
     async getPurchases() {
       try {
-        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/api/purchases/show`);
+        const { data } = await axios.get(`${process.env.VUE_APP_ROOT_API}/purchases/show`);
         this.responsePurchases = data.payload.purchases;
       } catch (errors) {
         const { response } = errors;
-        if (!response.data.payload.errors && !response.data.payload && !response) {
+        if (!response) {
           this.errors.generic = errors.message;
           return;
         }
@@ -46,12 +46,12 @@ export default {
       const confirmed = window.confirm(`Tem certeza que deseja deletar o id ${id}?`);
       if (confirmed) {
         try {
-          await axios.delete(`${process.env.VUE_APP_ROOT_API}/api/purchase/delete`, { data: { id } });
+          await axios.delete(`${process.env.VUE_APP_ROOT_API}/purchase/delete`, { data: { id } });
           alert('Compra deletada com sucesso!');
           this.$router.go();
         } catch (errors) {
           const { response } = errors;
-          if (!response.data.payload.errors && !response.data.payload && !response) {
+          if (!response) {
             this.errors.generic = errors.message;
             return;
           }
