@@ -59,8 +59,8 @@
 
     <BaseEditButtons
         v-if="!blockEditClick"
-        txtCancel="Cancelar"
-        txtSave="Atualizar"
+        cancelTxt="Cancelar"
+        saveTxt="Atualizar usuário"
         value="Atualizar"
         @deleteEmit="deleteUser"
         @cancelEmit="this.$router.push('/users/show')"
@@ -168,7 +168,6 @@ export default {
               this.formularyErrors[e.path] = e.message;
             });
           } else {
-            console.log(errors);
             const { response } = errors;
             if (!response) {
               this.errors.generic = errors.message;

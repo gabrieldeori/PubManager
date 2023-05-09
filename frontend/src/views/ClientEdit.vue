@@ -20,6 +20,7 @@
       <p>Atualizado em: {{ form.updated_at }}</p>
 
       <BaseEditButtons
+        saveTxt="Atualizar Cliente"
         @saveEmit="sendForm"
         @deleteEmit="deleteClient"
         @cancelEmit="this.$router.push('/clients/show')"
@@ -109,7 +110,6 @@ export default {
           alert('Cliente deletado com sucesso!');
           this.$router.push('/clients/show');
         } catch (errors) {
-          console.log(errors);
           const { response } = errors;
           if (!response) {
             this.errors.title = errors.message;
