@@ -1,8 +1,9 @@
 <template>
   <div>
+    <BaseErrors :errors="errors" />
     <h1>Dashboard</h1>
-    <p>Total Income: {{ dashboard.total_income }}</p>
-    <p>Total Outcome: {{ dashboard.total_outcome }}</p>
+    <p>Total Income: R$ {{ dashboard.totalIncome }}</p>
+    <p>Total Outcome: R$ {{ dashboard.totalOutcome }}</p>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ export default {
         totalIncome: 0,
         totalOutcome: 0,
       },
+      errors: {},
     };
   },
   methods: {
@@ -29,7 +31,9 @@ export default {
         } = data.payload.dashboard;
 
         this.dashboard = { totalIncome, totalOutcome };
+        console.log(this.dashboard);
       } catch (errors) {
+        console.log(errors);
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
