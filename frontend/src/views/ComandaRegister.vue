@@ -1,8 +1,6 @@
 <template>
   <form submit.prevent="">
-    <BaseErrors
-      :errors="errors"
-    />
+    <BaseErrors :errors="errors" />
     <section>
       <BaseSelectProducts
         name="clients"
@@ -27,13 +25,14 @@
         v-model="form.description"
         :error="formularyErrors.description"
       />
-      <!-- produtos -->
+
       <ul v-if="form.products.length > 0">
         <article
           v-for="(product, pIndex) in form.products"
           v-bind="product"
           :key="'product_key_id_' + product.id"
         >
+
           <button
             v-if="editId !== pIndex && responseProducts.length > 0"
             class="base_button button_primary_lighter"
@@ -44,6 +43,7 @@
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
+
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
               name="products"
@@ -52,9 +52,11 @@
               :options="responseProducts"
               :error="formularyErrors.id"
             />
+
             <p v-if="formularyErrors.id" class="error_message">
               {{ formularyErrors.id }}
             </p>
+
             <BaseInput
               name="individualPrice"
               label="Preço individual"
@@ -64,6 +66,7 @@
               :error="formularyErrors.individualPrice"
               @input="calculateTotalPrice"
             />
+
             <BaseInput
               name="quantity"
               label="Quantidade"
@@ -73,6 +76,7 @@
               :error="formularyErrors.quantity"
               @input="calculateboth"
             />
+
             <BaseInput
               name="totalPrice"
               label="Preço Total"
@@ -82,6 +86,7 @@
               :error="formularyErrors.totalPrice"
               @input="calculateIndividualPrice"
             />
+
             <BaseEditButtons
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
@@ -119,7 +124,8 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       :notDelete="true"
-      txtCancel="Voltar"
+      cancelTxt="Voltar"
+      saveTxt="Cadastrar Comanda"
       value="Cadastrar"
       @cancelEmit="cancelComanda"
       @saveEmit="sendForm"
@@ -147,6 +153,7 @@ const schema = yup.object().shape({
 
 export default {
   name: 'ComandaRegister',
+
   data() {
     return {
       form: {
@@ -172,6 +179,7 @@ export default {
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
@@ -197,6 +205,10 @@ export default {
           this.errors.validation = response.data.payload.errors.validation;
         }
       }
+    },
+
+    cancelComanda() {
+      this.$router.push({ name: 'ComandasShow' });
     },
 
     async getClients() {

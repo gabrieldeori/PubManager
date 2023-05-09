@@ -31,7 +31,6 @@
         :error="formularyErrors.preparable"
       />
       <BaseEditButtons
-        v-if="!blockEditClick"
         :notDelete="true"
         txtCancel="Voltar"
         value="Cadastrar"
@@ -55,6 +54,7 @@ const schema = yup.object().shape({
 
 export default {
   name: 'ProductRegister',
+
   data() {
     return {
       form: {
@@ -63,15 +63,18 @@ export default {
         alcoholic: false,
         preparable: false,
       },
+
       formularyErrors: {
         name: '',
         description: '',
         alcoholic: '',
         preparable: '',
       },
+
       errors: {},
     };
   },
+
   methods: {
     async saveEvent() {
       try {

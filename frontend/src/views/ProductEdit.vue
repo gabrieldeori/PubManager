@@ -30,9 +30,7 @@
         v-model="form.preparable"
         :error="formularyErrors.preparable"
       />
-
       <BaseEditButtons
-        v-if="!blockEditClick"
         value="Cadastrar"
         @deleteEmit="deleteProduct"
         @cancelEmit="cancelProduct"
@@ -55,6 +53,7 @@ const schema = yup.object().shape({
 
 export default {
   name: 'ProductEdit',
+
   data() {
     return {
       form: {
@@ -63,15 +62,18 @@ export default {
         alcoholic: false,
         preparable: false,
       },
+
       formularyErrors: {
         name: '',
         description: '',
         alcoholic: false,
         preparable: false,
       },
+
       errors: {},
     };
   },
+
   methods: {
     async getUser() {
       try {
@@ -88,6 +90,7 @@ export default {
         this.errors.validation = response.data.payload.errors.validation || '';
       }
     },
+
     async sendForm() {
       try {
         await schema.validate(this.form, { abortEarly: false });
@@ -129,6 +132,7 @@ export default {
       this.$router.push('/products/show');
     },
   },
+
   mounted() {
     this.getUser();
   },

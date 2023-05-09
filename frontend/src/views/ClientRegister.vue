@@ -8,10 +8,10 @@
         <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
 
           <BasePreview
-            v-if="editId !== index"
+            v-if="editId !== index && !blockEditClick"
             @click="editInsertion(index)"
             :preview="insertion"
-            />
+          />
 
           <div v-if="editId === index">
             <BaseInput
@@ -24,6 +24,7 @@
           </div>
 
           <BaseEditButtons
+            saveTxt="Salvar Cliente"
             v-show="editId === index"
             @deleteEmit="deleteInsertion(index)"
             @cancelEmit="cancelInsertion(index)"
@@ -33,14 +34,14 @@
         </div>
       </div>
       <button
-      v-if="insertionList.length > 0"
+      v-if="insertionList.length > 0 && !blockEditClick"
       type="button"
       class='base_button button_primary invert'
       @click="newInsertion">
         + Adicionar outro cliente
       </button>
       <button
-      v-else
+      v-else-if="!blockEditClick"
       type="button"
       class='base_button button_primary invert'
       @click="newInsertion">
@@ -50,7 +51,8 @@
       <BaseEditButtons
         v-if="!blockEditClick"
         :notDelete="true"
-        txtCancel="Voltar"
+        cancelTxt="Voltar"
+        saveTxt="Cadastrar Clientes"
         value="Cadastrar"
         @cancelEmit="this.$router.push('/clients/show')"
         @saveEmit="saveEvent"
@@ -66,14 +68,17 @@ export default {
   name: 'ClientRegister',
   data() {
     return {
-      editId: -1,
+      blockEditClick: false,
+      editId: null,
       insertionList: [],
       toEdit: {},
       errors: {},
     };
   },
+
   methods: {
     newInsertion() {
+      this.blockEditClick = true;
       this.editId = this.insertionList.length;
       this.toEdit = {
         name: '',
@@ -84,6 +89,7 @@ export default {
     },
 
     editInsertion(index) {
+      this.blockEditClick = true;
       this.editId = index;
       this.toEdit = { ...this.insertionList[index] };
     },
@@ -95,25 +101,25 @@ export default {
       }
       this.insertionList[index] = { ...this.toEdit };
       this.toEdit = {};
-      this.editId = -1;
+      this.editId = null;
+      this.blockEditClick = false;
     },
 
     cancelInsertion(index) {
       if (this.insertionList[index].name === '') {
         this.insertionList.splice(index, 1);
-        this.toEdit = {};
-        this.editId = -1;
-        return;
       }
+      this.blockEditClick = false;
+      this.editId = null;
       this.toEdit = {};
-      this.editId = -1;
     },
 
     deleteInsertion(index) {
       this.insertionList.splice(index, 1);
+      this.editId = null;
       this.toEdit = {};
-      this.editId = -1;
     },
+
     async saveEvent() {
       const confirmed = window.confirm('Tem certeza que deseja salvar?');
       if (confirmed) {

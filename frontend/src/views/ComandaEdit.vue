@@ -1,8 +1,6 @@
 <template>
   <form submit.prevent="">
-    <BaseErrors
-      :errors="errors"
-    />
+    <BaseErrors :errors="errors" />
     <section>
       <BaseSelectProducts
         name="clients"
@@ -27,13 +25,14 @@
         v-model="form.description"
         :error="formularyErrors.description"
       />
-      <!-- produtos -->
+
       <ul v-if="form.products.length > 0">
         <article
           v-for="(product, pIndex) in form.products"
           v-bind="product"
           :key="'product_key_id_' + product.id"
         >
+
           <button
             v-if="editId !== pIndex && responseProducts.length > 0"
             class="base_button button_primary_lighter"
@@ -44,6 +43,7 @@
             x{{ product.quantity }}
             = R${{ product.totalPrice }}
           </button>
+
           <div v-if="editId === pIndex" class="product_form">
             <BaseSelectProducts
               name="products"
@@ -52,9 +52,11 @@
               :options="responseProducts"
               :error="formularyErrors.id"
             />
+
             <p v-if="formularyErrors.id" class="error_message">
               {{ formularyErrors.id }}
             </p>
+
             <BaseInput
               name="individualPrice"
               label="Preço individual"
@@ -82,8 +84,9 @@
               :error="formularyErrors.totalPrice"
               @input="calculateIndividualPrice"
             />
+
             <BaseEditButtons
-              saveTxt="Salvar"
+              saveTxt="Salvar Produto"
               @deleteEmit="deleteInsertion(pIndex)"
               @cancelEmit="cancelInsertion(pIndex)"
               @saveEmit="saveInsertion(pIndex)"
@@ -110,7 +113,7 @@
 
     <p>
       Quantidade de produtos: {{ form.products.length }}
-      Total: R$ {{ totalPrice }}
+      Total: R$ {{ totalComanda }}
     </p>
 
     <p v-if="formularyErrors.products" class="error_message">
@@ -120,6 +123,7 @@
     <BaseEditButtons
       v-if="!blockEditClick"
       value="Cadastrar"
+      saveTxt="Atualizar Comanda"
       @deleteEmit="deleteComanda"
       @cancelEmit="cancelComanda"
       @saveEmit="sendForm"
@@ -172,6 +176,7 @@ export default {
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
@@ -287,7 +292,7 @@ export default {
     },
 
     newInsertion() {
-      if (this.blockEditClick) return;
+      this.blockEditClick = true;
       this.editId = this.form.products.length;
       this.productForm = {
         id: 0,
@@ -296,7 +301,6 @@ export default {
         totalPrice: '',
       };
       this.form.products.push({ ...this.productForm });
-      this.blockEditClick = true;
     },
 
     validateInsertion() {
@@ -385,17 +389,21 @@ export default {
     },
 
     cancelInsertion(index) {
-      this.form.products.splice(index, 1);
-      this.editId = null;
+      if (this.form.products[index].id === 0) {
+        this.form.products.splice(index, 1);
+      }
+
       this.productForm = {
         id: 0,
         individualPrice: '',
         quantity: '',
         totalPrice: '',
       };
-      this.formularyErrors = {};
-      this.errors = {};
+
+      this.editId = null;
       this.blockEditClick = false;
+      this.errors = {};
+      this.formularyErrors = {};
     },
 
     deleteInsertion(index) {
@@ -441,7 +449,7 @@ export default {
   },
 
   computed: {
-    totalPrice() {
+    totalComanda() {
       const total = this.form.products
         .reduce((acc, { totalPrice }) => {
           if (!totalPrice) return acc;
