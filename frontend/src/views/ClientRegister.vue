@@ -2,7 +2,7 @@
   <section>
     <form @submit.prevent="">
       <h2>Registrar Cliente</h2>
-      <p v-if="insertionList.length === 0">Insira ao menos um cliente</p>
+      <p v-if="insertionList.length === 0">Nenhum cliente</p>
       <BaseErrors :errors="this.errors" />
       <div>
         <div v-for="(insertion, index) in insertionList" :key="'key_insertion_' + index">
