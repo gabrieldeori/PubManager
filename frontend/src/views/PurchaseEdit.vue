@@ -140,9 +140,9 @@ const schema = yup.object().shape({
 
 export default {
   name: 'PurchaseEdit',
+
   data() {
     return {
-
       form: {
         id: null,
         name: '',
@@ -157,15 +157,16 @@ export default {
         totalPrice: '',
       },
 
-      responsePurchase: {},
       editId: null,
       blockEditClick: false,
       responseProducts: [],
+      responsePurchase: {},
       formularyErrors: {},
       errors: {},
       totalSomado: 0,
     };
   },
+
   methods: {
     async sendForm() {
       try {
