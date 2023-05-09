@@ -31,9 +31,7 @@ export default {
         } = data.payload.dashboard;
 
         this.dashboard = { totalIncome, totalOutcome };
-        console.log(this.dashboard);
       } catch (errors) {
-        console.log(errors);
         const { response } = errors;
         if (!response) {
           this.errors.generic = errors.message;
