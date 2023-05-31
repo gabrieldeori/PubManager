@@ -50,7 +50,6 @@
         :error="formularyErrors.userType"
       />
       <BaseEditButtons
-        v-if="!blockEditClick"
         :notDelete="true"
         txtCancel="Voltar"
         value="Cadastrar"

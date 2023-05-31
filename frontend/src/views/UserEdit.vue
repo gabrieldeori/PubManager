@@ -58,7 +58,6 @@
     />
 
     <BaseEditButtons
-        v-if="!blockEditClick"
         cancelTxt="Cancelar"
         saveTxt="Atualizar usuário"
         value="Atualizar"
