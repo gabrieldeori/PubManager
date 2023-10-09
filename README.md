@@ -1,7 +1,8 @@
 <a name="_pesyf6avpar0"></a>PubManager
 
 ## Apresentação em vídeo
-Acompanhe meu treino de pitch:
+Acompanhe meu treino de pitch enquanto demonstro as funcionalidades do site:
+
 [https://youtu.be/CDmtPaXmWqw](https://youtu.be/SzaOMH1ZLs0)
 
 <a name="_x047o6b2qfri"></a>O gerenciador dos Bares
