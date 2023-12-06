@@ -1,4 +1,4 @@
-(Veja o documento de design por aqui: https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing)[https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing]
+[Veja o documento de design por aqui: https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing](https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing)
 
 <a name="_pesyf6avpar0"></a>PubManager
 
