@@ -1,7 +1,7 @@
 # [Veja o documento de design](https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing)
 https://docs.google.com/document/d/1G1Qa5mk4ZK0DFrRUGIbPfukB8q8BTLCR5NgZr_qJZm8/edit?usp=sharing
 
-<a name="_pesyf6avpar0"></a>PubManager
+# <a name="_pesyf6avpar0"></a>PubManager
 
 # <a name="_pha9ag3d2pw3"></a>**Resumo**
 O PubManager é um sistema abrangente de gerenciamento de bares projetado para agilizar e simplificar as operações de bares e pubs. Construído em Laravel, Vue.js e MySQL, o PubManager permite que os proprietários de bares gerenciem inventário, acompanhem as vendas, analisem os lucros e interajam com os clientes por meio de uma interface intuitiva e amigável. O back-end robusto do aplicativo permite o registro eficiente de produtos, insumos, matérias-primas, clientes, serviços e vendas diárias, enquanto o front-end fornece gráficos perspicazes para análise de dados de forma eficiente. Com o PubManager, os proprietários de bares podem gerenciar seus negócios com eficiência e melhorar seus resultados com facilidade.
